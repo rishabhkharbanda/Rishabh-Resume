@@ -59,51 +59,58 @@
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const formData = new FormData(this);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const subject = formData.get('subject');
-    const message = formData.get('message');
+    // Collect form values
+    const name = document.querySelector('input[name="name"]').value.trim();
+    const email = document.querySelector('input[name="email"]').value.trim();
+    const subject = document.querySelector('input[name="subject"]').value.trim();
+    const message = document.querySelector('textarea[name="message"]').value.trim();
 
+    // Validation
     if (!name || !email || !subject || !message) {
-        alert('Please fill in all fields.');
+        alert('⚠️ Please fill in all fields.');
         return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
+        alert('⚠️ Please enter a valid email address.');
         return;
     }
 
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
 
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending Message...';
+    // Show loading
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
     submitBtn.disabled = true;
 
-    // Replace with your Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxVtr-J4UKACRVBmX18Iw43lk5op5N4V7WbPqePBbGhCOGsbwtivskcf-YskHs3UnmgHg/exec';
+    // Google Apps Script Web App URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxkZZp0zJ7V3kVufTcZ2JCW-4O4AIvdXGlN0GCjCCHoQCdwSI6fiBKKBdLPPb13nwfEoA/exec';  // replace with deployed URL
 
+    // Create FormData object
+    const formDataObj = new FormData();
+    formDataObj.append("name", name);
+    formDataObj.append("email", email);
+    formDataObj.append("subject", subject);
+    formDataObj.append("message", message);
+
+    // Send request
     fetch(scriptURL, {
         method: 'POST',
-        body: JSON.stringify({ name, email, subject, message }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        body: formDataObj
     })
     .then(response => response.json())
     .then(data => {
         if (data.result === 'success') {
             alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
-            this.reset();
+            document.getElementById('contact-form').reset();
         } else {
-            alert('Oops! Something went wrong. Please try again later.');
+            alert('⚠️ Oops! Something went wrong. Please try again later.');
             console.error(data.error);
         }
     })
     .catch(error => {
-        alert('Oops! Something went wrong. Please try again later.');
+        alert('⚠️ Oops! Something went wrong. Please try again later.');
         console.error(error);
     })
     .finally(() => {
