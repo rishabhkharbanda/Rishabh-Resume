@@ -84,7 +84,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
     submitBtn.disabled = true;
 
-    // Replace with your deployed Google Apps Script Web App URL
+    // Google Apps Script Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwoJ4YJcvDRpfd2a-RIxG4-v7lqqWEV52rANf8Dy-KAeZc72IzurU_MJmN3JF_npVEF_A/exec';
 
     // Create FormData object
@@ -99,18 +99,33 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
         method: 'POST',
         body: formDataObj
     })
-    .then(response => {
+    .then(async response => {
         console.log("Raw response:", response);
-        return response.json();
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Attempt to parse JSON
+        let data;
+        try {
+            data = await response.json();
+        } catch (err) {
+            throw new Error("Failed to parse JSON: " + err.message);
+        }
+
+        console.log("Parsed response:", data);
+        return data;
     })
     .then(data => {
-        console.log("Parsed response:", data);
-
-        if (data.result === "success") {
+        // Handle Google Apps Script response safely
+        if (data?.result === "success") {
             alert("🚀 Thank you for your message! I'll get back to you within 24 hours.");
             document.getElementById("contact-form").reset();
         } else {
-            alert("⚠️ Something went wrong: " + data.error);
+            console.warn("Error in response:", data);
+            const errorMsg = data?.error || "Unknown error occurred.";
+            alert("⚠️ Something went wrong: " + errorMsg);
         }
     })
     .catch(error => {
@@ -122,6 +137,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
         submitBtn.disabled = false;
     });
 });
+
 
 
         // Smooth scrolling for anchor links
