@@ -84,7 +84,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
     submitBtn.disabled = true;
 
-    // Replace with your deployed Google Apps Script Web App URL
+    // ✅ Your deployed Google Apps Script Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycby4L45ICwuOSV1oEh9SqXaxuoeD-flKa-oHlv-d9g4H7uLvtRPLUozcyz6a4mRYMaV3-A/exec';
 
     // Create FormData object
@@ -94,16 +94,26 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     formDataObj.append("subject", subject);
     formDataObj.append("message", message);
 
-    // Send request (with no-cors mode)
+    // ✅ Send request
     fetch(scriptURL, {
         method: 'POST',
-        mode: 'no-cors',   // ✅ bypasses CORS
         body: formDataObj
     })
-    .then(() => {
-        // We can't read JSON because of no-cors, but assume success
-        alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
-        document.getElementById('contact-form').reset();
+    .then(response => response.text())
+    .then(text => {
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.warn("Non-JSON response received:", text);
+        }
+
+        if (data && data.result === 'success') {
+            alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
+            document.getElementById('contact-form').reset();
+        } else {
+            alert('✅ Message sent! (But no JSON confirmation received).');
+        }
     })
     .catch(error => {
         alert('⚠️ Oops! Something went wrong. Please try again later.');
