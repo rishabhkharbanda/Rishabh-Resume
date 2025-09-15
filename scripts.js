@@ -83,7 +83,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     submitBtn.disabled = true;
 
     // Replace with your Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbymn_ag1e8rV-4zTffJiadhoNI7A13drNtyaHU1UwxezolJwSGa7UidBZ5wQ3gxqKq9kg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwM0ORRu_Ukqb40hg3l0w2EqIHmiJP4jVQuVInmkWeJgh3l-waeBuhYhw7X9WrXGBbKbw/exec';
 
     fetch(scriptURL, {
         method: 'POST',
