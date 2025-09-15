@@ -14,16 +14,19 @@
     <nav class="fixed top-0 w-full backdrop-blur-md border-b z-50" style="background-color: rgba(15, 23, 42, 0.8); border-color: rgba(59, 130, 246, 0.3);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0">
-                    <h1 class="text-2xl font-bold gradient-text">Rishabh Kharbanda</h1>
+                <!-- Logo / Name -->
+                <div class="flex-shrink-0 text-center md:text-left">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold gradient-text">
+                        Rishabh Kharbanda
+                    </h1>
                 </div>
-                
-                <!-- Desktop Menu -->
+    
+                <!-- Desktop Menu (unchanged) -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
                         <a href="#home" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 relative">
                             <span>Home</span>
-                            <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-#ff6b6b to-#4ecdc4 transition-all duration-300 group-hover:w-full"></div>
+                            <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#ff6b6b] to-[#4ecdc4] transition-all duration-300 group-hover:w-full"></div>
                         </a>
                         <a href="#about" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300">About</a>
                         <a href="#experience" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300">Experience</a>
@@ -32,27 +35,28 @@
                         <a href="#contact" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300">Contact</a>
                     </div>
                 </div>
-                
+    
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden relative">
-                        <button id="mobile-menu-btn" class="flex items-center justify-between w-32 text-gray-300 hover:text-white focus:outline-none px-4 py-2 bg-gray-900 rounded-lg">
-                            <span>Menu</span>
-                            <i id="mobile-menu-arrow" class="fas fa-chevron-down transition-transform duration-300"></i>
-                        </button>
-                    
-                        <!-- Dropdown Menu -->
-                        <div id="mobile-menu"
-                            class="hidden absolute left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-50 min-w-full">
-                            <a href="#home" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Home</a>
-                            <a href="#about" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">About</a>
-                            <a href="#experience" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Experience</a>
-                            <a href="#skills" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Skills</a>
-                            <a href="#projects" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Projects</a>
-                            <a href="#contact" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Contact</a>
-                        </div>
+                    <button id="mobile-menu-btn" class="flex items-center justify-between w-32 text-gray-300 hover:text-white focus:outline-none px-4 py-2 bg-gray-900 rounded-lg">
+                        <span>Menu</span>
+                        <i id="mobile-menu-arrow" class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+    
+                    <!-- Mobile Dropdown Menu -->
+                    <div id="mobile-menu" class="hidden absolute left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-50 min-w-full">
+                        <a href="#home" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Home</a>
+                        <a href="#about" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">About</a>
+                        <a href="#experience" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Experience</a>
+                        <a href="#skills" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Skills</a>
+                        <a href="#projects" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Projects</a>
+                        <a href="#contact" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Contact</a>
+                    </div>
+                </div>
             </div>
-
+        </div>
     </nav>
+
 
     <!-- Hero Section -->
     <section id="home" class="min-h-screen hero-bg relative flex items-center">
