@@ -59,13 +59,11 @@
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    // Collect form values
-    const name = document.querySelector('input[name="name"]').value.trim();
-    const email = document.querySelector('input[name="email"]').value.trim();
-    const subject = document.querySelector('input[name="subject"]').value.trim();
-    const message = document.querySelector('textarea[name="message"]').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
 
-    // Validation
     if (!name || !email || !subject || !message) {
         alert('⚠️ Please fill in all fields.');
         return;
@@ -80,62 +78,40 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
 
-    // Show loading state
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+    submitBtn.innerHTML = 'Sending...';
     submitBtn.disabled = true;
 
-    // Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwoJ4YJcvDRpfd2a-RIxG4-v7lqqWEV52rANf8Dy-KAeZc72IzurU_MJmN3JF_npVEF_A/exec';
+    // Replace with your deployed Google Apps Script URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRFtwcgbRbNpqjZfTfHQCvHPwhfOoZYVG214tJRPAx3pBqzaWKCoWERDqWkpuObzJdeA/exec';
 
-    // Create FormData object
     const formDataObj = new FormData();
     formDataObj.append("name", name);
     formDataObj.append("email", email);
     formDataObj.append("subject", subject);
     formDataObj.append("message", message);
 
-    // Send request
-    fetch(scriptURL, {
-        method: 'POST',
-        body: formDataObj
-    })
-    .then(async response => {
-        console.log("Raw response:", response);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        // Attempt to parse JSON
-        let data;
-        try {
-            data = await response.json();
-        } catch (err) {
-            throw new Error("Failed to parse JSON: " + err.message);
-        }
-
-        console.log("Parsed response:", data);
-        return data;
-    })
-    .then(data => {
-        // Handle Google Apps Script response safely
-        if (data?.result === "success") {
-            alert("🚀 Thank you for your message! I'll get back to you within 24 hours.");
-            document.getElementById("contact-form").reset();
-        } else {
-            console.warn("Error in response:", data);
-            const errorMsg = data?.error || "Unknown error occurred.";
-            alert("⚠️ Something went wrong: " + errorMsg);
-        }
-    })
-    .catch(error => {
-        alert("⚠️ Failed to send message. Please try again later.");
-        console.error("Fetch error:", error);
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    });
+    fetch(scriptURL, { method: 'POST', body: formDataObj })
+        .then(async response => {
+            if (!response.ok) throw new Error("HTTP error " + response.status);
+            try {
+                return await response.json();
+            } catch {
+                return { result: 'error', error: 'Invalid JSON from server' };
+            }
+        })
+        .then(data => {
+            if (data.result === "success") {
+                alert("🚀 Thank you! Your message was sent.");
+                this.reset();
+            } else {
+                alert("⚠️ " + (data.error || "Something went wrong"));
+            }
+        })
+        .catch(err => alert("⚠️ Failed to send message: " + err.message))
+        .finally(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
 });
 
 
