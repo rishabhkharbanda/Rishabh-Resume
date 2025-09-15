@@ -1,17 +1,21 @@
   // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
+        const mobileArrow = document.getElementById('mobile-menu-arrow');
         
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
+            mobileMenu.classList.toggle('hidden'); // Show/hide menu
+            mobileArrow.classList.toggle('rotate-180'); // Rotate arrow
+        });
+        
+        // Optional: Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                mobileArrow.classList.remove('rotate-180');
+            }
         });
 
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-            });
-        });
 
         // Scroll animations
         const observerOptions = {
