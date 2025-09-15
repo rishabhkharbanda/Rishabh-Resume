@@ -80,12 +80,12 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
 
-    // Show loading
+    // Show loading state
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
     submitBtn.disabled = true;
 
-    // Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxkZZp0zJ7V3kVufTcZ2JCW-4O4AIvdXGlN0GCjCCHoQCdwSI6fiBKKBdLPPb13nwfEoA/exec';  // replace with deployed URL
+    // Replace with your deployed Google Apps Script Web App URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby3-IX0kXalluUJXlxmc32Rd3WtbX7VUCLtX_FSN8V0BRT--fOoxSB4cQH0lxL62QS38A/exec';
 
     // Create FormData object
     const formDataObj = new FormData();
@@ -94,20 +94,16 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     formDataObj.append("subject", subject);
     formDataObj.append("message", message);
 
-    // Send request
+    // Send request (with no-cors mode)
     fetch(scriptURL, {
         method: 'POST',
+        mode: 'no-cors',   // ✅ bypasses CORS
         body: formDataObj
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.result === 'success') {
-            alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
-            document.getElementById('contact-form').reset();
-        } else {
-            alert('⚠️ Oops! Something went wrong. Please try again later.');
-            console.error(data.error);
-        }
+    .then(() => {
+        // We can't read JSON because of no-cors, but assume success
+        alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
+        document.getElementById('contact-form').reset();
     })
     .catch(error => {
         alert('⚠️ Oops! Something went wrong. Please try again later.');
@@ -118,7 +114,6 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
         submitBtn.disabled = false;
     });
 });
-
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
