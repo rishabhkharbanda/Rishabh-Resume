@@ -84,8 +84,8 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
     submitBtn.disabled = true;
 
-    // ✅ Your deployed Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwZ3qjffrv4X9l1CyfNv01o_FDoQ8X7YCzeeYwalroUGvuIyCNNqrONA6K9-suIAxs4hQ/exec';
+    // Replace with your deployed Google Apps Script Web App URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby4L45ICwuOSV1oEh9SqXaxuoeD-flKa-oHlv-d9g4H7uLvtRPLUozcyz6a4mRYMaV3-A/exec';
 
     // Create FormData object
     const formDataObj = new FormData();
@@ -94,36 +94,35 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     formDataObj.append("subject", subject);
     formDataObj.append("message", message);
 
-    // ✅ Send request
+    // Send request
     fetch(scriptURL, {
         method: 'POST',
         body: formDataObj
     })
-    .then(response => response.text())
-    .then(text => {
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            console.warn("Non-JSON response received:", text);
-        }
+    .then(response => {
+        console.log("Raw response:", response);
+        return response.json();
+    })
+    .then(data => {
+        console.log("Parsed response:", data);
 
-        if (data && data.result === 'success') {
-            alert('🚀 Thank you for your message! I\'ll get back to you within 24 hours.');
-            document.getElementById('contact-form').reset();
+        if (data.result === "success") {
+            alert("🚀 Thank you for your message! I'll get back to you within 24 hours.");
+            document.getElementById("contact-form").reset();
         } else {
-            alert('✅ Message sent! (But no JSON confirmation received).');
+            alert("⚠️ Something went wrong: " + data.error);
         }
     })
     .catch(error => {
-        alert('⚠️ Oops! Something went wrong. Please try again later.');
-        console.error(error);
+        alert("⚠️ Failed to send message. Please try again later.");
+        console.error("Fetch error:", error);
     })
     .finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     });
 });
+
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
