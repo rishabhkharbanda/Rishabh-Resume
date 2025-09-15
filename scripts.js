@@ -4,17 +4,18 @@
         const mobileArrow = document.getElementById('mobile-menu-arrow');
         
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden'); // Show/hide menu
-            mobileArrow.classList.toggle('rotate-180'); // Rotate arrow
+            mobileMenu.classList.toggle('hidden');         // Show/hide menu
+            mobileArrow.classList.toggle('rotate-180');    // Rotate arrow
         });
         
-        // Optional: Close menu when clicking outside
+        // Close dropdown if clicked outside
         document.addEventListener('click', (e) => {
             if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                 mobileMenu.classList.add('hidden');
                 mobileArrow.classList.remove('rotate-180');
             }
         });
+
 
 
         // Scroll animations
