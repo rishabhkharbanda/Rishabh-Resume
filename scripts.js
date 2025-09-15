@@ -85,7 +85,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     submitBtn.disabled = true;
 
     // Replace with your deployed Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby3-IX0kXalluUJXlxmc32Rd3WtbX7VUCLtX_FSN8V0BRT--fOoxSB4cQH0lxL62QS38A/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyPu0fmw7XL5hGsqeEQ1MBrcUkuBBncuSJValH73OknwVm0ezFsFLtolwmJvmtjiG26/exec';
 
     // Create FormData object
     const formDataObj = new FormData();
