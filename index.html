@@ -34,25 +34,24 @@
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
+                <div class="md:hidden relative">
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="flex items-center text-gray-300 hover:text-white focus:outline-none">
+                        <span class="mr-2">Menu</span>
+                        <i id="mobile-menu-arrow" class="fas fa-chevron-down transition-transform duration-300"></i>
                     </button>
+                
+                    <!-- Dropdown Menu -->
+                    <div id="mobile-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-50">
+                        <a href="#home" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Home</a>
+                        <a href="#about" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">About</a>
+                        <a href="#experience" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Experience</a>
+                        <a href="#skills" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Skills</a>
+                        <a href="#projects" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Projects</a>
+                        <a href="#contact" class="block px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Contact</a>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu md:hidden backdrop-blur-md border-t" style="background-color: rgba(15, 23, 42, 0.95); border-color: rgba(59, 130, 246, 0.3);">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#home" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">Home</a>
-                <a href="#about" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">About</a>
-                <a href="#experience" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">Experience</a>
-                <a href="#skills" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">Skills</a>
-                <a href="#projects" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">Projects</a>
-                <a href="#contact" class="nav-link block px-3 py-2 text-base font-medium text-gray-300 hover:text-white">Contact</a>
-            </div>
-        </div>
+
     </nav>
 
     <!-- Hero Section -->
