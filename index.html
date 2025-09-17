@@ -10,54 +10,54 @@
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="overflow-x-hidden" style="background-color: #0F172A; color: #F8FAFC;">
-<header>
-  <!-- 🌐 Desktop Navbar -->
-  <nav class="fixed top-0 w-full backdrop-blur-md border-b z-50 bg-gray-900/80 md:pb-4">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <!-- Logo -->
-      <div class="flex-shrink-0">
-        <h1 class="text-2xl font-bold gradient-text">Rishabh Kharbanda</h1>
-      </div>
+    <header>
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full backdrop-blur-xl border-b border-gray-800/50 z-50 bg-slate-900/90">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <div class="logo-container">
+                        <div class="logo-icon">RK</div>
+                        <div>
+                            <h1 class="text-xl font-bold gradient-text">Rishabh Kharbanda</h1>
+                            <p class="text-xs text-gray-400">Full Stack Developer</p>
+                        </div>
+                    </div>
 
-      <!-- Desktop Menu -->
-      <div class="hidden md:flex space-x-6 pb-4">
-          <a href="#home" class="nav-link">Home</a>
-          <a href="#about" class="nav-link">About</a>
-          <a href="#experience" class="nav-link">Experience</a>
-          <a href="#skills" class="nav-link">Skills</a>
-          <a href="#projects" class="nav-link">Projects</a>
-          <a href="#contact" class="nav-link">Contact</a>
-        </div>
-      <!-- Mobile Menu Button -->
-      <div class="md:hidden">
-        <button
-          id="mobile-menu-btn"
-          class="px-4 py-2 bg-gray-800/50 text-gray-300 rounded-lg border border-gray-700"
-        >
-          Menu
-        </button>
-      </div>
-    </div>
-  </div>
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center space-x-2">
+                        <a href="#home" class="nav-link">Home</a>
+                        <a href="#about" class="nav-link">About</a>
+                        <a href="#experience" class="nav-link">Experience</a>
+                        <a href="#skills" class="nav-link">Skills</a>
+                        <a href="#projects" class="nav-link">Projects</a>
+                        <a href="#contact" class="nav-link bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700">Contact</a>
+                    </div>
 
-  <!-- Mobile Dropdown -->
-  <div
-    id="mobile-menu"
-    class="hidden md:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-  >
-    <div
-      class="overflow-hidden transition-all duration-300 ease-in-out shadow-lg shadow-black/10 bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-b-lg"
-    >
-      <a href="#home" class="block px-4 py-3 nav-link">Home</a>
-      <a href="#about" class="block px-4 py-3 nav-link">About</a>
-      <a href="#experience" class="block px-4 py-3 nav-link">Experience</a>
-      <a href="#skills" class="block px-4 py-3 nav-link">Skills</a>
-      <a href="#projects" class="block px-4 py-3 nav-link">Projects</a>
-      <a href="#contact" class="block px-4 py-3 nav-link">Contact</a>
-    </div>
-  </div>
-</nav>
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="mobile-menu-btn p-2">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-gray-800/50">
+                <div class="max-w-7xl mx-auto px-4 py-4 space-y-2">
+                    <a href="#home" class="block nav-link">🏠 Home</a>
+                    <a href="#about" class="block nav-link">👨‍💻 About</a>
+                    <a href="#experience" class="block nav-link">💼 Experience</a>
+                    <a href="#skills" class="block nav-link">⚡ Skills</a>
+                    <a href="#projects" class="block nav-link">🚀 Projects</a>
+                    <a href="#contact" class="block nav-link bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 mt-4">📧 Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>   
     <!-- Hero Section -->
     <section id="home" class="min-h-screen hero-bg relative flex items-center">
         <div class="floating-shapes">
