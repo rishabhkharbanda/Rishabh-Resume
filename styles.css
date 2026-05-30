@@ -843,41 +843,35 @@ body {
     pointer-events: none;
 }
 
-/* Animation Classes — visible by default; hidden only when JS enables animations */
+/* Animation Classes — always readable; motion uses transform only (never opacity: 0) */
 .fade-in-up,
 .slide-in-left,
 .slide-in-right,
 .scale-in {
     opacity: 1;
-    transform: none;
-    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.js-animations .fade-in-up:not(.visible) {
-    opacity: 0;
-    transform: translateY(50px);
+.fade-in-up:not(.visible) {
+    transform: translateY(40px);
 }
 
-.js-animations .slide-in-left:not(.visible) {
-    opacity: 0;
-    transform: translateX(-100px);
+.slide-in-left:not(.visible) {
+    transform: translateX(-60px);
 }
 
-.js-animations .slide-in-right:not(.visible) {
-    opacity: 0;
-    transform: translateX(100px);
+.slide-in-right:not(.visible) {
+    transform: translateX(60px);
 }
 
-.js-animations .scale-in:not(.visible) {
-    opacity: 0;
-    transform: scale(0.8);
+.scale-in:not(.visible) {
+    transform: scale(0.95);
 }
 
 .fade-in-up.visible,
 .slide-in-left.visible,
 .slide-in-right.visible,
 .scale-in.visible {
-    opacity: 1;
     transform: none;
 }
 

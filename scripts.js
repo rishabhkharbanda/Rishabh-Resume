@@ -1,5 +1,3 @@
-document.documentElement.classList.add('js-animations');
-
 // ============================================
 // MOBILE MENU FUNCTIONALITY
 // ============================================
@@ -104,10 +102,23 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe animated elements
-document.querySelectorAll('.fade-in-up, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
-    observer.observe(el);
-});
+function revealAnimatedElements() {
+    const animated = document.querySelectorAll('.fade-in-up, .slide-in-left, .slide-in-right, .scale-in');
+    animated.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) {
+            el.classList.add('visible');
+        }
+        observer.observe(el);
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', revealAnimatedElements);
+} else {
+    revealAnimatedElements();
+}
 
 // ============================================
 // PARALLAX EFFECT FOR SHAPES
