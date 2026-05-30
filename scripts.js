@@ -458,12 +458,159 @@ if ('scrollRestoration' in window.history) {
 }
 
 // ============================================
+// 3D CARD PERSPECTIVE TILT EFFECT
+// ============================================
+
+function initCardTilt() {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    const cards = document.querySelectorAll('.card-3d, .project-card-advanced');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const xc = rect.width / 2;
+            const yc = rect.height / 2;
+            const dx = x - xc;
+            const dy = y - yc;
+            // Limit maximum tilt angle to 8 degrees for elegant micro-movement
+            const tiltX = -(dy / yc) * 8;
+            const tiltY = (dx / xc) * 8;
+            
+            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+    });
+}
+
+// ============================================
+// INTERACTIVE SVG DATA VISUALIZATION
+// ============================================
+
+function initInteractiveChart() {
+    const bars = document.querySelectorAll('.chart-bar-advanced');
+    const chartContainer = document.querySelector('.advanced-data-viz');
+    if (!chartContainer) return;
+    
+    // Create and append tooltip element
+    const tooltip = document.createElement('div');
+    tooltip.id = 'chart-tooltip';
+    tooltip.className = 'absolute hidden bg-slate-950/95 border border-slate-700/80 text-white text-xs px-3 py-2 rounded-lg shadow-2xl backdrop-blur-md pointer-events-none transition-all duration-150 z-30 font-medium';
+    chartContainer.appendChild(tooltip);
+    chartContainer.style.position = 'relative';
+    
+    const metricDetails = {
+        'CAC': 'Customer Acquisition Cost: Reduced by 17% through geo-segmentation marketing',
+        'Sales': 'Monthly Sales: Achieved a massive 70% growth in overall digital transactions',
+        'ROI': 'Return on Investment: Scaled performance marketing campaigns to 3.5x average ROI',
+        'Retention': 'User Retention: Sustained a solid 80% user retention rate via automated onboarding',
+        'Growth': 'Business Growth: Boosted search analytics traffic and customer base by 5x'
+    };
+    
+    const volumeDetails = {
+        'Savings': 'Cost Saved: ₹2.2 Crores saved from performance optimization strategies',
+        'Budget': 'Monthly Budget: Managed marketing funds streamlined from ₹4Cr to ₹1.8Cr',
+        'Revenue': 'Quarterly Revenue: Scaled and boosted by 30% through predictive model integrations',
+        'Dashboards': 'KPI Dashboards: 3 interactive Tableau & Python dashboards deployed for monitoring',
+        'Acquisition': 'Daily Acquisition: 100+ new verified daily customer signups achieved'
+    };
+    
+    let activeDataset = 'performance'; // 'performance' or 'volume'
+    
+    // Hover details for bars
+    bars.forEach((bar, index) => {
+        bar.style.cursor = 'pointer';
+        bar.style.opacity = '0.85';
+        bar.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        
+        bar.addEventListener('mouseenter', (e) => {
+            // Highlight bar
+            bar.style.opacity = '1';
+            bar.style.filter = 'brightness(1.2) drop-shadow(0 0 10px #3B82F6)';
+            
+            // Get labels (SVG text elements)
+            const texts = chartContainer.querySelectorAll('svg text');
+            const label = texts[index] ? texts[index].textContent : 'Metric';
+            const details = activeDataset === 'performance' ? metricDetails[label] : volumeDetails[label];
+            
+            tooltip.innerHTML = `<strong>${label}</strong><div class="mt-1 text-slate-300 font-normal leading-relaxed">${details}</div>`;
+            tooltip.classList.remove('hidden');
+        });
+        
+        bar.addEventListener('mousemove', (e) => {
+            const rect = chartContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left + 15;
+            const y = e.clientY - rect.top - 15;
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        });
+        
+        bar.addEventListener('mouseleave', () => {
+            bar.style.opacity = '0.85';
+            bar.style.filter = 'none';
+            tooltip.classList.add('hidden');
+        });
+    });
+    
+    // Dataset toggling implementation
+    const btnPerf = document.getElementById('btn-perf');
+    const btnVolume = document.getElementById('btn-volume');
+    
+    if (btnPerf && btnVolume) {
+        const performanceHeights = [100, 150, 120, 170, 130];
+        const volumeHeights = [160, 90, 140, 110, 150];
+        
+        function updateChart(dataset) {
+            activeDataset = dataset;
+            const heights = dataset === 'performance' ? performanceHeights : volumeHeights;
+            
+            bars.forEach((bar, index) => {
+                const h = heights[index];
+                const y = 200 - h;
+                
+                bar.setAttribute('height', h);
+                bar.setAttribute('y', y);
+            });
+            
+            // Update SVG text labels
+            const texts = chartContainer.querySelectorAll('svg text');
+            const labels = dataset === 'performance' 
+                ? ['CAC', 'Sales', 'ROI', 'Retention', 'Growth'] 
+                : ['Savings', 'Budget', 'Revenue', 'Dashboards', 'Acquisition'];
+            
+            texts.forEach((text, index) => {
+                if (labels[index]) {
+                    text.textContent = labels[index];
+                }
+            });
+        }
+        
+        btnPerf.addEventListener('click', () => {
+            btnPerf.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500 text-white shadow-lg transition-all duration-300';
+            btnVolume.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all duration-300';
+            updateChart('performance');
+        });
+        
+        btnVolume.addEventListener('click', () => {
+            btnVolume.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500 text-white shadow-lg transition-all duration-300';
+            btnPerf.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all duration-300';
+            updateChart('volume');
+        });
+    }
+}
+
+// ============================================
 // INIT FUNCTION
 // ============================================
 
 function init() {
     console.log('Portfolio website initialized successfully! 🚀');
     updateActiveNavLink();
+    initCardTilt();
+    initInteractiveChart();
 }
 
 document.addEventListener('DOMContentLoaded', init);
