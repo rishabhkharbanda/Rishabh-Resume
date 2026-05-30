@@ -1,3 +1,5 @@
+document.documentElement.classList.add('js-animations');
+
 // ============================================
 // MOBILE MENU FUNCTIONALITY
 // ============================================
@@ -287,7 +289,7 @@ if (contactForm) {
                 return { result: 'success' };
             })
             .then(data => {
-                showAlert('🚀 Thank you! Your message has been sent. We\\'ll get back to you soon!', 'success');
+                showAlert("🚀 Thank you! Your message has been sent. We'll get back to you soon!", 'success');
                 contactForm.reset();
             })
             .catch(err => {
