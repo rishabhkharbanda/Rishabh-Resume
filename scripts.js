@@ -320,17 +320,16 @@ if (contactForm) {
 
 function showAlert(message, type = 'info') {
     const alertDiv = document.createElement('div');
-    const bgColor = type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-red-500';
-    
-    alertDiv.className = `fixed top-20 right-4 ${bgColor} text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm animate-pulse`;
+    alertDiv.className = `alert-toast ${type}`;
     alertDiv.textContent = message;
     
     document.body.appendChild(alertDiv);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
-        alertDiv.style.animation = 'fadeOut 0.5s ease-out';
-        setTimeout(() => alertDiv.remove(), 500);
+        alertDiv.style.opacity = '0';
+        alertDiv.style.transform = 'translateX(20px)';
+        alertDiv.style.transition = 'all 0.4s ease';
+        setTimeout(() => alertDiv.remove(), 400);
     }, 5000);
 }
 
@@ -405,7 +404,7 @@ window.addEventListener('scroll', debouncedScrollHandler);
 
 document.querySelectorAll('.skill-orb').forEach(orb => {
     orb.addEventListener('mouseenter', function() {
-        this.style.boxShadow = '0 0 30px rgba(59, 130, 246, 0.8)';
+        this.style.boxShadow = '0 16px 32px rgba(0,0,0,0.3), 0 0 24px rgba(201, 169, 98, 0.35)';
     });
     
     orb.addEventListener('mouseleave', function() {
@@ -542,7 +541,7 @@ function initInteractiveChart() {
         bar.addEventListener('mouseenter', (e) => {
             // Highlight bar
             bar.style.opacity = '1';
-            bar.style.filter = 'brightness(1.2) drop-shadow(0 0 10px #3B82F6)';
+            bar.style.filter = 'brightness(1.15) drop-shadow(0 0 8px rgba(201,169,98,0.4))';
             
             // Get labels (SVG text elements)
             const texts = chartContainer.querySelectorAll('svg text');
@@ -602,13 +601,13 @@ function initInteractiveChart() {
         }
         
         btnPerf.addEventListener('click', () => {
-            btnPerf.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500 text-white shadow-lg transition-all duration-300';
+            btnPerf.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-700/40 text-amber-200 border border-amber-600/30 shadow-lg transition-all duration-300';
             btnVolume.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all duration-300';
             updateChart('performance');
         });
         
         btnVolume.addEventListener('click', () => {
-            btnVolume.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500 text-white shadow-lg transition-all duration-300';
+            btnVolume.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-700/40 text-amber-200 border border-amber-600/30 shadow-lg transition-all duration-300';
             btnPerf.className = 'px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all duration-300';
             updateChart('volume');
         });
@@ -616,14 +615,236 @@ function initInteractiveChart() {
 }
 
 // ============================================
+// PREMIUM: PARTICLE CANVAS BACKGROUND
+// ============================================
+
+function initParticleCanvas() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let w, h, animId;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+        const count = Math.min(80, Math.floor((w * h) / 18000));
+        particles = Array.from({ length: count }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            r: Math.random() * 1.5 + 0.5,
+            alpha: Math.random() * 0.4 + 0.1
+        }));
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        particles.forEach((p, i) => {
+            if (!prefersReduced) {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > w) p.vx *= -1;
+                if (p.y < 0 || p.y > h) p.vy *= -1;
+            }
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(201, 169, 98, ${p.alpha})`;
+            ctx.fill();
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const q = particles[j];
+                const dx = p.x - q.x;
+                const dy = p.y - q.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(q.x, q.y);
+                    ctx.strokeStyle = `rgba(122, 143, 168, ${0.08 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        });
+
+        animId = requestAnimationFrame(draw);
+    }
+
+    resize();
+    createParticles();
+    draw();
+
+    window.addEventListener('resize', () => {
+        resize();
+        createParticles();
+    });
+
+    return () => cancelAnimationFrame(animId);
+}
+
+// ============================================
+// PREMIUM: CUSTOM CURSOR
+// ============================================
+
+function initCustomCursor() {
+    if (window.matchMedia('(max-width: 1024px), (hover: none)').matches) return;
+
+    const dot = document.querySelector('.cursor-dot');
+    const ring = document.querySelector('.cursor-ring');
+    if (!dot || !ring) return;
+
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        dot.style.left = mx + 'px';
+        dot.style.top = my + 'px';
+    });
+
+    function animateRing() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top = ry + 'px';
+        requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    const hoverTargets = 'a, button, .card-3d, .project-card-advanced, .stat-card, .skill-orb, .magnetic, input, textarea';
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(hoverTargets)) ring.classList.add('hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(hoverTargets)) ring.classList.remove('hover');
+    });
+}
+
+// ============================================
+// PREMIUM: SCROLL PROGRESS & NAV
+// ============================================
+
+function initScrollProgress() {
+    const bar = document.getElementById('scroll-progress');
+    const nav = document.querySelector('.site-nav');
+    const scrollTopBtn = document.getElementById('scroll-to-top');
+
+    function onScroll() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+        if (bar) bar.style.width = progress + '%';
+        if (nav) nav.classList.toggle('scrolled', scrollTop > 40);
+        if (scrollTopBtn) {
+            scrollTopBtn.classList.toggle('hidden', scrollTop < 400);
+            scrollTopBtn.classList.toggle('visible', scrollTop >= 400);
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+}
+
+// ============================================
+// PREMIUM: 3D PROFILE CARD TILT
+// ============================================
+
+function initProfile3D() {
+    const card = document.getElementById('profile-3d');
+    const scene = document.querySelector('.profile-scene');
+    if (!card || !scene || !window.matchMedia('(hover: hover)').matches) return;
+
+    scene.addEventListener('mousemove', (e) => {
+        const rect = scene.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const rotateY = x * 18;
+        const rotateX = -y * 18;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+    });
+
+    scene.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        setTimeout(() => { card.style.transition = 'transform 0.1s linear'; }, 600);
+    });
+}
+
+// ============================================
+// PREMIUM: MAGNETIC BUTTONS
+// ============================================
+
+function initMagneticElements() {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+        });
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+        });
+    });
+}
+
+// ============================================
+// PREMIUM: SKILL BAR REVEAL
+// ============================================
+
+function initSkillBars() {
+    const bars = document.querySelectorAll('.skill-bar');
+    if (!bars.length) return;
+
+    const barObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const bar = entry.target;
+                const width = bar.style.width;
+                bar.style.width = '0';
+                requestAnimationFrame(() => {
+                    bar.style.width = width;
+                });
+                barObserver.unobserve(bar);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    bars.forEach(bar => barObserver.observe(bar));
+}
+
+// ============================================
 // INIT FUNCTION
 // ============================================
 
 function init() {
-    console.log('Portfolio website initialized successfully! 🚀');
     updateActiveNavLink();
     initCardTilt();
     initInteractiveChart();
+    initParticleCanvas();
+    initCustomCursor();
+    initScrollProgress();
+    initProfile3D();
+    initMagneticElements();
+    initSkillBars();
 }
 
 document.addEventListener('DOMContentLoaded', init);

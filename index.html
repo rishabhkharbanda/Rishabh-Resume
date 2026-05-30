@@ -4,29 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Senior Marketing Analyst & Data Strategist - Transforming complex data into growth strategies.">
-    <meta name="theme-color" content="#0F172A">
+    <meta name="theme-color" content="#030304">
     <meta name="og:title" content="Rishabh Kharbanda - Senior Marketing Analyst">
     <meta name="og:description" content="Data-driven growth strategist with 4+ years of experience in performance marketing and analytics.">
-    <title>Rishabh Kharbanda - Senior Marketing Analyst & Data Strategist</title>
+    <title>Rishabh Kharbanda — Senior Marketing Analyst & Data Strategist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css"/>
-    <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="overflow-x-hidden" style="background-color: #0F172A; color: #F8FAFC;" data-theme="dark">
-    <!-- Animated Background with Canvas -->
-    <div id="background-canvas" class="fixed inset-0 -z-10 overflow-hidden pointer-events-none"></div>
-    
-    <!-- Floating BG Elements -->
-    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-blob"></div>
-        <div class="absolute bottom-1/2 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-blob" style="animation-delay: 2s;"></div>
-        <div class="absolute -bottom-32 left-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-blob" style="animation-delay: 4s;"></div>
-        <div class="absolute top-1/3 right-0 w-72 h-72 bg-pink-500/5 rounded-full blur-3xl animate-blob" style="animation-delay: 6s;"></div>
-    </div>
+<body class="overflow-x-hidden custom-cursor" data-theme="dark">
+    <div id="scroll-progress"></div>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="ambient-glow ambient-glow--gold"></div>
+    <div class="ambient-glow ambient-glow--steel"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
 
     <!-- Theme Switcher & Controls -->
     <div class="fixed top-24 right-4 z-40 flex items-center gap-3">
@@ -39,8 +33,8 @@
     </div>
     
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full h-16 backdrop-blur-2xl border-b border-gray-800/50 z-50 bg-slate-900/80" role="navigation" aria-label="Main navigation">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+    <nav class="site-nav fixed top-0 w-full z-50" role="navigation" aria-label="Main navigation">
+        <div class="nav-inner w-full">
             <!-- Logo with advanced hover -->
             <div class="flex items-center gap-3 cursor-pointer group">
                 <div class="nav-logo">
@@ -77,8 +71,8 @@
                     <a href="#skills" class="mobile-nav-link" data-section="skills"><span>Skills</span></a>
                     <a href="#projects" class="mobile-nav-link" data-section="projects"><span>Projects</span></a>
                     <div class="pt-4 mt-4 border-t border-gray-700/50">
-                        <a href="#contact" class="mobile-nav-link bg-gradient-to-r from-blue-500 to-purple-600 text-white" data-section="contact">
-                            <span>📧 Get In Touch</span>
+                        <a href="#contact" class="mobile-nav-link" data-section="contact">
+                            <span>Get In Touch</span>
                         </a>
                     </div>
                 </div>
@@ -86,111 +80,85 @@
         </div>
     </nav>         
     
-    <!-- Hero Section with 3D Effects -->
+    <!-- Hero Section -->
     <section id="home" class="min-h-screen hero-bg relative flex items-center overflow-hidden pt-20" data-scroll>
-        <div class="floating-shapes">
-            <div class="shape w-32 h-32 bg-white rounded-full blob-animation"></div>
-            <div class="shape w-24 h-24 bg-white rounded-lg transform rotate-45 blob-animation" style="animation-delay: 1s;"></div>
-            <div class="shape w-20 h-20 bg-white rounded-full blob-animation" style="animation-delay: 2s;"></div>
-        </div>
-        
+        <div class="hero-grid-lines"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="text-white fade-in-up">
-                    <!-- Status Badge with pulse -->
-                    <div class="inline-flex items-center bg-white/20 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-pointer group status-badge">
-                        <div class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></div>
-                        <span class="text-sm font-semibold">Open for opportunities</span>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-in-up">
+                    <div class="inline-flex items-center gap-3 status-badge mb-10">
+                        <div class="status-dot"></div>
+                        <span>Available for opportunities</span>
                     </div>
-                    
-                    <!-- Main Heading with staggered animation -->
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight word-rotate">
-                        Hi, I'm <br>
-                        <span class="typewriter gradient-text">Rishabh</span>
+
+                    <p class="section-number mb-4">01 / Introduction</p>
+
+                    <h1 class="hero-title font-display mb-6">
+                        Rishabh<br>
+                        <span class="hero-name">Kharbanda</span>
                     </h1>
-                    
-                    <h2 class="text-xl sm:text-2xl lg:text-3xl font-light mb-6 text-white/90 leading-relaxed">
-                        Senior Marketing Analyst & Data Strategist
-                    </h2>
-                    
-                    <p class="text-lg sm:text-xl mb-8 text-white/80 leading-relaxed max-w-lg">
-                        Transforming complex data into growth strategies that drive real business impact. 4+ years of turning insights into results.
+
+                    <p class="hero-subtitle mb-6">Senior Marketing Analyst &amp; Data Strategist</p>
+
+                    <p class="hero-desc mb-10">
+                        Transforming complex data into growth strategies that drive measurable business impact — across performance marketing, user analytics, and executive decision-making.
                     </p>
-                    
-                    <!-- Advanced Stats with counter animation -->
-                    <div class="grid grid-cols-3 gap-4 sm:gap-6 mb-10 stat-cards">
-                        <div class="stat-card group" data-stat="17%">
-                            <div class="stat-content">
-                                <div class="stats-counter text-2xl sm:text-3xl font-bold text-green-400 group-hover:text-green-300">17%</div>
-                                <div class="text-xs sm:text-sm text-white/70 mt-2">CAC Reduction</div>
-                            </div>
+
+                    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-10 stat-cards stagger-children">
+                        <div class="stat-card" data-stat="17%">
+                            <div class="stats-counter">17%</div>
+                            <div class="text-xs mt-2">CAC Reduction</div>
                         </div>
-                        <div class="stat-card group" data-stat="70%">
-                            <div class="stat-content">
-                                <div class="stats-counter text-2xl sm:text-3xl font-bold text-blue-400 group-hover:text-blue-300">70%</div>
-                                <div class="text-xs sm:text-sm text-white/70 mt-2">Sales Growth</div>
-                            </div>
+                        <div class="stat-card" data-stat="70%">
+                            <div class="stats-counter">70%</div>
+                            <div class="text-xs mt-2">Sales Growth</div>
                         </div>
-                        <div class="stat-card group" data-stat="5+">
-                            <div class="stat-content">
-                                <div class="stats-counter text-2xl sm:text-3xl font-bold text-purple-400 group-hover:text-purple-300">5+</div>
-                                <div class="text-xs sm:text-sm text-white/70 mt-2">Years Experience</div>
-                            </div>
+                        <div class="stat-card" data-stat="5+">
+                            <div class="stats-counter">5+</div>
+                            <div class="text-xs mt-2">Years Experience</div>
                         </div>
                     </div>
-                    
-                    <!-- CTA Buttons with advanced effects -->
+
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#contact" class="btn-gradient px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-white text-center hover:scale-105 transition-transform duration-300 relative overflow-hidden group">
-                            <span class="relative z-10 flex items-center justify-center gap-2">
-                                Let's Connect <i class="fas fa-rocket"></i>
-                            </span>
+                        <a href="#contact" class="btn-gradient magnetic px-8 py-4 text-center">
+                            <span class="flex items-center justify-center gap-2">Start a Conversation <i class="fas fa-arrow-right text-sm"></i></span>
                         </a>
-                        <a href="#projects" class="border-2 border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-white/10 transition-all duration-300 text-center backdrop-blur-md group relative">
-                            <span class="flex items-center justify-center gap-2">
-                                View My Work <i class="fas fa-arrow-down"></i>
-                            </span>
+                        <a href="#projects" class="btn-outline magnetic">
+                            View Portfolio <i class="fas fa-arrow-down text-xs"></i>
                         </a>
                     </div>
                 </div>
-                
-                <!-- 3D Profile Avatar with advanced effects -->
-                <div class="flex justify-center scale-in hidden sm:flex group">
-                    <div class="profile-container 3d-perspective">
-                        <div class="profile-ring ring-1"></div>
-                        <div class="profile-ring ring-2"></div>
-                        <div class="profile-ring ring-3"></div>
-                        <div class="profile-avatar cursor-pointer group-hover:shadow-2xl transition-all duration-500 overflow-hidden">
-                            <img src="avatar.png" alt="Rishabh Kharbanda" class="w-full h-full object-cover" />
+
+                <div class="profile-scene scale-in hidden sm:block">
+                    <div class="profile-card-3d" id="profile-3d">
+                        <div class="profile-glow-ring"></div>
+                        <div class="profile-frame">
+                            <img src="avatar.png" alt="Rishabh Kharbanda — Senior Marketing Analyst" />
+                            <div class="profile-shine"></div>
+                            <div class="profile-meta">
+                                <span>Based in Hyderabad</span>
+                                <p>Data-Driven Growth</p>
+                            </div>
                         </div>
-                        
-                        <!-- Floating particles with advanced physics -->
-                        <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
-                        <div class="particle" style="top: 30%; right: 10%; animation-delay: 1s;"></div>
-                        <div class="particle" style="bottom: 20%; left: 30%; animation-delay: 2s;"></div>
-                        <div class="particle" style="bottom: 40%; right: 20%; animation-delay: 3s;"></div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
-            <div class="text-white/50 text-center">
-                <p class="text-xs mb-2 tracking-widest">SCROLL DOWN</p>
-                <svg class="w-6 h-6 mx-auto text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-            </div>
-        </div>
+
+        <a href="#about" class="scroll-indicator" aria-label="Scroll to about section">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </a>
     </section>
 
     <!-- About Section with advanced cards -->
     <section id="about" class="py-20 section-bg bg-gray-800 relative overflow-hidden" data-scroll>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-4 py-2 bg-blue-500/20 rounded-full text-sm font-semibold text-blue-300 mb-4">GET TO KNOW ME</span>
-                <h2 class="text-4xl sm:text-5xl font-bold gradient-text mb-6">About Me</h2>
+                <p class="section-number mb-3">02 / About</p>
+                <span class="section-label">Profile</span>
+                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">About Me</h2>
                 <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
                     Senior Marketing Analyst passionate about turning data into growth strategies that create real business impact.
                 </p>
@@ -235,6 +203,12 @@
                         </div>
                         
                         <svg viewBox="0 0 500 250" class="w-full h-64">
+                            <defs>
+                                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#e2cf98"/>
+                                    <stop offset="100%" stop-color="#4a6d8c"/>
+                                </linearGradient>
+                            </defs>
                             <!-- Grid lines -->
                             <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
                                 <line x1="50" y1="200" x2="500" y2="200" />
@@ -244,11 +218,11 @@
                             </g>
                             
                             <!-- Animated bars -->
-                            <rect x="80" y="100" width="40" height="100" fill="#ff6b6b" class="chart-bar-advanced"/>
-                            <rect x="140" y="50" width="40" height="150" fill="#4ecdc4" class="chart-bar-advanced" style="animation-delay: 0.1s;"/>
-                            <rect x="200" y="80" width="40" height="120" fill="#45b7d1" class="chart-bar-advanced" style="animation-delay: 0.2s;"/>
-                            <rect x="260" y="30" width="40" height="170" fill="#96ceb4" class="chart-bar-advanced" style="animation-delay: 0.3s;"/>
-                            <rect x="320" y="70" width="40" height="130" fill="#feca57" class="chart-bar-advanced" style="animation-delay: 0.4s;"/>
+                            <rect x="80" y="100" width="40" height="100" fill="url(#barGradient)" class="chart-bar-advanced"/>
+                            <rect x="140" y="50" width="40" height="150" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.1s;"/>
+                            <rect x="200" y="80" width="40" height="120" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.2s;"/>
+                            <rect x="260" y="30" width="40" height="170" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.3s;"/>
+                            <rect x="320" y="70" width="40" height="130" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.4s;"/>
                             
                             <!-- Labels -->
                             <text x="100" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">CAC</text>
@@ -302,8 +276,9 @@
     <section id="experience" class="py-20 bg-gray-900 relative overflow-hidden" data-scroll>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-4 py-2 bg-purple-500/20 rounded-full text-sm font-semibold text-purple-300 mb-4">CAREER PATH</span>
-                <h2 class="text-4xl sm:text-5xl font-bold gradient-text mb-6">Professional Journey</h2>
+                <p class="section-number mb-3">03 / Experience</p>
+                <span class="section-label">Career</span>
+                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Professional Journey</h2>
                 <p class="text-lg sm:text-xl text-gray-300">My path in data-driven marketing and analytics</p>
             </div>
 
@@ -504,8 +479,9 @@
     <section id="skills" class="py-20 section-bg bg-gray-800 relative overflow-hidden" data-scroll>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-4 py-2 bg-cyan-500/20 rounded-full text-sm font-semibold text-cyan-300 mb-4">EXPERTISE</span>
-                <h2 class="text-4xl sm:text-5xl font-bold gradient-text mb-6">Technical Arsenal</h2>
+                <p class="section-number mb-3">04 / Skills</p>
+                <span class="section-label">Expertise</span>
+                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Technical Arsenal</h2>
                 <p class="text-lg sm:text-xl text-gray-300">Tools and technologies I master to drive data-driven decisions</p>
             </div>
             
@@ -648,14 +624,15 @@
     <section id="projects" class="py-20 bg-gray-900 relative overflow-hidden" data-scroll>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-4 py-2 bg-green-500/20 rounded-full text-sm font-semibold text-green-300 mb-4">PORTFOLIO</span>
-                <h2 class="text-4xl sm:text-5xl font-bold gradient-text mb-6">Featured Projects</h2>
+                <p class="section-number mb-3">05 / Projects</p>
+                <span class="section-label">Portfolio</span>
+                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Featured Projects</h2>
                 <p class="text-lg sm:text-xl text-gray-300">Data-driven initiatives that delivered measurable business impact</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Project 1 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #ef4444;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #c9a962;">
                     <div class="project-icon">
                         <i class="fas fa-chart-line text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -673,7 +650,7 @@
                 </div>
                 
                 <!-- Project 2 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #3b82f6; animation-delay: 0.1s;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #a8bdd4; animation-delay: 0.1s;">
                     <div class="project-icon">
                         <i class="fas fa-users text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -691,7 +668,7 @@
                 </div>
                 
                 <!-- Project 3 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #10b981; animation-delay: 0.2s;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #8b9cb3; animation-delay: 0.2s;">
                     <div class="project-icon">
                         <i class="fas fa-shopping-cart text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -709,7 +686,7 @@
                 </div>
                 
                 <!-- Project 4 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #f59e0b; animation-delay: 0.3s;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #e2cf98; animation-delay: 0.3s;">
                     <div class="project-icon">
                         <i class="fas fa-chart-bar text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -727,7 +704,7 @@
                 </div>
                 
                 <!-- Project 5 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #a855f7; animation-delay: 0.4s;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #7a8fa8; animation-delay: 0.4s;">
                     <div class="project-icon">
                         <i class="fas fa-trophy text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -745,7 +722,7 @@
                 </div>
                 
                 <!-- Project 6 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #06b6d4; animation-delay: 0.5s;">
+                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #4a6d8c; animation-delay: 0.5s;">
                     <div class="project-icon">
                         <i class="fas fa-robot text-white text-lg sm:text-2xl"></i>
                     </div>
@@ -767,17 +744,12 @@
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 hero-bg relative overflow-hidden" data-scroll>
-        <div class="floating-shapes">
-            <div class="shape w-20 h-20 bg-white rounded-full blob-animation"></div>
-            <div class="shape w-16 h-16 bg-white rounded-lg transform rotate-45 blob-animation" style="animation-delay: 1s;"></div>
-            <div class="shape w-12 h-12 bg-white rounded-full blob-animation" style="animation-delay: 2s;"></div>
-        </div>
-        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16 fade-in-up">
-                <span class="inline-block px-4 py-2 bg-red-500/20 rounded-full text-sm font-semibold text-red-300 mb-4">LET'S CONNECT</span>
-                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6">Let's Create Something Amazing</h2>
-                <p class="text-lg sm:text-xl text-white/80">Ready to discuss data-driven marketing strategies that drive real results?</p>
+                <p class="section-number mb-3">06 / Contact</p>
+                <span class="section-label">Connect</span>
+                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Let's Work Together</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">Ready to discuss data-driven marketing strategies that deliver measurable results.</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
@@ -874,8 +846,8 @@
     <footer class="bg-gray-900 border-t border-gray-700 py-12 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center fade-in-up">
-                <h3 class="text-2xl sm:text-3xl font-bold text-yellow-500 mb-4">Rishabh Kharbanda</h3>
-                <p class="text-gray-400 mb-8 text-base sm:text-lg">Senior Marketing Analyst • Data-Driven Growth Strategist</p>
+                <h3 class="text-2xl sm:text-3xl font-display mb-4">Rishabh Kharbanda</h3>
+                <p class="text-gray-400 mb-8 text-base sm:text-lg">Senior Marketing Analyst · Data-Driven Growth Strategist</p>
                 
                 <div class="flex justify-center gap-3 sm:gap-6 mb-8 flex-wrap">
                     <a href="https://www.linkedin.com/in/rishabh-kharbanda-7a3659209" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn">
