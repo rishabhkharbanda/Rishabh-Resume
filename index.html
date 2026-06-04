@@ -1,873 +1,1422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Senior Marketing Analyst & Data Strategist - Transforming complex data into growth strategies.">
-    <meta name="theme-color" content="#030304">
-    <meta name="og:title" content="Rishabh Kharbanda - Senior Marketing Analyst">
-    <meta name="og:description" content="Data-driven growth strategist with 4+ years of experience in performance marketing and analytics.">
-    <title>Rishabh Kharbanda — Senior Marketing Analyst & Data Strategist</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="styles.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rishabh Kharbanda — Senior Marketing Analyst & Data Strategist. Transforming data into growth strategies.">
+  <title>Rishabh Kharbanda — Senior Marketing Analyst & Data Strategist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=Syne:wght@800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-cream: #FFF9F0;
+      --clay-mint: #B5EAD7;
+      --clay-peach: #FFDAC1;
+      --clay-lavender: #C7CEEA;
+      --clay-sky: #B5D8F7;
+      --clay-coral: #FFB7B2;
+      --text-dark: #2D2A32;
+      --text-muted: #6B6570;
+      --shadow-1: #DFC5F0;
+      --shadow-2: #CBAEE0;
+      --clay-shadow: 6px 6px 0 var(--shadow-1), 12px 12px 0 var(--shadow-2);
+      --clay-shadow-hover: 8px 8px 0 var(--shadow-1), 16px 16px 0 var(--shadow-2);
+      --clay-shadow-sm: 4px 4px 0 var(--shadow-1), 8px 8px 0 var(--shadow-2);
+      --radius-card: 32px;
+      --radius-pill: 50px;
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --nav-height: 80px;
+      --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      background: var(--bg-cream);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Clay card base ── */
+    .clay-card {
+      background: #fff;
+      border-radius: var(--radius-card);
+      box-shadow: var(--clay-shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .clay-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--clay-shadow-hover);
+    }
+
+    /* ── Animations ── */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .float { animation: float 3s ease-in-out infinite; }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Background blobs ── */
+    .blob-bg {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      z-index: 1000;
+      background: rgba(255, 249, 240, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(223, 197, 240, 0.4);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 249, 240, 0.92);
+      box-shadow: 0 4px 24px rgba(203, 174, 224, 0.25);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .nav-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--clay-lavender);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      box-shadow: var(--clay-shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .nav-logo:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--clay-shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-pill {
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: var(--clay-sky);
+      color: var(--text-dark);
+      box-shadow: 3px 3px 0 var(--shadow-1), 6px 6px 0 var(--shadow-2);
+      transition: transform var(--transition), box-shadow var(--transition), background 0.3s;
+    }
+
+    .nav-pill:hover, .nav-pill.active {
+      transform: translateY(-3px);
+      box-shadow: 5px 5px 0 var(--shadow-1), 10px 10px 0 var(--shadow-2);
+      background: var(--clay-mint);
+    }
+
+    .nav-cta {
+      background: var(--clay-coral);
+      font-weight: 500;
+    }
+
+    .nav-cta:hover { background: #ffa8a2; }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: var(--clay-peach);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 12px 14px;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-sm);
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-dark);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    .menu-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; }
+    .menu-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(255, 249, 240, 0.97);
+      backdrop-filter: blur(20px);
+      padding: 1.5rem;
+      border-bottom: 2px solid rgba(223, 197, 240, 0.4);
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.75rem;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--clay-shadow-hover);
+    }
+
+    .btn-primary { background: var(--clay-coral); color: var(--text-dark); }
+    .btn-secondary { background: var(--clay-mint); color: var(--text-dark); }
+
+    /* ── Section shared ── */
+    section {
+      position: relative;
+      padding: 6rem 0;
+      overflow: hidden;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: var(--radius-pill);
+      background: var(--clay-lavender);
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      box-shadow: 3px 3px 0 var(--shadow-1);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+    }
+
+    /* ── Hero ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: var(--nav-height);
+    }
+
+    .hero-blobs .blob-bg:nth-child(1) {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, var(--clay-mint) 0%, transparent 70%);
+      top: -80px; right: -100px;
+    }
+
+    .hero-blobs .blob-bg:nth-child(2) {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, var(--clay-peach) 0%, transparent 70%);
+      bottom: 10%; left: -80px;
+    }
+
+    .hero-blobs .blob-bg:nth-child(3) {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, var(--clay-lavender) 0%, transparent 70%);
+      top: 40%; right: 20%;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-role {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .metric-badge {
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-pill);
+      font-weight: 500;
+      font-size: 0.85rem;
+      box-shadow: var(--clay-shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .metric-badge:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--clay-shadow);
+    }
+
+    .metric-badge:nth-child(1) { background: var(--clay-mint); }
+    .metric-badge:nth-child(2) { background: var(--clay-peach); }
+    .metric-badge:nth-child(3) { background: var(--clay-sky); }
+
+    .metric-badge strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+    }
+
+    .hero-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .avatar-blob {
+      position: relative;
+      width: 320px;
+      height: 340px;
+      background: var(--clay-lavender);
+      border-radius: 45% 55% 52% 48% / 48% 45% 55% 52%;
+      box-shadow: var(--clay-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar-blob img {
+      width: 85%;
+      height: 85%;
+      object-fit: cover;
+      border-radius: 45% 55% 52% 48% / 48% 45% 55% 52%;
+    }
+
+    /* ── About ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text {
+      padding: 2.5rem;
+    }
+
+    .about-text h3 {
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-size: 1.02rem;
+    }
+
+    .competency-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .competency-card {
+      padding: 1.75rem;
+      text-align: center;
+    }
+
+    .competency-card:nth-child(1) .icon-circle { background: var(--clay-coral); }
+    .competency-card:nth-child(2) .icon-circle { background: var(--clay-sky); }
+    .competency-card:nth-child(3) .icon-circle { background: var(--clay-mint); }
+    .competency-card:nth-child(4) .icon-circle { background: var(--clay-peach); }
+
+    .icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 3px 3px 0 var(--shadow-1);
+    }
+
+    .icon-circle svg { width: 26px; height: 26px; }
+
+    .competency-card h4 {
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .competency-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Experience timeline ── */
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--clay-lavender), var(--clay-mint), var(--clay-sky));
+      border-radius: 4px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 64px;
+      margin-bottom: 2.5rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 12px;
+      top: 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--clay-coral);
+      box-shadow: 3px 3px 0 var(--shadow-1);
+      z-index: 1;
+    }
+
+    .timeline-item:nth-child(2) .timeline-dot { background: var(--clay-mint); }
+    .timeline-item:nth-child(3) .timeline-dot { background: var(--clay-sky); }
+
+    .exp-card { padding: 2rem; }
+
+    .exp-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .exp-header h3 { font-size: 1.35rem; }
+
+    .exp-company {
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .exp-date {
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-pill);
+      background: var(--clay-lavender);
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 2px 2px 0 var(--shadow-1);
+      white-space: nowrap;
+    }
+
+    .exp-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .exp-badge {
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 500;
+      box-shadow: 2px 2px 0 var(--shadow-1);
+    }
+
+    .exp-badge:nth-child(odd) { background: var(--clay-peach); }
+    .exp-badge:nth-child(even) { background: var(--clay-mint); }
+
+    /* ── Skills ── */
+    .tools-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+      margin: 2.5rem 0 3rem;
+    }
+
+    .tool-token {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-align: center;
+      box-shadow: var(--clay-shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .tool-token:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--clay-shadow);
+    }
+
+    .tool-token svg { width: 28px; height: 28px; }
+
+    .tool-token:nth-child(1) { background: var(--clay-coral); }
+    .tool-token:nth-child(2) { background: var(--clay-sky); }
+    .tool-token:nth-child(3) { background: var(--clay-mint); }
+    .tool-token:nth-child(4) { background: var(--clay-peach); }
+    .tool-token:nth-child(5) { background: var(--clay-lavender); }
+    .tool-token:nth-child(6) { background: var(--clay-sky); }
+
+    .skills-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .blob-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 2rem;
+    }
+
+    .blob-tag {
+      padding: 0.65rem 1.25rem;
+      border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 3px 3px 0 var(--shadow-1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+
+    .blob-tag:hover {
+      transform: rotate(2deg) translateY(-4px);
+      box-shadow: 5px 5px 0 var(--shadow-1);
+    }
+
+    .blob-tag:nth-child(odd):hover { transform: rotate(-2deg) translateY(-4px); }
+
+    .blob-tag:nth-child(1) { background: var(--clay-mint); }
+    .blob-tag:nth-child(2) { background: var(--clay-peach); }
+    .blob-tag:nth-child(3) { background: var(--clay-lavender); }
+    .blob-tag:nth-child(4) { background: var(--clay-sky); }
+    .blob-tag:nth-child(5) { background: var(--clay-coral); }
+
+    .certs-grid {
+      display: grid;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .cert-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .cert-card:nth-child(1) { background: var(--clay-sky); border-radius: 36px; }
+    .cert-card:nth-child(2) { background: var(--clay-mint); border-radius: 38px 32px 36px 34px; }
+
+    .cert-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0 var(--shadow-1);
+      flex-shrink: 0;
+    }
+
+    .cert-card h4 { font-size: 1rem; margin-bottom: 0.15rem; }
+    .cert-card p { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .project-card {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-bubble {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      box-shadow: 3px 3px 0 var(--shadow-1);
+    }
+
+    .project-card:nth-child(1) .project-bubble { background: var(--clay-coral); }
+    .project-card:nth-child(2) .project-bubble { background: var(--clay-lavender); }
+    .project-card:nth-child(3) .project-bubble { background: var(--clay-mint); }
+    .project-card:nth-child(4) .project-bubble { background: var(--clay-peach); }
+    .project-card:nth-child(5) .project-bubble { background: var(--clay-sky); }
+    .project-card:nth-child(6) .project-bubble { background: var(--clay-coral); }
+
+    .project-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card .desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .tag-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag-chip {
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.7rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 2px 2px 0 var(--shadow-1);
+    }
+
+    .project-metric {
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      text-align: center;
+      box-shadow: 3px 3px 0 var(--shadow-1);
+      align-self: flex-start;
+    }
+
+    .project-card:nth-child(1) .project-metric { background: var(--clay-mint); }
+    .project-card:nth-child(2) .project-metric { background: var(--clay-peach); }
+    .project-card:nth-child(3) .project-metric { background: var(--clay-sky); }
+    .project-card:nth-child(4) .project-metric { background: var(--clay-lavender); }
+    .project-card:nth-child(5) .project-metric { background: var(--clay-coral); }
+    .project-card:nth-child(6) .project-metric { background: var(--clay-mint); }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-top: 3rem;
+    }
+
+    .contact-info { display: flex; flex-direction: column; gap: 1rem; }
+
+    .info-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .info-card:nth-child(1) { background: var(--clay-peach); border-radius: 34px; }
+    .info-card:nth-child(2) { background: var(--clay-mint); border-radius: 36px 30px 34px 32px; }
+    .info-card:nth-child(3) { background: var(--clay-sky); border-radius: 32px 36px 30px 34px; }
+
+    .info-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0 var(--shadow-1);
+      flex-shrink: 0;
+    }
+
+    .info-card h4 { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; font-family: var(--font-body); }
+    .info-card p { font-weight: 500; font-size: 0.95rem; }
+
+    .linkedin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-pill);
+      background: var(--clay-lavender);
+      font-weight: 500;
+      box-shadow: var(--clay-shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+      width: fit-content;
+    }
+
+    .linkedin-btn:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--clay-shadow);
+    }
+
+    .contact-form {
+      padding: 2.5rem;
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.9rem 1.25rem;
+      border: 3px solid transparent;
+      border-radius: 28px;
+      background: #fff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      box-shadow: inset 0 0 0 2px var(--clay-lavender), 3px 3px 0 var(--shadow-1);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--clay-mint);
+      box-shadow: inset 0 0 0 2px var(--clay-mint), 5px 5px 0 var(--shadow-1);
+    }
+
+    textarea.form-input { resize: vertical; min-height: 120px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 2px dashed rgba(203, 174, 224, 0.5);
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      top: calc(var(--nav-height) + 1rem);
+      right: 1rem;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-pill);
+      background: var(--clay-mint);
+      box-shadow: var(--clay-shadow);
+      font-weight: 500;
+      font-size: 0.9rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .toast.error { background: var(--clay-coral); }
+
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+      .hero-grid, .about-grid, .skills-section, .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .hero-visual { order: -1; }
+
+      .avatar-blob { width: 260px; height: 280px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+
+      .menu-toggle { display: flex; }
+
+      .projects-grid { grid-template-columns: 1fr; }
+
+      .competency-grid { grid-template-columns: 1fr; }
+
+      .form-row { grid-template-columns: 1fr; }
+
+      section { padding: 4rem 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .fade-in { opacity: 1; transform: none; }
+    }
+  </style>
 </head>
-<body class="overflow-x-hidden custom-cursor" data-theme="dark">
-    <div id="scroll-progress"></div>
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    <div class="ambient-glow ambient-glow--gold"></div>
-    <div class="ambient-glow ambient-glow--steel"></div>
-    <div class="cursor-dot" aria-hidden="true"></div>
-    <div class="cursor-ring" aria-hidden="true"></div>
+<body>
 
-    <!-- Theme Switcher & Controls -->
-    <div class="fixed top-24 right-4 z-40 flex items-center gap-3">
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle theme">
-            <i class="fas fa-moon"></i>
-        </button>
-        <button id="scroll-to-top" class="scroll-to-top-btn hidden" aria-label="Scroll to top" title="Back to top">
-            <i class="fas fa-arrow-up"></i>
-        </button>
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="nav-logo" aria-label="Home">RK</a>
+      <div class="nav-links">
+        <a href="#home" class="nav-pill active" data-section="home">Home</a>
+        <a href="#about" class="nav-pill" data-section="about">About</a>
+        <a href="#experience" class="nav-pill" data-section="experience">Experience</a>
+        <a href="#skills" class="nav-pill" data-section="skills">Skills</a>
+        <a href="#projects" class="nav-pill" data-section="projects">Projects</a>
+        <a href="#contact" class="nav-pill nav-cta" data-section="contact">Get In Touch</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    
-    <!-- Navigation -->
-    <nav class="site-nav fixed top-0 w-full z-50" role="navigation" aria-label="Main navigation">
-        <div class="nav-inner w-full">
-            <!-- Logo with advanced hover -->
-            <div class="flex items-center gap-3 cursor-pointer group">
-                <div class="nav-logo">
-                    <div class="logo-inner">RK</div>
-                </div>
-                <h1 class="text-xl font-bold gradient-text hidden sm:block">Rishabh Kharbanda</h1>
-            </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#home" class="nav-pill">Home</a>
+      <a href="#about" class="nav-pill">About</a>
+      <a href="#experience" class="nav-pill">Experience</a>
+      <a href="#skills" class="nav-pill">Skills</a>
+      <a href="#projects" class="nav-pill">Projects</a>
+      <a href="#contact" class="nav-pill nav-cta">Get In Touch</a>
+    </div>
+  </nav>
 
-            <!-- Desktop Menu with indicators -->
-            <div class="hidden lg:flex items-center space-x-1">
-                <a href="#home" class="nav-link" data-section="home">Home</a>
-                <a href="#about" class="nav-link" data-section="about">About</a>
-                <a href="#experience" class="nav-link" data-section="experience">Experience</a>
-                <a href="#skills" class="nav-link" data-section="skills">Skills</a>
-                <a href="#projects" class="nav-link" data-section="projects">Projects</a>
-                <a href="#contact" class="nav-link-cta" data-section="contact">Contact</a>
-            </div>
-
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="lg:hidden mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
+  <!-- Hero -->
+  <section id="home">
+    <div class="hero-blobs">
+      <div class="blob-bg"></div>
+      <div class="blob-bg"></div>
+      <div class="blob-bg"></div>
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-content fade-in">
+        <h1>Rishabh Kharbanda</h1>
+        <p class="hero-role">Senior Marketing Analyst &amp; Data Strategist</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary">Start a Conversation</a>
+          <a href="#projects" class="btn btn-secondary">View Portfolio</a>
         </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-slate-900/98 backdrop-blur-2xl border-b border-gray-800/50 shadow-2xl">
-            <div class="max-w-7xl mx-auto px-6 py-6">
-                <div class="space-y-2">
-                    <a href="#home" class="mobile-nav-link" data-section="home"><span>Home</span></a>
-                    <a href="#about" class="mobile-nav-link" data-section="about"><span>About</span></a>
-                    <a href="#experience" class="mobile-nav-link" data-section="experience"><span>Experience</span></a>
-                    <a href="#skills" class="mobile-nav-link" data-section="skills"><span>Skills</span></a>
-                    <a href="#projects" class="mobile-nav-link" data-section="projects"><span>Projects</span></a>
-                    <div class="pt-4 mt-4 border-t border-gray-700/50">
-                        <a href="#contact" class="mobile-nav-link" data-section="contact">
-                            <span>Get In Touch</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="hero-metrics">
+          <div class="metric-badge"><strong>17%</strong> CAC Reduction</div>
+          <div class="metric-badge"><strong>70%</strong> Sales Growth</div>
+          <div class="metric-badge"><strong>5+</strong> Years</div>
         </div>
-    </nav>         
-    
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen hero-bg relative flex items-center overflow-hidden pt-20" data-scroll>
-        <div class="hero-grid-lines"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="fade-in-up">
-                    <div class="inline-flex items-center gap-3 status-badge mb-10">
-                        <div class="status-dot"></div>
-                        <span>Available for opportunities</span>
-                    </div>
-
-                    <p class="section-number mb-4">01 / Introduction</p>
-
-                    <h1 class="hero-title font-display mb-6">
-                        Rishabh<br>
-                        <span class="hero-name">Kharbanda</span>
-                    </h1>
-
-                    <p class="hero-subtitle mb-6">Senior Marketing Analyst &amp; Data Strategist</p>
-
-                    <p class="hero-desc mb-10">
-                        Transforming complex data into growth strategies that drive measurable business impact — across performance marketing, user analytics, and executive decision-making.
-                    </p>
-
-                    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-10 stat-cards stagger-children">
-                        <div class="stat-card" data-stat="17%">
-                            <div class="stats-counter">17%</div>
-                            <div class="text-xs mt-2">CAC Reduction</div>
-                        </div>
-                        <div class="stat-card" data-stat="70%">
-                            <div class="stats-counter">70%</div>
-                            <div class="text-xs mt-2">Sales Growth</div>
-                        </div>
-                        <div class="stat-card" data-stat="5+">
-                            <div class="stats-counter">5+</div>
-                            <div class="text-xs mt-2">Years Experience</div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#contact" class="btn-gradient magnetic px-8 py-4 text-center">
-                            <span class="flex items-center justify-center gap-2">Start a Conversation <i class="fas fa-arrow-right text-sm"></i></span>
-                        </a>
-                        <a href="#projects" class="btn-outline magnetic">
-                            View Portfolio <i class="fas fa-arrow-down text-xs"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="profile-scene scale-in hidden sm:block">
-                    <div class="profile-card-3d" id="profile-3d">
-                        <div class="profile-glow-ring"></div>
-                        <div class="profile-frame">
-                            <img src="avatar.png" alt="Rishabh Kharbanda — Senior Marketing Analyst" />
-                            <div class="profile-shine"></div>
-                            <div class="profile-meta">
-                                <span>Based in Hyderabad</span>
-                                <p>Data-Driven Growth</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="hero-visual fade-in">
+        <div class="avatar-blob float">
+          <img src="avatar.png" alt="Rishabh Kharbanda — Senior Marketing Analyst">
         </div>
+      </div>
+    </div>
+  </section>
 
-        <a href="#about" class="scroll-indicator" aria-label="Scroll to about section">
-            <span>Scroll</span>
-            <div class="scroll-line"></div>
-        </a>
-    </section>
-
-    <!-- About Section with advanced cards -->
-    <section id="about" class="py-20 section-bg bg-gray-800 relative overflow-hidden" data-scroll>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in-up">
-                <p class="section-number mb-3">02 / About</p>
-                <span class="section-label">Profile</span>
-                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">About Me</h2>
-                <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
-                    Senior Marketing Analyst passionate about turning data into growth strategies that create real business impact.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="slide-in-left">
-                    <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect">
-                        <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">My Journey</h3>
-                        <p class="text-base sm:text-lg text-gray-700 mb-6 leading-relaxed">
-                            As a Senior Marketing Analyst with 4+ years of experience, I focus on driving growth by turning data into impactful strategies. From optimizing campaigns and analyzing user behavior to fine-tuning spend efficiency, I've led both digital and offline initiatives that create real value.
-                        </p>
-                        
-                        <p class="text-base sm:text-lg text-gray-700 mb-8 leading-relaxed">
-                            With expertise in Tableau, Excel, and Python, I'm passionate about translating complex data into clear insights that help teams make smarter decisions and fuel business growth.
-                        </p>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="advanced-card bg-gradient-to-br from-red-50 to-pink-50 p-4 rounded-lg text-center">
-                                <i class="fas fa-map-marker-alt text-red-500 text-2xl mb-2"></i>
-                                <h4 class="font-semibold text-gray-800">Location</h4>
-                                <p class="text-gray-600 text-sm">Hyderabad, India</p>
-                            </div>
-                            <div class="advanced-card bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg text-center">
-                                <i class="fas fa-briefcase text-blue-500 text-2xl mb-2"></i>
-                                <h4 class="font-semibold text-gray-800">Experience</h4>
-                                <p class="text-gray-600 text-sm">4+ Years</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="slide-in-right">
-                    <!-- Advanced data visualization -->
-                    <div class="advanced-data-viz rounded-2xl mb-8 p-6 glass-effect" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.4), rgba(15, 23, 42, 0.4));">
-                        <h3 class="text-white text-xl font-bold text-center mb-4">Performance Metrics</h3>
-                        
-                        <!-- Interactive Metric Toggle Buttons -->
-                        <div class="flex justify-center gap-2 mb-6">
-                            <button id="btn-perf" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500 text-white shadow-lg transition-all duration-300">Growth & Efficiency</button>
-                            <button id="btn-volume" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all duration-300">Volume & Scale</button>
-                        </div>
-                        
-                        <svg viewBox="0 0 500 250" class="w-full h-64">
-                            <defs>
-                                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#e2cf98"/>
-                                    <stop offset="100%" stop-color="#4a6d8c"/>
-                                </linearGradient>
-                            </defs>
-                            <!-- Grid lines -->
-                            <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
-                                <line x1="50" y1="200" x2="500" y2="200" />
-                                <line x1="50" y1="150" x2="500" y2="150" />
-                                <line x1="50" y1="100" x2="500" y2="100" />
-                                <line x1="50" y1="50" x2="500" y2="50" />
-                            </g>
-                            
-                            <!-- Animated bars -->
-                            <rect x="80" y="100" width="40" height="100" fill="url(#barGradient)" class="chart-bar-advanced"/>
-                            <rect x="140" y="50" width="40" height="150" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.1s;"/>
-                            <rect x="200" y="80" width="40" height="120" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.2s;"/>
-                            <rect x="260" y="30" width="40" height="170" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.3s;"/>
-                            <rect x="320" y="70" width="40" height="130" fill="url(#barGradient)" class="chart-bar-advanced" style="animation-delay: 0.4s;"/>
-                            
-                            <!-- Labels -->
-                            <text x="100" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">CAC</text>
-                            <text x="160" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">Sales</text>
-                            <text x="220" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">ROI</text>
-                            <text x="280" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">Retention</text>
-                            <text x="340" y="225" text-anchor="middle" fill="#94a3b8" font-size="12">Growth</text>
-                        </svg>
-                    </div>
-                    
-                    <!-- Specializations with hover effects -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="advanced-card p-4 sm:p-6 rounded-xl text-center glass-effect">
-                            <div class="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                <i class="fas fa-chart-line text-white text-lg sm:text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-800 mb-2 text-sm sm:text-base">Performance Marketing</h4>
-                            <p class="text-gray-600 text-xs sm:text-sm">Campaign optimization</p>
-                        </div>
-                        
-                        <div class="advanced-card p-4 sm:p-6 rounded-xl text-center glass-effect">
-                            <div class="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                <i class="fas fa-users text-white text-lg sm:text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-800 mb-2 text-sm sm:text-base">User Analytics</h4>
-                            <p class="text-gray-600 text-xs sm:text-sm">Behavior analysis</p>
-                        </div>
-                        
-                        <div class="advanced-card p-4 sm:p-6 rounded-xl text-center glass-effect">
-                            <div class="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                <i class="fas fa-dollar-sign text-white text-lg sm:text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-800 mb-2 text-sm sm:text-base">Spend Management</h4>
-                            <p class="text-gray-600 text-xs sm:text-sm">Budget optimization</p>
-                        </div>
-                        
-                        <div class="advanced-card p-4 sm:p-6 rounded-xl text-center glass-effect">
-                            <div class="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                <i class="fas fa-database text-white text-lg sm:text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-800 mb-2 text-sm sm:text-base">Data Visualization</h4>
-                            <p class="text-gray-600 text-xs sm:text-sm">Tableau & Python</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="fade-in">
+        <span class="section-label">About</span>
+        <h2 class="section-title">About Me</h2>
+        <p class="section-subtitle">Senior Marketing Analyst passionate about turning data into growth strategies that create real business impact.</p>
+      </div>
+      <div class="about-grid" style="margin-top: 3rem;">
+        <div class="about-text clay-card fade-in">
+          <h3>My Journey</h3>
+          <p>As a Senior Marketing Analyst with 5+ years of experience, I focus on driving growth by turning data into impactful strategies. From optimizing campaigns and analyzing user behavior to fine-tuning spend efficiency, I've led both digital and offline initiatives that create real value.</p>
+          <p>With expertise in Tableau, Excel, and Python, I'm passionate about translating complex data into clear insights that help teams make smarter decisions and fuel business growth.</p>
         </div>
-    </section>
-
-    <!-- Experience Section with timeline -->
-    <section id="experience" class="py-20 bg-gray-900 relative overflow-hidden" data-scroll>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in-up">
-                <p class="section-number mb-3">03 / Experience</p>
-                <span class="section-label">Career</span>
-                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Professional Journey</h2>
-                <p class="text-lg sm:text-xl text-gray-300">My path in data-driven marketing and analytics</p>
+        <div class="competency-grid">
+          <div class="competency-card clay-card fade-in">
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
-
-            <div class="experience-timeline relative">
-                <div class="timeline-connector hidden sm:block"></div>
-
-                <div class="space-y-12 sm:space-y-16">
-                    <!-- Experience Item 1 -->
-                    <div class="experience-item relative pl-6 sm:pl-20 fade-in-up" data-experience="1">
-                        <div class="timeline-node hidden sm:block"></div>
-                        <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect experience-card">
-                            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
-                                <div>
-                                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Senior Marketing Analyst</h3>
-                                    <p class="text-lg sm:text-xl font-semibold gradient-text mb-1">Head Digital Works</p>
-                                    <p class="text-gray-600 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-map-marker-alt mr-2"></i>
-                                        Hyderabad, India
-                                    </p>
-                                </div>
-                                <div class="date-badge">
-                                    <span class="font-semibold text-sm sm:text-base">September 2024 - Present</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
-                                <div class="stat-box">17% ↓ CAC</div>
-                                <div class="stat-box">₹1.8Cr</div>
-                                <div class="stat-box">15% ↓ Churn</div>
-                                <div class="stat-box">₹2.2Cr Saved</div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-star text-yellow-500 mr-2"></i>
-                                        Key Achievements
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Strategically optimized marketing channels with geo segmentation
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Reduced monthly budget from ₹4Cr to ₹1.8Cr
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-rocket text-blue-500 mr-2"></i>
-                                        Strategic Initiatives
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Implemented targeted onboarding via WebEngage
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Led poker tournaments across premium venues
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Experience Item 2 -->
-                    <div class="experience-item relative pl-6 sm:pl-20 fade-in-up" data-experience="2" style="animation-delay: 0.2s;">
-                        <div class="timeline-node hidden sm:block" style="border-color: #4ecdc4;"></div>
-                        <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect experience-card">
-                            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
-                                <div>
-                                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Data Analyst</h3>
-                                    <p class="text-lg sm:text-xl font-semibold gradient-text mb-1">KSKT Agromart</p>
-                                    <p class="text-gray-600 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-map-marker-alt mr-2"></i>
-                                        Gurugram, India
-                                    </p>
-                                </div>
-                                <div class="date-badge">
-                                    <span class="font-semibold text-sm sm:text-base">December 2023 - August 2024</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                                <div class="stat-box">70% ↑ Sales</div>
-                                <div class="stat-box">80% Retention</div>
-                                <div class="stat-box">60% ↑ AOV</div>
-                                <div class="stat-box">3 Dashboards</div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-star text-yellow-500 mr-2"></i>
-                                        Key Achievements
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Drove 70% sales growth with strategic optimization
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Built 3 comprehensive KPI dashboards
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-rocket text-blue-500 mr-2"></i>
-                                        Strategic Initiatives
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Implemented churn prediction models
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Enhanced customer analytics framework
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Experience Item 3 -->
-                    <div class="experience-item relative pl-6 sm:pl-20 fade-in-up" data-experience="3" style="animation-delay: 0.4s;">
-                        <div class="timeline-node hidden sm:block" style="border-color: #45b7d1;"></div>
-                        <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect experience-card">
-                            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6">
-                                <div>
-                                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Data Analyst</h3>
-                                    <p class="text-lg sm:text-xl font-semibold gradient-text mb-1">DaddyTech</p>
-                                    <p class="text-gray-600 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-map-marker-alt mr-2"></i>
-                                        Gurugram, India
-                                    </p>
-                                </div>
-                                <div class="date-badge">
-                                    <span class="font-semibold text-sm sm:text-base">February 2023 - November 2023</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6">
-                                <div class="stat-box">22% Retention ↑</div>
-                                <div class="stat-box">30% Revenue ↑</div>
-                                <div class="stat-box">100 Daily Customers</div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-star text-yellow-500 mr-2"></i>
-                                        Key Achievements
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Drove 30% quarterly revenue growth
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Improved retention by 22%
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="achievement-list">
-                                    <h4 class="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                                        <i class="fas fa-rocket text-blue-500 mr-2"></i>
-                                        Strategic Initiatives
-                                    </h4>
-                                    <ul class="text-gray-700 space-y-2 text-sm sm:text-base">
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Built predictive analytics engine
-                                        </li>
-                                        <li class="flex items-start">
-                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3 flex-shrink-0"></i>
-                                            Scaled customer acquisition 100x
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <h4>Performance Marketing</h4>
+            <p>Campaign optimization &amp; ROI scaling</p>
+          </div>
+          <div class="competency-card clay-card fade-in">
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
+            <h4>User Analytics</h4>
+            <p>Behavior analysis &amp; churn prediction</p>
+          </div>
+          <div class="competency-card clay-card fade-in">
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h4>Spend Management</h4>
+            <p>Budget optimization &amp; efficiency</p>
+          </div>
+          <div class="competency-card clay-card fade-in">
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <h4>Data Visualization</h4>
+            <p>Tableau dashboards &amp; Python analytics</p>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Skills Section with advanced UI -->
-    <section id="skills" class="py-20 section-bg bg-gray-800 relative overflow-hidden" data-scroll>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in-up">
-                <p class="section-number mb-3">04 / Skills</p>
-                <span class="section-label">Expertise</span>
-                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Technical Arsenal</h2>
-                <p class="text-lg sm:text-xl text-gray-300">Tools and technologies I master to drive data-driven decisions</p>
+  <!-- Experience -->
+  <section id="experience">
+    <div class="container">
+      <div class="fade-in" style="text-align: center;">
+        <span class="section-label">Experience</span>
+        <h2 class="section-title">Professional Journey</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">My path in data-driven marketing and analytics across leading organizations.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item fade-in">
+          <div class="timeline-dot"></div>
+          <div class="exp-card clay-card">
+            <div class="exp-header">
+              <div>
+                <h3>Senior Marketing Analyst</h3>
+                <p class="exp-company">Head Digital Works</p>
+              </div>
+              <span class="exp-date">Sep 2024 – Present</span>
             </div>
-            
-            <!-- Skill Orbs with 3D effects -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 mb-16">
-                <div class="skill-orb scale-in bg-gradient-to-br from-red-400 to-pink-500">
-                    <i class="fas fa-chart-bar text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">Tableau</div>
-                </div>
-                <div class="skill-orb scale-in bg-gradient-to-br from-blue-400 to-indigo-500" style="animation-delay: 0.1s;">
-                    <i class="fas fa-chart-pie text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">Power BI</div>
-                </div>
-                <div class="skill-orb scale-in bg-gradient-to-br from-green-400 to-teal-500" style="animation-delay: 0.2s;">
-                    <i class="fab fa-python text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">Python</div>
-                </div>
-                <div class="skill-orb scale-in bg-gradient-to-br from-yellow-400 to-orange-500" style="animation-delay: 0.3s;">
-                    <i class="fas fa-database text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">SQL</div>
-                </div>
-                <div class="skill-orb scale-in bg-gradient-to-br from-purple-400 to-pink-500" style="animation-delay: 0.4s;">
-                    <i class="fas fa-file-excel text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">Excel</div>
-                </div>
-                <div class="skill-orb scale-in bg-gradient-to-br from-cyan-400 to-blue-500" style="animation-delay: 0.5s;">
-                    <i class="fas fa-snowflake text-white text-2xl sm:text-3xl"></i>
-                    <div class="skill-label">Snowflake</div>
-                </div>
+            <div class="exp-badges">
+              <span class="exp-badge">17% CAC</span>
+              <span class="exp-badge">₹1.8Cr Budget</span>
+              <span class="exp-badge">15% Churn</span>
+              <span class="exp-badge">₹2.2Cr Saved</span>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-                <!-- Skill Bars with advanced animation -->
-                <div class="slide-in-left">
-                    <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect">
-                        <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8">Core Competencies</h3>
-                        <div class="space-y-6 sm:space-y-8">
-                            <div class="skill-item-advanced" data-skill="Data Visualization">
-                                <div class="flex justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm sm:text-base">Data Visualization & Analytics</span>
-                                    <span class="font-bold text-yellow-600">95%</span>
-                                </div>
-                                <div class="skill-bar-container">
-                                    <div class="skill-bar" style="width: 95%"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item-advanced" data-skill="Performance Marketing">
-                                <div class="flex justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm sm:text-base">Performance Marketing</span>
-                                    <span class="font-bold text-yellow-600">92%</span>
-                                </div>
-                                <div class="skill-bar-container">
-                                    <div class="skill-bar" style="width: 92%; --bar-color: linear-gradient(to right, #3B82F6, #6366F1);"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item-advanced" data-skill="User Behavior Analysis">
-                                <div class="flex justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm sm:text-base">User Behavior Analysis</span>
-                                    <span class="font-bold text-yellow-600">90%</span>
-                                </div>
-                                <div class="skill-bar-container">
-                                    <div class="skill-bar" style="width: 90%; --bar-color: linear-gradient(to right, #10B981, #14B8A6);"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item-advanced" data-skill="Statistical Modeling">
-                                <div class="flex justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm sm:text-base">Statistical Modeling</span>
-                                    <span class="font-bold text-yellow-600">88%</span>
-                                </div>
-                                <div class="skill-bar-container">
-                                    <div class="skill-bar" style="width: 88%; --bar-color: linear-gradient(to right, #A855F7, #EC4899);"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="skill-item-advanced" data-skill="ROI Optimization">
-                                <div class="flex justify-between mb-3">
-                                    <span class="font-semibold text-gray-800 text-sm sm:text-base">ROI Optimization</span>
-                                    <span class="font-bold text-yellow-600">87%</span>
-                                </div>
-                                <div class="skill-bar-container">
-                                    <div class="skill-bar" style="width: 87%; --bar-color: linear-gradient(to right, #FBBF24, #F97316);"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Technology Stack & Certifications -->
-                <div class="slide-in-right">
-                    <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect mb-8">
-                        <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8">Technology Stack</h3>
-                        <div class="grid grid-cols-2 gap-4 sm:gap-6">
-                            <div class="tech-card bg-gradient-to-br from-red-50 to-pink-50 p-4 sm:p-6 rounded-xl text-center">
-                                <i class="fas fa-chart-bar text-red-500 text-2xl sm:text-3xl mb-2 sm:mb-3"></i>
-                                <h4 class="font-bold text-gray-800 text-sm sm:text-base">Tableau</h4>
-                                <p class="text-gray-600 text-xs sm:text-sm">Advanced Dashboards</p>
-                            </div>
-                            <div class="tech-card bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 rounded-xl text-center">
-                                <i class="fas fa-chart-pie text-blue-500 text-2xl sm:text-3xl mb-2 sm:mb-3"></i>
-                                <h4 class="font-bold text-gray-800 text-sm sm:text-base">Power BI</h4>
-                                <p class="text-gray-600 text-xs sm:text-sm">Business Intelligence</p>
-                            </div>
-                            <div class="tech-card bg-gradient-to-br from-green-50 to-teal-50 p-4 sm:p-6 rounded-xl text-center">
-                                <i class="fab fa-python text-green-500 text-2xl sm:text-3xl mb-2 sm:mb-3"></i>
-                                <h4 class="font-bold text-gray-800 text-sm sm:text-base">Python</h4>
-                                <p class="text-gray-600 text-xs sm:text-sm">Data Analysis & ML</p>
-                            </div>
-                            <div class="tech-card bg-gradient-to-br from-yellow-50 to-orange-50 p-4 sm:p-6 rounded-xl text-center">
-                                <i class="fas fa-database text-yellow-500 text-2xl sm:text-3xl mb-2 sm:mb-3"></i>
-                                <h4 class="font-bold text-gray-800 text-sm sm:text-base">SQL</h4>
-                                <p class="text-gray-600 text-xs sm:text-sm">Database Queries</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect">
-                        <h4 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Certifications</h4>
-                        <div class="space-y-4">
-                            <div class="cert-item bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
-                                <i class="fab fa-google text-blue-600 text-2xl float-left mr-4"></i>
-                                <h5 class="font-semibold text-gray-800 text-sm sm:text-base">Google Digital Marketing</h5>
-                                <p class="text-gray-600 text-xs sm:text-sm">Certified Professional</p>
-                            </div>
-                            <div class="cert-item bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg">
-                                <i class="fab fa-python text-green-600 text-2xl float-left mr-4"></i>
-                                <h5 class="font-semibold text-gray-800 text-sm sm:text-base">Python Developer</h5>
-                                <p class="text-gray-600 text-xs sm:text-sm">Udemy Certification</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
-
-    <!-- Projects Section with advanced cards -->
-    <section id="projects" class="py-20 bg-gray-900 relative overflow-hidden" data-scroll>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in-up">
-                <p class="section-number mb-3">05 / Projects</p>
-                <span class="section-label">Portfolio</span>
-                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Featured Projects</h2>
-                <p class="text-lg sm:text-xl text-gray-300">Data-driven initiatives that delivered measurable business impact</p>
+        <div class="timeline-item fade-in">
+          <div class="timeline-dot"></div>
+          <div class="exp-card clay-card">
+            <div class="exp-header">
+              <div>
+                <h3>Data Analyst</h3>
+                <p class="exp-company">KSKT Agromart</p>
+              </div>
+              <span class="exp-date">Dec 2023 – Aug 2024</span>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                <!-- Project 1 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #c9a962;">
-                    <div class="project-icon">
-                        <i class="fas fa-chart-line text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Performance Marketing Revolution</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Geo-segmentation strategy that revolutionized campaign efficiency.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">Geo Segmentation</span>
-                        <span class="badge">CAC Optimization</span>
-                        <span class="badge">Budget Mgmt</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">₹2.2Cr</div>
-                        <div class="result-label">Cost Saved</div>
-                    </div>
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #a8bdd4; animation-delay: 0.1s;">
-                    <div class="project-icon">
-                        <i class="fas fa-users text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">User Behavior Intelligence</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Advanced analysis identifying churn patterns and implementing targeted journeys.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">Churn Analysis</span>
-                        <span class="badge">WebEngage</span>
-                        <span class="badge">User Journey</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">15% ↓</div>
-                        <div class="result-label">Churn Reduced</div>
-                    </div>
-                </div>
-                
-                <!-- Project 3 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #8b9cb3; animation-delay: 0.2s;">
-                    <div class="project-icon">
-                        <i class="fas fa-shopping-cart text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">E-commerce Growth Engine</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Comprehensive strategy that skyrocketed online sales by 70% MoM.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">E-commerce</span>
-                        <span class="badge">Growth Strategy</span>
-                        <span class="badge">Retention</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">70% ↑</div>
-                        <div class="result-label">Sales Growth</div>
-                    </div>
-                </div>
-                
-                <!-- Project 4 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #e2cf98; animation-delay: 0.3s;">
-                    <div class="project-icon">
-                        <i class="fas fa-chart-bar text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Real-time Analytics Dashboard</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Deployed 3 comprehensive KPI dashboards for real-time monitoring.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">Tableau</span>
-                        <span class="badge">KPI Tracking</span>
-                        <span class="badge">Real-time</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">3</div>
-                        <div class="result-label">Dashboards</div>
-                    </div>
-                </div>
-                
-                <!-- Project 5 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #7a8fa8; animation-delay: 0.4s;">
-                    <div class="project-icon">
-                        <i class="fas fa-trophy text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Premium Event Marketing</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Orchestrated high-impact poker tournaments across premium venues.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">Event Marketing</span>
-                        <span class="badge">Brand Building</span>
-                        <span class="badge">Premium</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">Multi-city</div>
-                        <div class="result-label">Recognition</div>
-                    </div>
-                </div>
-                
-                <!-- Project 6 -->
-                <div class="project-card-advanced rounded-2xl p-6 sm:p-8 scale-in glass-effect" style="--project-color: #4a6d8c; animation-delay: 0.5s;">
-                    <div class="project-icon">
-                        <i class="fas fa-robot text-white text-lg sm:text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Predictive Analytics Engine</h3>
-                    <p class="text-gray-600 mb-6 text-sm sm:text-base">Built advanced statistical models generating 100 new customers daily.</p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="badge">ML</span>
-                        <span class="badge">Prediction</span>
-                        <span class="badge">Acquisition</span>
-                    </div>
-                    <div class="project-result">
-                        <div class="result-value">100</div>
-                        <div class="result-label">Daily Customers</div>
-                    </div>
-                </div>
+            <div class="exp-badges">
+              <span class="exp-badge">70% Sales</span>
+              <span class="exp-badge">80% Retention</span>
+              <span class="exp-badge">60% AOV</span>
+              <span class="exp-badge">3 Dashboards</span>
             </div>
+          </div>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 hero-bg relative overflow-hidden" data-scroll>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16 fade-in-up">
-                <p class="section-number mb-3">06 / Contact</p>
-                <span class="section-label">Connect</span>
-                <h2 class="text-4xl sm:text-5xl font-display gradient-text mb-6">Let's Work Together</h2>
-                <p class="text-lg text-gray-300 max-w-2xl mx-auto">Ready to discuss data-driven marketing strategies that deliver measurable results.</p>
+        <div class="timeline-item fade-in">
+          <div class="timeline-dot"></div>
+          <div class="exp-card clay-card">
+            <div class="exp-header">
+              <div>
+                <h3>Data Analyst</h3>
+                <p class="exp-company">DaddyTech</p>
+              </div>
+              <span class="exp-date">Feb 2023 – Nov 2023</span>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-                <div class="slide-in-left">
-                    <div class="card-3d p-6 sm:p-8 rounded-2xl glass-effect">
-                        <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8">Get In Touch</h3>
-                        
-                        <div class="space-y-6 mb-8">
-                            <a href="mailto:rishabhkharbanda08@gmail.com" class="contact-item group">
-                                <div class="contact-icon">
-                                    <i class="fas fa-envelope text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm sm:text-lg">Email</h4>
-                                    <p class="text-gray-600 text-xs sm:text-base">rishabhkharbanda08@gmail.com</p>
-                                </div>
-                            </a>
-                            
-                            <a href="tel:+918604726050" class="contact-item group">
-                                <div class="contact-icon">
-                                    <i class="fas fa-phone text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm sm:text-lg">Phone</h4>
-                                    <p class="text-gray-600 text-xs sm:text-base">+91 86047 26050</p>
-                                </div>
-                            </a>
-                            
-                            <div class="contact-item">
-                                <div class="contact-icon">
-                                    <i class="fas fa-map-marker-alt text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm sm:text-lg">Location</h4>
-                                    <p class="text-gray-600 text-xs sm:text-base">Hyderabad, India</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-3 sm:gap-4">
-                            <a href="https://www.linkedin.com/in/rishabh-kharbanda-7a3659209" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                            <a href="mailto:rishabhkharbanda08@gmail.com" class="social-btn" aria-label="Email" title="Email">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="tel:+918604726050" class="social-btn" aria-label="Phone" title="Phone">
-                                <i class="fas fa-phone"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="slide-in-right">
-                    <form id="contact-form" class="contact-form p-6 sm:p-8 rounded-2xl glass-effect" novalidate>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
-                            <div class="form-group">
-                                <label for="name" class="block text-xs sm:text-sm font-semibold text-white mb-2 sm:mb-3">Full Name</label>
-                                <input type="text" id="name" name="name" required placeholder="Your name"
-                                    class="form-input w-full px-4 py-3 sm:py-4 rounded-xl focus:outline-none transition-all duration-300 text-sm sm:text-base">
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="block text-xs sm:text-sm font-semibold text-white mb-2 sm:mb-3">Email Address</label>
-                                <input type="email" id="email" name="email" required placeholder="your@email.com"
-                                    class="form-input w-full px-4 py-3 sm:py-4 rounded-xl focus:outline-none transition-all duration-300 text-sm sm:text-base">
-                            </div>
-                        </div>
-                
-                        <div class="mb-6 form-group">
-                            <label for="subject" class="block text-xs sm:text-sm font-semibold text-white mb-2 sm:mb-3">Subject</label>
-                            <input type="text" id="subject" name="subject" required placeholder="What is this about?"
-                                class="form-input w-full px-4 py-3 sm:py-4 rounded-xl focus:outline-none transition-all duration-300 text-sm sm:text-base">
-                        </div>
-                
-                        <div class="mb-8 form-group">
-                            <label for="message" class="block text-xs sm:text-sm font-semibold text-white mb-2 sm:mb-3">Message</label>
-                            <textarea id="message" name="message" rows="6" required placeholder="Tell me more..."
-                                class="form-input w-full px-4 py-3 sm:py-4 rounded-xl focus:outline-none transition-all duration-300 resize-none text-sm sm:text-base"></textarea>
-                        </div>
-                
-                        <button type="submit"
-                            class="btn-gradient w-full text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-base sm:text-lg hover:shadow-lg transition-all duration-300 relative group overflow-hidden">
-                            <span class="relative z-10 flex items-center justify-center gap-2">
-                                Send Message <i class="fas fa-paper-plane"></i>
-                            </span>
-                        </button>
-                    </form>
-                </div>
+            <div class="exp-badges">
+              <span class="exp-badge">22% Retention</span>
+              <span class="exp-badge">30% Revenue</span>
+              <span class="exp-badge">100 Daily Customers</span>
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 border-t border-gray-700 py-12 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center fade-in-up">
-                <h3 class="text-2xl sm:text-3xl font-display mb-4">Rishabh Kharbanda</h3>
-                <p class="text-gray-400 mb-8 text-base sm:text-lg">Senior Marketing Analyst · Data-Driven Growth Strategist</p>
-                
-                <div class="flex justify-center gap-3 sm:gap-6 mb-8 flex-wrap">
-                    <a href="https://www.linkedin.com/in/rishabh-kharbanda-7a3659209" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="mailto:rishabhkharbanda08@gmail.com" class="social-btn" aria-label="Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                    <a href="tel:+918604726050" class="social-btn" aria-label="Phone">
-                        <i class="fas fa-phone"></i>
-                    </a>
-                </div>
-                
-                <div class="border-t border-gray-700 pt-8">
-                    <p class="text-gray-500 text-xs sm:text-base">&copy; 2024 Rishabh Kharbanda. Crafted with passion for data-driven excellence.</p>
-                </div>
-            </div>
+  <!-- Skills -->
+  <section id="skills">
+    <div class="container">
+      <div class="fade-in" style="text-align: center;">
+        <span class="section-label">Skills</span>
+        <h2 class="section-title">Technical Arsenal</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">Tools and technologies I master to drive data-driven decisions.</p>
+      </div>
+      <div class="tools-row fade-in">
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tableau
         </div>
-    </footer>
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          Power BI
+        </div>
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Python
+        </div>
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          SQL
+        </div>
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Excel
+        </div>
+        <div class="tool-token">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Snowflake
+        </div>
+      </div>
+      <div class="skills-section">
+        <div class="clay-card fade-in">
+          <h3 style="padding: 2rem 2rem 0; font-size: 1.35rem;">Core Competencies</h3>
+          <div class="blob-tags">
+            <span class="blob-tag">Data Visualization &amp; Analytics</span>
+            <span class="blob-tag">Performance Marketing</span>
+            <span class="blob-tag">User Behavior Analysis</span>
+            <span class="blob-tag">Statistical Modeling</span>
+            <span class="blob-tag">ROI Optimization</span>
+          </div>
+        </div>
+        <div class="clay-card fade-in">
+          <h3 style="padding: 2rem 2rem 0; font-size: 1.35rem;">Certifications</h3>
+          <div class="certs-grid">
+            <div class="cert-card clay-card">
+              <div class="cert-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              </div>
+              <div>
+                <h4>Google Digital Marketing</h4>
+                <p>Certified Professional</p>
+              </div>
+            </div>
+            <div class="cert-card clay-card">
+              <div class="cert-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <div>
+                <h4>Python Developer</h4>
+                <p>Udemy Certification</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script src="scripts.js" defer></script>
+  <!-- Projects -->
+  <section id="projects">
+    <div class="container">
+      <div class="fade-in" style="text-align: center;">
+        <span class="section-label">Projects</span>
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">Data-driven initiatives that delivered measurable business impact.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>Performance Marketing Revolution</h3>
+          <p class="desc">Geo-segmentation strategy that revolutionized campaign efficiency and budget allocation.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">Geo Segmentation</span>
+            <span class="tag-chip">CAC Optimization</span>
+          </div>
+          <span class="project-metric">₹2.2Cr Saved</span>
+        </div>
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>User Behavior Intelligence</h3>
+          <p class="desc">Advanced churn analysis with targeted onboarding journeys via WebEngage.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">Churn Analysis</span>
+            <span class="tag-chip">WebEngage</span>
+          </div>
+          <span class="project-metric">15% Churn</span>
+        </div>
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>E-commerce Growth Engine</h3>
+          <p class="desc">Comprehensive strategy that skyrocketed online sales through data-driven optimization.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">E-commerce</span>
+            <span class="tag-chip">Growth Strategy</span>
+          </div>
+          <span class="project-metric">70% Sales</span>
+        </div>
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>Real-time Analytics Dashboard</h3>
+          <p class="desc">Deployed comprehensive KPI dashboards for real-time business monitoring.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">Tableau</span>
+            <span class="tag-chip">KPI Tracking</span>
+          </div>
+          <span class="project-metric">3 Dashboards</span>
+        </div>
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>Premium Event Marketing</h3>
+          <p class="desc">Orchestrated high-impact poker tournaments across premium venues nationwide.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">Event Marketing</span>
+            <span class="tag-chip">Brand Building</span>
+          </div>
+          <span class="project-metric">Multi-city</span>
+        </div>
+        <div class="project-card clay-card fade-in">
+          <div class="project-bubble"></div>
+          <h3>Predictive Analytics Engine</h3>
+          <p class="desc">Built statistical models generating consistent daily customer acquisition at scale.</p>
+          <div class="tag-chips">
+            <span class="tag-chip">ML</span>
+            <span class="tag-chip">Prediction</span>
+          </div>
+          <span class="project-metric">100 Daily Customers</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <div class="fade-in" style="text-align: center;">
+        <span class="section-label">Contact</span>
+        <h2 class="section-title">Let's Work Together</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">Ready to discuss data-driven marketing strategies that deliver measurable results.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info fade-in">
+          <a href="mailto:rishabhkharbanda08@gmail.com" class="info-card clay-card">
+            <div class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <h4>Email</h4>
+              <p>rishabhkharbanda08@gmail.com</p>
+            </div>
+          </a>
+          <a href="tel:+918604726050" class="info-card clay-card">
+            <div class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <h4>Phone</h4>
+              <p>+91 86047 26050</p>
+            </div>
+          </a>
+          <div class="info-card clay-card">
+            <div class="info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <h4>Location</h4>
+              <p>Hyderabad, India</p>
+            </div>
+          </div>
+          <a href="https://www.linkedin.com/in/rishabh-kharbanda-7a3659209" target="_blank" rel="noopener noreferrer" class="linkedin-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Connect on LinkedIn
+          </a>
+        </div>
+        <form class="contact-form clay-card fade-in" id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" class="form-input" placeholder="What is this about?" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" class="form-input" placeholder="Tell me more..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Rishabh Kharbanda — Crafted with passion for data-driven excellence.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="alert"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── Mobile menu ── */
+      var menuToggle = document.getElementById('menuToggle');
+      var mobileNav = document.getElementById('mobileNav');
+
+      if (menuToggle && mobileNav) {
+        menuToggle.addEventListener('click', function () {
+          var isOpen = mobileNav.classList.toggle('open');
+          menuToggle.classList.toggle('open', isOpen);
+          menuToggle.setAttribute('aria-expanded', isOpen);
+        });
+
+        mobileNav.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () {
+            mobileNav.classList.remove('open');
+            menuToggle.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      /* ── Smooth scroll ── */
+      document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
+          var targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          var target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      /* ── Navbar scroll state & active link ── */
+      var navbar = document.getElementById('navbar');
+      var navPills = document.querySelectorAll('.nav-links .nav-pill[data-section]');
+      var sections = document.querySelectorAll('section[id]');
+
+      function onScroll() {
+        if (navbar) {
+          navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }
+
+        var current = '';
+        sections.forEach(function (section) {
+          if (window.scrollY >= section.offsetTop - 200) {
+            current = section.id;
+          }
+        });
+
+        navPills.forEach(function (pill) {
+          pill.classList.toggle('active', pill.getAttribute('data-section') === current);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ── IntersectionObserver fade-in ── */
+      var fadeObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            fadeObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(function (el) {
+        fadeObserver.observe(el);
+      });
+
+      /* ── Toast helper ── */
+      var toast = document.getElementById('toast');
+      var toastTimer;
+
+      function showToast(message, isError) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.toggle('error', !!isError);
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toast.classList.remove('show');
+        }, 4500);
+      }
+
+      /* ── Contact form ── */
+      var contactForm = document.getElementById('contactForm');
+
+      if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          var name = document.getElementById('name').value.trim();
+          var email = document.getElementById('email').value.trim();
+          var subject = document.getElementById('subject').value.trim();
+          var message = document.getElementById('message').value.trim();
+
+          if (!name || !email || !subject || !message) {
+            showToast('Please fill in all fields.', true);
+            return;
+          }
+
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Please enter a valid email address.', true);
+            return;
+          }
+
+          var btn = contactForm.querySelector('button[type="submit"]');
+          var originalText = btn.textContent;
+          btn.textContent = 'Sending...';
+          btn.disabled = true;
+
+          var formData = new FormData();
+          formData.append('name', name);
+          formData.append('email', email);
+          formData.append('subject', subject);
+          formData.append('message', message);
+
+          fetch('https://script.google.com/macros/s/AKfycbwRFtwcgbRbNpqjZfTfHQCvHPwhfOoZYVG214tJRPAx3pBqzaWKCoWERDqWkpuObzJdeA/exec', {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+          })
+            .then(function () {
+              showToast('Thank you! Your message has been sent.');
+              contactForm.reset();
+            })
+            .catch(function () {
+              showToast('Failed to send. Please email directly.', true);
+            })
+            .finally(function () {
+              btn.textContent = originalText;
+              btn.disabled = false;
+            });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
