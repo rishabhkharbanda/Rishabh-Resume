@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="RK">
+  <rect width="512" height="512" fill="#000000"/>
+  <circle cx="256" cy="256" r="220" fill="#7a8b41"/>
+  <text
+    x="256"
+    y="286"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="168"
+    font-weight="700"
+    fill="#ffffff"
+    letter-spacing="-6"
+  >RK</text>
+</svg>
