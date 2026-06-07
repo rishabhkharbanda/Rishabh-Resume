@@ -34,20 +34,8 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
   const isSubjectValid = subject.trim().length > 2;
   const isMessageValid = message.trim().length > 8;
 
-  // Domain checks for Business Email requirement
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isEmailValidFormat = emailRegex.test(email);
-  const isPersonalDomain = isEmailValidFormat && (
-    email.toLowerCase().includes('@gmail.com') ||
-    email.toLowerCase().includes('@yahoo.com') ||
-    email.toLowerCase().includes('@outlook.com') ||
-    email.toLowerCase().includes('@hotmail.com') ||
-    email.toLowerCase().includes('@aol.com') ||
-    email.toLowerCase().includes('@icloud.com') ||
-    email.toLowerCase().includes('@personal.com')
-  );
-
-  const isEmailFullyValid = isEmailValidFormat && !isPersonalDomain;
+  const isEmailFullyValid = emailRegex.test(email);
 
   // Validate on Submit
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -232,9 +220,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
                   <p className={`font-mono text-[11px] mt-1 font-semibold ${isEmailFullyValid ? 'text-primary' : 'text-red-400'}`}>
                     {isEmailFullyValid 
                       ? 'Ready to go!' 
-                      : isPersonalDomain 
-                        ? 'Please enter a business email' 
-                        : 'Please enter a valid email'}
+                      : 'Please enter a valid email'}
                   </p>
                 )}
               </div>

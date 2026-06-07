@@ -78,7 +78,7 @@ export default function NavigationDrawer({
                   alt="Rishabh Kharbanda portrait" 
                   className="w-full h-full object-cover" 
                   referrerPolicy="no-referrer"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1maZk7sBlmt_-DQ3LvdR9yuZb5K3sX6qxw-Gla9WjZdLCMfJeVwGPxHyXPTZJS1r24phwSsZLl4lMYdLXlo8y3oT7NK6vqp8ucws9xp2ItrpURRZFOE4kPZUkJXhCUlBAncGoQT49t0RaQmRrZVXe5G-PGA9dS5kGDvxVyC2UxwHRkp6pfFYyZM2fF_w6mKJcRBgiS1pbTKHvgcLR5OZYjjasH9Xf0C7LWIIp1-7NpJ0zfvJIDwWthn3Nwjcm38Bpy-Vm0hz3t1Sq"
+                  src={`${import.meta.env.BASE_URL}avatar.png`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/25 pointer-events-none" />
               </div>
