@@ -28,13 +28,14 @@ jobs:
           rm -rf assets
           cp -r dist/assets assets
           cp dist/avatar.png avatar.png
+          cp dist/Rishabh_Kharbanda_CV_v2.pdf Rishabh_Kharbanda_CV_v2.pdf
           touch .nojekyll
 
       - name: Commit and push built files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html assets/ avatar.png .nojekyll
+          git add index.html assets/ avatar.png Rishabh_Kharbanda_CV_v2.pdf .nojekyll
           git diff --staged --quiet && echo "No changes to deploy" && exit 0
           git commit -m "deploy: build site for GitHub Pages [skip ci]"
           git push

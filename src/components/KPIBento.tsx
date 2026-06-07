@@ -23,12 +23,12 @@ export default function KPIBento() {
     },
     {
       label: 'Industry Experience',
-      value: '4+',
+      value: '5+',
       impact: 'YEARS OF EXPERTISE',
-      description: 'Years of experience in driving data-backed strategies across high-growth startups.',
+      description: 'Years of experience across gaming, e-commerce, B2C growth, and international markets.',
       trend: 'normal',
       icon: Award,
-      tooltip: 'Spearheaded strategic operations and data pipelines across Head Digital Works, KSKT, and DaddyTech.'
+      tooltip: 'Career spanning Yong Yung Casino, Head Digital Works, KSKT Agromart, DaddyTech, and FabHotels.',
     }
   ];
 

@@ -20,6 +20,14 @@ export default function MarketingSimulator() {
   // Scenarios presets matching Rishabh's real achievements
   const presets = [
     {
+      name: 'Yong Yung Intl.',
+      desc: 'Multi-Market Campaign Analytics',
+      budget: 1500000,
+      cac: 1100,
+      aov: 4200,
+      churn: 18
+    },
+    {
       name: 'HDW Optimized',
       desc: 'Optimized Poker Tournament Campaign',
       budget: 1800000,
@@ -29,20 +37,12 @@ export default function MarketingSimulator() {
     },
     {
       name: 'KSKT Agromart',
-      desc: 'Rural Agromart Personalized Funnel',
+      desc: 'E-commerce Growth Funnel',
       budget: 800000,
       cac: 750,
       aov: 2400,
       churn: 20
     },
-    {
-      name: 'DaddyTech Scale',
-      desc: 'Automated Lead Score Machine',
-      budget: 1200000,
-      cac: 900,
-      aov: 3200,
-      churn: 22
-    }
   ];
 
   const applyPreset = (preset: typeof presets[0]) => {

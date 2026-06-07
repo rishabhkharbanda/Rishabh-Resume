@@ -26,6 +26,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
+import { profileSummary, resumePdfUrl } from './data';
 import { ViewTab } from './types';
 import NavigationDrawer from './components/NavigationDrawer';
 import KPIBento from './components/KPIBento';
@@ -198,7 +199,7 @@ export default function App() {
 
                 {/* Premium Introduction Paragraph */}
                 <p className="font-sans text-[17px] md:text-xl text-on-surface-variant mb-12 max-w-2xl leading-relaxed font-medium">
-                  Senior Marketing Analyst &amp; Data Strategist transforming complex data into growth strategies that drive measurable business impact across performance marketing and user analytics.
+                  {profileSummary}
                 </p>
 
                   {/* Main page navigation shortcuts */}
@@ -265,7 +266,7 @@ export default function App() {
                 </div>
                 <div className="md:col-span-8">
                   <p className="font-sans text-[17px] md:text-lg text-on-surface-variant leading-relaxed mb-10">
-                    As a Senior Marketing Analyst, I focus on driving growth by turning data into impactful strategies. From optimizing campaigns and analyzing user behavior to fine-tuning spend efficiency, I've led both digital and offline initiatives that create real value.
+                    As a Senior Marketing Analyst with 5+ years of experience across gaming, e-commerce, and B2C growth, I focus on driving results through performance marketing, funnel optimization, and lifecycle analytics — from international campaign dashboards to geo-segmented acquisition strategies.
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-6">
@@ -284,7 +285,7 @@ export default function App() {
                         <span>Strategic Impact</span>
                       </h4>
                       <p className="text-sm text-on-surface-variant leading-relaxed font-sans">
-                        Dedicated expertise in regional demographic trends, user decay forecasting, and micro-metric operational tracking frameworks.
+                        Skilled in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage — with hands-on experience across Malaysia, Australia, and Papua New Guinea markets.
                       </p>
                     </div>
                   </div>
@@ -314,47 +315,47 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Brief HDW */}
+                  {/* Brief Yong Yung Casino */}
                   <div className="liquid-glass border border-outline-variant/40 p-8 rounded-3xl relative group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2024 - PRESENT</span>
-                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Senior Role</span>
+                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2025 - 2026</span>
+                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Freelance</span>
                       </div>
-                      <h3 className="font-headline text-xl font-bold text-on-surface">Senior Marketing Analyst</h3>
-                      <p className="text-primary font-mono text-sm font-semibold mb-6">Head Digital Works</p>
+                      <h3 className="font-headline text-xl font-bold text-on-surface">Freelance Marketing Analyst</h3>
+                      <p className="text-primary font-mono text-sm font-semibold mb-6">Yong Yung Casino · Malaysia, Australia &amp; PNG</p>
                       
                       <div className="space-y-4 text-on-surface-variant text-sm font-sans">
                         <div className="flex gap-3">
                           <span className="text-primary mt-1">•</span>
-                          <p>Lowered monthly customer acquisition costs (CAC) by 17% utilizing automated geo-segmentation bidding matrices.</p>
+                          <p>Built 8+ Tableau dashboards tracking CAC, ROI, and ROAS across three international markets — cutting reporting turnaround by 40%.</p>
                         </div>
                         <div className="flex gap-3">
                           <span className="text-primary mt-1">•</span>
-                          <p>Saved cumulative ₹2.2Cr in operational budget scales while expanding premium Poker tournament participation rates.</p>
+                          <p>Optimized landing pages and paid media to increase conversion rates by 18% and campaign sign-ups by 25%.</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Brief KSKT */}
+                  {/* Brief HDW */}
                   <div className="liquid-glass border border-outline-variant/40 p-8 rounded-3xl relative group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2023 - 2024</span>
-                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Data Science</span>
+                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2024 - 2025</span>
+                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Senior Role</span>
                       </div>
-                      <h3 className="font-headline text-xl font-bold text-on-surface">Data Analyst</h3>
-                      <p className="text-primary font-mono text-sm font-semibold mb-6">KSKT Agromart</p>
+                      <h3 className="font-headline text-xl font-bold text-on-surface">Senior Marketing Analyst</h3>
+                      <p className="text-primary font-mono text-sm font-semibold mb-6">Head Digital Works · Gaming &amp; Fantasy Sports</p>
                       
                       <div className="space-y-4 text-on-surface-variant text-sm font-sans">
                         <div className="flex gap-3">
                           <span className="text-primary mt-1">•</span>
-                          <p>Pushed MoM digital agromart retail sales up by 70% using predictive demand-inventory models.</p>
+                          <p>Lowered CAC by 17% through geo-segmentation and player value tier optimization (HVP, MVP).</p>
                         </div>
                         <div className="flex gap-3">
                           <span className="text-primary mt-1">•</span>
-                          <p>Constructed customized churn prediction models that targeted decaying cohorts with 85% analytical precision.</p>
+                          <p>Reduced monthly ad spend from ₹4 Cr to ₹1.8 Cr while maintaining acquisition outcomes and cutting churn by 15%.</p>
                         </div>
                       </div>
                     </div>
@@ -466,7 +467,10 @@ export default function App() {
                 <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-outline-variant" />
                 <a 
                   className="font-mono text-xs text-primary hover:underline decoration-2 underline-offset-8 uppercase font-bold" 
-                  href="#"
+                  href={resumePdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
                 >
                   DOWNLOAD RESUME
                 </a>
@@ -501,7 +505,7 @@ export default function App() {
           </div>
           
           <p className="font-sans text-sm text-on-surface-variant max-w-md leading-relaxed">
-            Senior Marketing Analyst · Data-Driven Growth Strategist specialized in performance marketing and analytics.
+            Senior Marketing Analyst · 5+ Years across Gaming, E-commerce &amp; B2C Growth
           </p>
           
           <div className="flex flex-wrap gap-8 justify-center my-2">
