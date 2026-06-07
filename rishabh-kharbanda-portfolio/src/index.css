@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Montserrat", sans-serif;
+  --font-display: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom Olive Green on White Glossy Palette */
+  --color-primary: #4c683f; /* Deep Olive Green */
+  --color-on-primary: #ffffff;
+  --color-primary-container: #d9e9d3; /* Translucent sage-glass basis */
+  --color-on-primary-container: #1b2e15;
+  --color-secondary: #708e62; /* Mid-tone Leaf Olive */
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e6f0e3; /* Light watery sage */
+  --color-on-secondary-container: #263820;
+  --color-tertiary: #52756d; /* Deep Sage Pine */
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #daf0ec;
+  --color-on-tertiary-container: #1a2c28;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
+  --color-surface: #ffffff;
+  --color-on-surface: #1e261c; /* Muted forest-charcoal */
+  --color-surface-variant: #f2f7ef;
+  --color-on-surface-variant: #4f5a4c;
+  --color-outline: #81957c;
+  --color-outline-variant: #dff0db;
+  --color-background: #fbfdf9; /* Clean linen white background */
+  --color-on-background: #1e261c;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f6faf2;
+  --color-surface-container: #f0f6eb;
+  --color-surface-container-high: #e5ecd0;
+  --color-surface-container-highest: #d9e2c2;
+  --color-data-growth: #2b7a3d; /* Bold organic growth */
+}
+
+/* Dark Theme Custom Variable Overrides */
+.dark, :root.dark {
+  --color-primary: #8cb67b; /* Bright, legible sage-olive for readability in dark mode */
+  --color-on-primary: #12210b;
+  --color-primary-container: #23341b; /* Cozy dark sage glass container base */
+  --color-on-primary-container: #daf0d4;
+  --color-secondary: #a3c990;
+  --color-on-secondary: #192d13;
+  --color-secondary-container: #2c4424;
+  --color-on-secondary-container: #daf0d3;
+  --color-tertiary: #8ccbc0;
+  --color-on-tertiary: #10302a;
+  --color-tertiary-container: #224c44;
+  --color-on-tertiary-container: #cef2eb;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  
+  --color-surface: #121810; /* Deep charcoal with forest-moss tint */
+  --color-on-surface: #e1ebdf;
+  --color-surface-variant: #1e261b;
+  --color-on-surface-variant: #b0c2ac;
+  --color-outline: #5c6e57;
+  --color-outline-variant: #283424;
+  
+  --color-background: #0b0f0a; /* True deep moss background */
+  --color-on-background: #e1ebdf;
+  
+  --color-surface-container-lowest: #080b07;
+  --color-surface-container-low: #11160f;
+  --color-surface-container: #182015;
+  --color-surface-container-high: #212b1d;
+  --color-surface-container-highest: #2b3728;
+  
+  --color-data-growth: #4ade80; /* Vibrantly glowing organic growth signal for dark backdrop */
+}
+
+/* Custom background grid pattern for visual elegance in Olive */
+.grid-pattern {
+  background-image: radial-gradient(#d3dfcf 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .grid-pattern, :root.dark .grid-pattern {
+  background-image: radial-gradient(#253420 1px, transparent 1px);
+}
+
+.grid-accent {
+  background-image: linear-gradient(#e1ecdcf0 1px, transparent 1px), linear-gradient(90deg, #e1ecdcf0 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .grid-accent, :root.dark .grid-accent {
+  background-image: linear-gradient(#1a2617d0 1px, transparent 1px), linear-gradient(90deg, #1a2617d0 1px, transparent 1px);
+}
+
+.grid-background {
+  background-image: linear-gradient(#e4efe0e0 1px, transparent 1px), linear-gradient(90deg, #e4efe0e0 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .grid-background, :root.dark .grid-background {
+  background-image: linear-gradient(#1c2a18c0 1px, transparent 1px), linear-gradient(90deg, #1c2a18c0 1px, transparent 1px);
+}
+
+.mask-fade {
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+
+/* Liquid Glass Glassmorphism Styles */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 8px 32px 0 rgba(76, 104, 63, 0.06),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 3px 0 rgba(76, 104, 63, 0.03);
+}
+
+.dark .liquid-glass, :root.dark .liquid-glass {
+  background: rgba(18, 24, 16, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 2px 0 rgba(140, 182, 123, 0.02);
+}
+
+.liquid-glass-active {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(76, 104, 63, 0.25);
+  box-shadow: 
+    0 12px 40px 0 rgba(76, 104, 63, 0.09),
+    inset 0 1px 3px 0 rgba(255, 255, 255, 0.95);
+}
+
+.dark .liquid-glass-active, :root.dark .liquid-glass-active {
+  background: rgba(28, 38, 25, 0.7);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(140, 182, 123, 0.3);
+  box-shadow: 
+    0 12px 40px 0 rgba(0, 0, 0, 0.55),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.08);
+}
+
+.liquid-glass-dark {
+  background: rgba(43, 56, 38, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(43, 56, 38, 0.08);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.dark .liquid-glass-dark, :root.dark .liquid-glass-dark {
+  background: rgba(20, 26, 18, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.05);
+}
+
+/* Liquid fluid background bubble orbs */
+.liquid-blob {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  animation: liquidBubble 18s ease-in-out infinite alternate;
+}
+
+.liquid-blob-alt {
+  border-radius: 40% 60% 70% 30% / 50% 60% 30% 70%;
+  animation: liquidBubbleAlt 22s ease-in-out infinite alternate;
+}
+
+@keyframes liquidBubble {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    border-radius: 40% 60% 50% 50% / 40% 40% 60% 60%;
+    transform: translate(40px, -60px) rotate(180deg);
+  }
+  100% {
+    border-radius: 50% 50% 60% 40% / 60% 50% 40% 60%;
+    transform: translate(-20px, 40px) rotate(360deg);
+  }
+}
+
+@keyframes liquidBubbleAlt {
+  0% {
+    border-radius: 40% 60% 70% 30% / 50% 60% 30% 70%;
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    border-radius: 60% 40% 40% 60% / 50% 50% 60% 50%;
+    transform: translate(-50px, 40px) scale(1.15) rotate(90deg);
+  }
+  100% {
+    border-radius: 50% 50% 50% 50% / 40% 60% 40% 60%;
+    transform: translate(30px, -40px) scale(0.9) rotate(-90deg);
+  }
+}
+
+.success-glow {
+  box-shadow: 0 15px 45px -15px rgba(43, 122, 61, 0.15);
+}
+
+/* Base resets & smooth behaviors */
+html {
+  scroll-behavior: smooth;
+  background-color: #fbfdf9;
+}
+
+:root.dark html, .dark html {
+  background-color: #0b0f0a;
+}
+
+body {
+  color: #1e261c;
+  overflow-x: hidden;
+}
+
+:root.dark body, .dark body {
+  color: #e1ebdf;
+}
+
+/* Custom Webkit scrollbar matching general aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f6ef;
+}
+:root.dark ::-webkit-scrollbar-track, .dark ::-webkit-scrollbar-track {
+  background: #11160f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccd9c9;
+  border-radius: 4px;
+}
+:root.dark ::-webkit-scrollbar-thumb, .dark ::-webkit-scrollbar-thumb {
+  background: #2b3728;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #708e62;
+}
+:root.dark ::-webkit-scrollbar-thumb:hover, .dark ::-webkit-scrollbar-thumb:hover {
+  background: #5c6e57;
+}
+
+
