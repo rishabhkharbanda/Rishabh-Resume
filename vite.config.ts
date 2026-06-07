@@ -7,6 +7,13 @@ export default defineConfig(() => {
   return {
     base: '/Rishabh-Resume/',
     plugins: [react(), tailwindcss()],
+    build: {
+      rollupOptions: {
+        input: {
+          index: path.resolve(__dirname, 'dev.html'),
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

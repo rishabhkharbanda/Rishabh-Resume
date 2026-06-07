@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   deploy:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,9 +22,19 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy built site to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+      - name: Copy built site to repository root
+        run: |
+          cp dist/dev.html index.html
+          rm -rf assets
+          cp -r dist/assets assets
+          cp dist/avatar.png avatar.png
+          touch .nojekyll
+
+      - name: Commit and push built files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html assets/ avatar.png .nojekyll
+          git diff --staged --quiet && echo "No changes to deploy" && exit 0
+          git commit -m "deploy: build site for GitHub Pages [skip ci]"
+          git push

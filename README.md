@@ -31,15 +31,8 @@ npm run preview
 
 ## GitHub Pages
 
-After pushing to `main`, GitHub Actions builds the app and publishes to the `gh-pages` branch.
+The live site is at **https://rishabhkharbanda.github.io/Rishabh-Resume/**
 
-**One-time setup (required):**
+After you push to `main`, GitHub Actions builds the app and commits the production files (`index.html`, `assets/`, `avatar.png`) to the repo root. GitHub Pages serves those directly from the `main` branch — no extra settings required.
 
-1. Open **Settings → Pages** in your repo
-2. Under **Build and deployment**, set **Source** to **Deploy from a branch**
-3. Choose branch **`gh-pages`**, folder **`/ (root)`**
-4. Save
-
-Live URL: https://rishabhkharbanda.github.io/Rishabh-Resume/
-
-If the page is blank, Pages is likely still serving the unbuilt `main` branch source instead of `gh-pages`.
+For local development, use `dev.html` as the Vite entry (via `npm run dev`).
