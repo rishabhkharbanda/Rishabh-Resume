@@ -1,7 +1,7 @@
-/** Google Apps Script web app URL — update after deploying scripts/contact-form-google-apps-script.gs */
-export const CONTACT_FORM_ENDPOINT =
-  import.meta.env.VITE_CONTACT_FORM_URL ||
-  'https://script.google.com/macros/s/AKfycbwRFtwcgbRbNpqjZfTfHQCvHPwhfOoZYVG214tJRPAx3pBqzaWKCoWERDqWkpuObzJdeA/exec';
+import { PORTFOLIO_API_URL } from './api';
+
+/** Same Google Apps Script endpoint as analytics (action=contact) */
+export const CONTACT_FORM_ENDPOINT = PORTFOLIO_API_URL;
 
 export interface ContactFormPayload {
   name: string;
@@ -12,6 +12,7 @@ export interface ContactFormPayload {
 
 export async function submitContactForm(payload: ContactFormPayload): Promise<void> {
   const formData = new FormData();
+  formData.append('action', 'contact');
   formData.append('name', payload.name.trim());
   formData.append('email', payload.email.trim());
   formData.append('subject', payload.subject.trim());

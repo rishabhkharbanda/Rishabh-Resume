@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
+          VITE_PORTFOLIO_API_URL: ${{ secrets.VITE_PORTFOLIO_API_URL }}
           VITE_CONTACT_FORM_URL: ${{ secrets.VITE_CONTACT_FORM_URL }}
 
       - name: Copy built site to repository root
