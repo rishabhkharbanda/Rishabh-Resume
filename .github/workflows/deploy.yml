@@ -21,6 +21,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_CONTACT_FORM_URL: ${{ secrets.VITE_CONTACT_FORM_URL }}
 
       - name: Copy built site to repository root
         run: |

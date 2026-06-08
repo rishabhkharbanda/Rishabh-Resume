@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Mail, 
   Phone, 
   MapPin, 
   CheckCircle, 
-  X, 
   AlertCircle, 
   ArrowRight,
-  Shield,
   Briefcase
 } from 'lucide-react';
+import { submitContactForm } from '../config/contact';
 
 interface ContactFormProps {
   onSuccess: (data: { name: string; email: string; subject: string; message: string }) => void;
@@ -28,6 +27,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
   const [messageTouched, setMessageTouched] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Real-time validations
   const isNameValid = name.trim().length > 2;
@@ -37,20 +37,39 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isEmailFullyValid = emailRegex.test(email);
 
-  // Validate on Submit
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setNameTouched(true);
     setEmailTouched(true);
     setSubjectTouched(true);
     setMessageTouched(true);
+    setSubmitError(null);
 
-    if (isNameValid && isEmailFullyValid && isSubjectValid && isMessageValid) {
-      setSubmitting(true);
-      setTimeout(() => {
-        setSubmitting(false);
-        onSuccess({ name, email, subject, message });
-      }, 1200);
+    if (!isNameValid || !isEmailFullyValid || !isSubjectValid || !isMessageValid) {
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await submitContactForm({ name, email, subject, message });
+      onSuccess({ name, email, subject, message });
+      setName('');
+      setEmail('');
+      setSubject('');
+      setMessage('');
+      setNameTouched(false);
+      setEmailTouched(false);
+      setSubjectTouched(false);
+      setMessageTouched(false);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong. Please email rishabhkharbanda08@gmail.com directly.'
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -303,13 +322,20 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
               )}
             </div>
 
+            {submitError && (
+              <div className="flex items-start gap-3 p-4 rounded-2xl border border-red-400/40 bg-red-400/10 text-red-500">
+                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                <p className="font-sans text-sm leading-relaxed">{submitError}</p>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button 
               type="submit" 
               disabled={submitting}
               className="w-full md:w-auto bg-primary text-on-primary px-10 py-4.5 font-mono text-[11px] tracking-widest font-bold flex items-center justify-center gap-3 hover:brightness-110 active:scale-95 transition-all group rounded-full cursor-pointer disabled:opacity-50 font-extrabold uppercase shadow-lg border-none"
             >
-              <span>{submitting ? 'VALIDATING PACKETS...' : 'SEND MESSAGE'}</span>
+              <span>{submitting ? 'SENDING MESSAGE...' : 'SEND MESSAGE'}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
             </button>
           </form>
