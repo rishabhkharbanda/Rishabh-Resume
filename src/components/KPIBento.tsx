@@ -7,7 +7,7 @@ export default function KPIBento() {
       label: 'CAC Optimization',
       value: '17%',
       impact: 'REDUCTION ACHIEVED',
-      description: 'Strategically optimized marketing channels with geo-segmentation at Head Digital Works.',
+      description: 'Restructured performance strategy at Head Digital Works — 55% ad spend reduction while sustaining outcomes.',
       trend: 'down',
       icon: TrendingDown,
       tooltip: 'Achieved by pruning non-converting keywords and routing ad spend efficiently to high-LTV localized gaming cohorts.'
@@ -28,7 +28,7 @@ export default function KPIBento() {
       description: 'Years of experience across gaming, e-commerce, B2C growth, and international markets.',
       trend: 'normal',
       icon: Award,
-      tooltip: 'Career spanning Yong Yung Casino, Head Digital Works, KSKT Agromart, DaddyTech, and FabHotels.',
+      tooltip: 'Career spanning Yong Yuan Casino, Head Digital Works, KSKT Agromart, DaddyTech, and FabHotels.',
     }
   ];
 

@@ -52,37 +52,57 @@ export default function SkillsArsenal() {
     {
       name: 'Performance Marketing',
       value: 95,
-      detail: 'Expertise in lower-funnel acquisition, budgeting strategies, and optimizing CAC/ROAS across gaming and e-commerce.',
+      detail: 'Paid media optimisation, channel strategy, and creative testing across gaming, fantasy sports, and e-commerce.',
     },
     {
-      name: 'Funnel Optimization',
+      name: 'Lifecycle Marketing',
+      value: 93,
+      detail: 'Cohort analysis, retention windows, onboarding journeys, and personalised re-engagement flows via WebEngage and Clevertap.',
+    },
+    {
+      name: 'Attribution Modeling',
       value: 92,
-      detail: 'Landing page redesign, user journey analysis, and conversion rate optimization across international campaigns.',
+      detail: 'AppsFlyer MMP tracking, paid media attribution, and CPL optimisation across multi-channel campaigns.',
     },
     {
-      name: 'User Lifecycle & CRM',
+      name: 'Cohort Analysis',
+      value: 94,
+      detail: 'D0–D30 behaviour mapping, churn pattern identification, and retention marketing strategy.',
+    },
+    {
+      name: 'Funnel Optimisation',
+      value: 91,
+      detail: 'Landing page redesign, user journey analysis, and conversion rate improvements across international campaigns.',
+    },
+    {
+      name: 'User Segmentation',
       value: 90,
-      detail: 'Specialized in D0–D30 behavior analysis, churn reduction, and lifecycle journeys via WebEngage and Clevertap.',
+      detail: 'Clustering, demographic and behavioural segmentation, and targeted lifecycle campaigns.',
     },
     {
       name: 'CAC/ROAS Analysis',
       value: 94,
-      detail: 'Deep analysis of acquisition costs and return on ad spend across multi-channel, multi-market campaigns.',
+      detail: 'Acquisition cost reduction, budget reallocation, and return on ad spend optimisation.',
     },
     {
-      name: 'Dashboard Design',
-      value: 93,
-      detail: 'Built 8+ Tableau dashboards tracking CAC, ROI, ROAS, and KPIs across multi-market operations.',
+      name: 'LTV Modelling',
+      value: 89,
+      detail: 'Python-driven LTV analysis, cohort modelling, and player value tier strategy (HVP, MVP).',
     },
     {
       name: 'A/B Testing',
       value: 88,
-      detail: 'Structured experimentation on creatives, landing pages, and audience segments to validate growth hypotheses.',
+      detail: 'Structured experimentation on creatives, landing pages, and audience segments.',
+    },
+    {
+      name: 'Dashboard Design',
+      value: 93,
+      detail: 'Tableau and Power BI dashboards tracking CAC, ROI, ROAS, and KPIs across multi-market operations.',
     },
     {
       name: 'Competitor Research',
       value: 91,
-      detail: 'Competitor benchmarking and feature-gap analysis to inform product enhancements and market positioning.',
+      detail: 'Benchmarking, feature-gap analysis, and market research to inform product roadmap decisions.',
     },
   ];
 
@@ -173,7 +193,7 @@ export default function SkillsArsenal() {
               ))}
             </div>
             <p className="text-sm text-on-surface-variant mt-4 leading-relaxed">
-              Used for campaign copy, data summarisation, competitor research, insight generation, automation prompts, and creative production.
+              Used for campaign copy, data summarisation, insight generation, automation prompts, and creative production.
             </p>
           </div>
         </div>

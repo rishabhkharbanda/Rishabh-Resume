@@ -312,26 +312,26 @@ export default function App() {
                 </div>
                 <div className="md:col-span-8">
                   <p className="font-sans text-[17px] md:text-lg text-on-surface-variant leading-relaxed mb-10">
-                    Passionate about translating complex data into clear insights that help teams make smarter, faster decisions — from international campaign dashboards and geo-segmented acquisition strategies to lifecycle analytics and funnel optimization.
+                    Deep expertise in cohort analysis, attribution modeling, retention marketing, and user segmentation — from international paid media campaigns to geo-segmented acquisition and lifecycle analytics.
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-6">
                     <div className="space-y-3 liquid-glass p-6 rounded-3xl border border-outline-variant/40 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                       <h4 className="font-headline text-lg font-bold text-primary flex items-center gap-2">
                         <Compass className="w-5 h-5 opacity-90" />
-                        <span>Data Vision</span>
+                        <span>Analytics &amp; Attribution</span>
                       </h4>
                       <p className="text-sm text-on-surface-variant leading-relaxed font-sans">
-                        Passionate about translating complex raw numbers into clean visual models that empower teams to take bolder, smarter budget reallocations.
+                        Cohort analysis, attribution modeling, and LTV modelling to turn complex datasets into clear growth levers and smarter budget decisions.
                       </p>
                     </div>
                     <div className="space-y-3 liquid-glass p-6 rounded-3xl border border-outline-variant/40 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                       <h4 className="font-headline text-lg font-bold text-primary flex items-center gap-2">
                         <Sparkles className="w-5 h-5 opacity-90" />
-                        <span>Strategic Impact</span>
+                        <span>Lifecycle &amp; Retention</span>
                       </h4>
                       <p className="text-sm text-on-surface-variant leading-relaxed font-sans">
-                        Skilled in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage — with hands-on experience across Malaysia, Australia, and Papua New Guinea markets.
+                        Retention marketing, user segmentation, and lifecycle campaigns via Tableau, AppsFlyer, Clevertap, and WebEngage across Malaysia, Australia, and Papua New Guinea.
                       </p>
                     </div>
                   </div>
@@ -372,13 +372,11 @@ export default function App() {
                             {experience.period.replace(' - ', ' – ')}
                           </span>
                           <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase shrink-0">
-                            {experience.role.includes('Freelance')
-                              ? 'Freelance'
-                              : experience.role.includes('Senior')
-                                ? 'Senior'
-                                : experience.role.includes('Manager')
-                                  ? 'Manager'
-                                  : 'Analyst'}
+                            {experience.role.includes('Senior')
+                              ? 'Senior'
+                              : experience.role.includes('Manager')
+                                ? 'Manager'
+                                : 'Analyst'}
                           </span>
                         </div>
                         <h3 className="font-headline text-xl font-bold text-on-surface">{experience.role}</h3>
@@ -444,7 +442,7 @@ export default function App() {
                 Professional Journey
               </h1>
               <p className="font-sans text-lg text-on-surface-variant max-w-2xl leading-relaxed">
-                Five roles across gaming, e-commerce, B2C growth, and international markets — from freelance marketing analytics to senior performance strategy and data-driven account management.
+                Five roles across gaming, fantasy sports, e-commerce, and international markets — from senior marketing analytics to performance strategy and data-driven account management.
               </p>
             </div>
 
@@ -552,7 +550,7 @@ export default function App() {
           </div>
           
           <p className="font-sans text-sm text-on-surface-variant max-w-md leading-relaxed">
-            Senior Marketing Analyst · 5+ Years across Gaming, E-commerce &amp; B2C Growth
+            Senior Marketing Analyst · 5+ Years across Gaming, Fantasy Sports, E-commerce &amp; B2C Growth
           </p>
           
           <div className="flex flex-wrap gap-8 justify-center my-2">

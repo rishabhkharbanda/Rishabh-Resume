@@ -20,7 +20,7 @@ export default function MarketingSimulator() {
   // Scenarios presets matching Rishabh's real achievements
   const presets = [
     {
-      name: 'Yong Yung Intl.',
+      name: 'Yong Yuan Intl.',
       desc: 'Multi-Market Campaign Analytics',
       budget: 1500000,
       cac: 1100,

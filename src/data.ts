@@ -8,31 +8,30 @@ import {
 } from './types';
 
 export const profileSummary =
-  'Results-driven Senior Marketing Analyst with 5+ years of experience across gaming, e-commerce, and B2C growth — specialising in performance marketing, funnel optimization, and life-cycle analytics. Proven track record of reducing CAC by 17%, cutting ad spend by 55% while maintaining outcomes, and driving 70% MoM e-commerce growth. Skilled in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage, with hands-on experience across international markets (Malaysia, Australia, Papua New Guinea). Passionate about translating complex data into clear insights that help teams make smarter, faster decisions.';
+  'Senior Marketing Analyst with 5+ years of experience driving growth across gaming, fantasy sports, e-commerce, and B2C markets. Specialises in performance marketing, lifecycle analytics, and paid media optimisation — with a track record of reducing CAC by 17%, cutting ad spend by 55% while sustaining results, and delivering 70% MoM e-commerce growth. Deep expertise in cohort analysis, attribution modeling, retention marketing, and user segmentation. Experienced across international markets (Malaysia, Australia, Papua New Guinea) and experienced in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage. Leverages AI tools daily for faster insight generation, campaign ideation, and data summarisation.';
 
 export const portfolioExperiences: ExperienceItem[] = [
   {
-    company: 'Yong Yung Casino',
-    role: 'Freelance Marketing Analyst',
+    company: 'Yong Yuan Casino',
+    role: 'Senior Marketing Analyst',
     period: 'OCT 2025 - MAY 2026',
-    location: 'Malaysia, Australia & Papua New Guinea Markets',
+    location: 'Malaysia, Australia & Papua New Guinea',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        label: 'Marketing Analytics',
-        text: 'Developed 8+ Tableau dashboards to monitor CAC, ROI, ROAS, and campaign performance across Malaysia, Australia, and Papua New Guinea, improving reporting efficiency and reducing turnaround time by 40%.',
+        text: 'Built 8+ Tableau dashboards tracking CAC, ROI, ROAS, and paid media KPIs across three markets (Malaysia, Australia, Papua New Guinea), reducing reporting turnaround by 40%.',
       },
       {
-        label: 'Performance Marketing',
-        text: 'Analysed paid media performance across multiple channels and international markets, optimizing bidding strategies, audience targeting, and creatives to increase conversion rates by 18% and reduce Cost per Lead (CPL).',
+        text: 'Optimised bidding strategies, audience segmentation, and ad creatives across paid media channels, lifting conversion rates by 18% and lowering Cost per Lead (CPL) through attribution modeling.',
       },
       {
-        label: 'Conversion Rate Optimisation (CRO)',
-        text: 'Redesigned and optimised 10+ landing pages through user journey analysis and UX enhancements, reducing funnel drop-offs and increasing campaign sign-ups by 25%.',
+        text: 'Redesigned 10+ landing pages through user journey analysis and UX improvements, cutting funnel drop-offs and increasing campaign sign-ups by 25%.',
       },
       {
-        label: 'UI/UX Design',
-        text: 'Designed wireframes and user interfaces in Figma for 3+ government websites, collaborating with developers and stakeholders to deliver user-centric, accessible digital experiences.',
+        text: 'Drove lifecycle marketing strategy using cohort analysis and user segmentation to identify retention windows and build personalised re-engagement flows.',
+      },
+      {
+        text: 'Designed wireframes and UX flows in Figma for 3+ government digital platforms, collaborating closely with developers to deliver accessible, user-centric experiences.',
       },
     ],
     metrics: [
@@ -50,29 +49,24 @@ export const portfolioExperiences: ExperienceItem[] = [
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        label: 'Performance Marketing & Campaign Strategy Development',
-        text: 'Strategically optimized marketing channels based on Geo segmentation and player value tiers (HVP, MVP), resulting in a 17% reduction in CAC.',
+        text: 'Optimised performance marketing across channels using geo-segmentation and player value tiers (HVP, MVP), reducing CAC by 17% through strategic paid media reallocation and creative testing.',
       },
       {
-        label: 'Spend Management',
-        text: 'Revamped the performance strategy and implemented key optimizations that enabled the team to achieve better results with a reduced monthly budget of ₹1.8 Cr, compared to the earlier spend of ₹4 Cr.',
+        text: 'Restructured performance strategy and budget allocation, delivering stronger results on ₹1.8 Cr/month vs a prior spend of ₹4 Cr — a 55% cost reduction with no drop in outcomes.',
       },
       {
-        label: 'User Behavior Insights',
-        text: 'Leveraged D0–D30 user behavior analysis to identify churn patterns and implemented targeted onboarding journeys via WebEngage, resulting in a 15% decrease in new user churn.',
+        text: 'Conducted D0–D30 cohort analysis to map churn patterns; deployed targeted onboarding journeys via WebEngage with AppsFlyer MMP tracking, reducing new user churn by 15%.',
       },
       {
-        label: 'Strategy & Market Research',
-        text: 'Led detailed competitor bench-marking and identified feature gaps, enabling product enhancements that expanded the company’s SOM.',
+        text: 'Ran detailed competitor benchmarking and market research, identifying product feature gaps that directly informed roadmap decisions and expanded share of market (SOM).',
       },
       {
-        label: 'Offline Acquisition',
-        text: 'Led high-impact poker tournaments across Goa casinos and premier institutes (IITs & IIMs), fostering early-stage user loyalty and accelerating brand recognition in a competitive market.',
+        text: 'Executed offline acquisition events (poker tournaments at IITs, IIMs, and Goa casinos), generating early-stage user loyalty and brand recognition in a competitive market.',
       },
     ],
     metrics: [
       { label: 'CAC REDUCTION', value: '17%', trend: 'down', subLabel: 'CAC Reduced' },
-      { label: 'BUDGET EFFICIENCY', value: '₹2.2Cr', trend: 'down', subLabel: 'Saved Monthly' },
+      { label: 'AD SPEND CUT', value: '55%', trend: 'down', subLabel: 'Cost Reduction' },
       { label: 'CHURN', value: '15% ↓', trend: 'down', subLabel: 'Churn Reduced' },
       { label: 'OPTIMIZED BUDGET', value: '₹1.8Cr', trend: 'down', subLabel: 'Monthly Budget' },
     ],
@@ -85,24 +79,16 @@ export const portfolioExperiences: ExperienceItem[] = [
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        label: 'E-commerce Growth',
-        text: 'Spearheaded e-commerce strategy, increasing online sales by 70% MoM.',
+        text: 'Led e-commerce growth strategy, scaling online sales by 70% MoM through data-driven campaign optimisation, paid media targeting, and retention marketing initiatives.',
       },
       {
-        label: 'Data-Driven Insights',
-        text: 'Designed and implemented 3 dashboards for key performance metrics (KPIs), enabling data-driven decision-making.',
+        text: 'Designed and deployed 3 KPI dashboards covering sales, marketing, and operations, enabling faster, evidence-based decision-making.',
       },
       {
-        label: 'Customer Champion',
-        text: 'Increased customer retention by 80% through deep customer understanding and targeted initiatives.',
+        text: 'Grew customer retention by 80% via deep user segmentation, personalised lifecycle campaigns, and post-purchase re-engagement flows.',
       },
       {
-        label: 'Marketing Optimization',
-        text: 'Crafted and optimized marketing programs, raising AOV (Average Order Value) by 60% and improved ROAS (Return on Ad Spend) by 20%.',
-      },
-      {
-        label: 'Technical Expertise',
-        text: 'Utilized Python for data cleaning and analysis.',
+        text: 'Raised Average Order Value (AOV) by 60% and improved ROAS by 20% through optimised marketing programs; used Python for data cleaning, cohort analysis, and LTV modelling.',
       },
     ],
     metrics: [
@@ -120,30 +106,20 @@ export const portfolioExperiences: ExperienceItem[] = [
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Executed in-depth data analysis with Tableau and Power BI, unveiling key trends and opportunities that led to a 22% increase in customer retention and a 30% boost in quarterly revenue.',
+        text: 'Used Tableau and Power BI to surface actionable trends from large datasets, contributing to a 22% increase in customer retention and 30% quarterly revenue growth.',
       },
       {
-        label: 'Data-Driven Decision Making',
-        text: 'Developed and deployed statistical models and predictive analyses which resulted in 100 new customers on average daily.',
+        text: 'Developed and deployed predictive statistical models that drove an average of 100 net-new customers per day.',
       },
       {
-        label: 'Data Integrity',
-        text: 'Maintained 100% data accuracy, consistency, and security.',
-      },
-      {
-        label: 'Cross-functional collaboration',
-        text: 'Coordinated with IT, business development, marketing, and operations teams to launch a new product line, resulting in a 20% increase in sales and a 15% reduction in project turnaround time.',
-      },
-      {
-        label: 'Communication',
-        text: 'Deliver presentations with clarity and coherence, resulting in a 95% satisfaction rate from stakeholders.',
+        text: 'Maintained 100% data integrity across pipelines; led cross-functional product launch coordination resulting in 20% sales uplift and 15% faster project delivery.',
       },
     ],
     metrics: [
       { label: 'REVENUE GROWTH', value: '30%', trend: 'up', subLabel: 'Quarterly Revenue' },
-      { label: 'DAILY VOLUME', value: '100+', trend: 'up', subLabel: 'New Customers' },
+      { label: 'DAILY VOLUME', value: '100+', trend: 'up', subLabel: 'Net-New Customers' },
       { label: 'RETENTION', value: '22% ↑', trend: 'up', subLabel: 'Customer Retention' },
-      { label: 'DATA ACCURACY', value: '100%', trend: 'neutral', subLabel: 'Integrity' },
+      { label: 'DATA INTEGRITY', value: '100%', trend: 'neutral', subLabel: 'Pipeline Accuracy' },
     ],
   },
   {
@@ -154,31 +130,20 @@ export const portfolioExperiences: ExperienceItem[] = [
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        label: 'Account Management',
-        text: 'Proactively resolved issues, leading to a 75% reduction in client escalations.',
+        text: 'Proactively resolved client issues, reducing escalations by 75% and complaints by 80% as single point of contact.',
       },
       {
-        label: 'Operational Efficiency',
-        text: 'Streamlined operations as the single point of contact and reduced complaints by 80% by resolving client issues.',
+        text: 'Generated MIS reports to support efficient tracking, improving decision-making processes by 25%.',
       },
       {
-        label: 'Teamwork',
-        text: 'Actively participated in team meetings and brainstorming sessions, leading to innovative solutions and a 25% increase in productivity.',
-      },
-      {
-        label: 'Financial Management',
-        text: 'Handled GST management, payments, and UTR generation and reported a growth of 200%.',
-      },
-      {
-        label: 'Reporting',
-        text: 'Generated MIS reports to facilitate efficient tracking and monitoring, improving decision-making processes by 25%.',
+        text: 'Handled GST management, payments, and UTR generation; reported 200% financial growth in managed accounts.',
       },
     ],
     metrics: [
       { label: 'ESCALATIONS', value: '75% ↓', trend: 'down', subLabel: 'Client Escalations' },
       { label: 'COMPLAINTS', value: '80% ↓', trend: 'down', subLabel: 'Complaint Reduction' },
-      { label: 'PRODUCTIVITY', value: '25% ↑', trend: 'up', subLabel: 'Team Productivity' },
-      { label: 'FINANCIAL GROWTH', value: '200%', trend: 'up', subLabel: 'GST & Payments' },
+      { label: 'DECISION SPEED', value: '25% ↑', trend: 'up', subLabel: 'MIS Reporting' },
+      { label: 'FINANCIAL GROWTH', value: '200%', trend: 'up', subLabel: 'Managed Accounts' },
     ],
   },
 ];
@@ -187,24 +152,24 @@ export const portfolioProjects: ProjectItem[] = [
   {
     id: 'sales-dashboard',
     title: 'Sales Performance Dashboard',
-    description: 'Interactive retail sales dashboard with Python data pipeline and Tableau visualizations.',
-    tags: ['Tableau', 'Python', 'Retail Analytics'],
+    description: 'Retail sales dashboard with Python data pipeline and interactive Tableau visualisations.',
+    tags: ['Tableau', 'Python'],
     imgUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAE-0EoQIvw-Clvv4exGUOlpiDWqL-eA0vl2xYKPmQKruYQ0sdXRTEG5xPbdqGor1qxI8z5EH1OXbBzaIJLKJUmQVEjt2OuLmW5i7hh8blw3ymuHzgXbAwdGN0B2ULFUm_jM8rxJnfztWoRBZp8AW-2ZtiYp3FuycE-CzqDjxdQOIkaGc3bC2hZYsvnhB6dHlI2t1Op9YI1Z9z_EtN6EnJUyQUaYUo0OaSHCoOfMDtsvgwabEi-z2iKCwSR3CQzVvI6LoDKFEjw9jjg',
     metricValue: 'Multi-Region',
     metricLabel: 'Sales Tracking',
     longDescription:
-      'Developed a sales performance dashboard for a retail company. Used Python to clean and pre-process sales data, then created interactive visualizations in Tableau. The dashboard included key metrics like total sales, sales growth, top-performing products, and sales by region — enabling stakeholders to track and analyze sales performance and improve sales strategies.',
+      'Developed a sales performance dashboard for a retail company. Used Python for data cleaning and preprocessing, then built interactive Tableau visualisations covering total sales, growth trends, top-performing products, and regional breakdowns — enabling stakeholders to improve sales strategies.',
   },
   {
     id: 'customer-segmentation',
     title: 'Customer Segmentation Analysis',
-    description: 'ML-driven customer clustering for targeted marketing and personalized experiences.',
-    tags: ['Excel', 'Tableau', 'Clustering'],
+    description: 'Clustering-based customer segmentation for targeted lifecycle marketing and personalised experiences.',
+    tags: ['Python', 'Excel', 'Tableau'],
     imgUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPX_FpLloml4t6EAfX_qFlku9p_zGzy5JPc5-Mr444LiOwbH8QG9gJVlGkTR-12kPfOOKIFmuQos4BIh1vY6TBS5RGgIE_yPfHub_V0UrtLQujGDl0Bur2BdEPbZlEsCfMG5rQKQ6yLs1j1AK21VTod95kkruV1GXdFETfC_8x98yg06cVrN_v9p6F0_9nFbvL76R9IYp4UVshrJ9PNGk-D1GJlgSdhYRxHAPlF6D59KK9GUZzVjDh8g949gUUz7p3E5B7xMY3uxaj',
     metricValue: 'Cohort',
     metricLabel: 'Segments Built',
     longDescription:
-      'Established a customer segmentation project for an e-commerce platform using Python for data analysis and machine learning. Applied clustering algorithms to segment customers based on purchasing behavior and demographic data. Visualized the segments in Tableau, highlighting key characteristics of each segment — providing insights for targeted marketing strategies and personalized customer experiences.',
+      'Built a customer segmentation model for an e-commerce platform using Python and clustering algorithms to segment users by purchasing behaviour and demographic data. Visualised segments in Tableau, providing actionable insights for targeted lifecycle marketing and personalised customer experiences.',
   },
 ];
 
@@ -230,22 +195,16 @@ export const portfolioCertifications: CertificationItem[] = [
 
 export const portfolioEducation: EducationItem[] = [
   {
-    degree: 'Bachelor of Computer Applications (B.CA)',
-    institution: 'NEFTU',
+    degree: 'Bachelor of Computer Applications (BCA)',
+    institution: 'North East Frontier Technical University (NEFTU)',
     period: '2019 - 2023',
     detail: 'Concentrated on business analytics and data-driven decision-making.',
   },
   {
-    degree: 'Higher Secondary',
+    degree: 'Higher Secondary Certificate (Science)',
     institution: 'M.G. Convent School, Lucknow',
-    period: 'June 2017 - October 2019',
+    period: '2017 - 2019',
     detail: 'Strong foundation in mathematics and science.',
-  },
-  {
-    degree: 'High School',
-    institution: 'Rasphil Academy, Lucknow',
-    period: 'March 2013 - February 2015',
-    detail: 'Developed strong communication and teamwork skills.',
   },
 ];
 
