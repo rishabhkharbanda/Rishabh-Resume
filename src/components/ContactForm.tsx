@@ -127,19 +127,17 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
           </div>
         </div>
 
-        {/* Map Visualization of Delhi NCR */}
-        <div className="relative aspect-video bg-surface-container overflow-hidden border border-outline-variant/40 rounded-3xl group/map">
-          <img 
-            alt="Delhi NCR map visual" 
-            className="w-full h-full object-cover grayscale opacity-55 group-hover/map:grayscale-0 group-hover/map:opacity-85 transition-all duration-700" 
-            referrerPolicy="no-referrer"
-            src="https://maps.googleapis.com/maps/api/staticmap?center=Delhi+NCR,India&zoom=10&size=640x360&maptype=roadmap&style=feature:all|element:labels|visibility:simplified&key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Delhi_NCR_metropolitan_area.svg/640px-Delhi_NCR_metropolitan_area.svg.png';
-            }}
+        {/* Google Maps — Delhi NCR */}
+        <div className="relative aspect-video bg-surface-container overflow-hidden border border-outline-variant/40 rounded-3xl">
+          <iframe
+            title="Delhi NCR location map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d650036.2288289947!2d76.89530232574351!3d28.286602538950536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cdcf849b3d949%3A0xf33d37d3c02dbe49!2sBPTP%20Park%2081!5e0!3m2!1sen!2sin!4v1780902660611!5m2!1sen!2sin"
+            className="absolute inset-0 w-full h-full border-0"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
           />
-          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay pointer-events-none" />
-          <div className="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md p-3.5 border border-outline-variant/40 rounded-xl">
+          <div className="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md p-3.5 border border-outline-variant/40 rounded-xl pointer-events-none">
             <p className="font-mono text-[10px] text-primary uppercase tracking-widest font-extrabold">
               DELHI NCR
             </p>
