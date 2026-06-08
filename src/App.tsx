@@ -114,7 +114,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-background text-on-background selection:bg-primary selection:text-on-primary relative">
+    <div className="min-h-screen w-full overflow-x-clip bg-background text-on-background selection:bg-primary selection:text-on-primary relative isolate">
       
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
@@ -135,21 +135,21 @@ export default function App() {
       />
 
       {/* Main Top Header Navigation */}
-      <header className="fixed top-0 inset-x-0 z-50 w-full max-w-[100vw] overflow-hidden bg-surface/80 dark:bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-xs">
-        <div className="flex justify-between items-center gap-2 px-4 sm:px-6 md:px-12 py-3 sm:py-4 max-w-7xl mx-auto w-full min-w-0">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-outline-variant/30 bg-background md:bg-surface/95 md:backdrop-blur-xl shadow-xs">
+        <div className="grid grid-cols-[1fr_auto] md:grid-cols-[auto_1fr_auto] items-center gap-2 px-4 sm:px-6 md:px-12 py-3 sm:py-4 max-w-7xl mx-auto w-full">
           
           {/* Logo and Menu Trigger */}
-          <div className="flex items-center gap-2 sm:gap-4 min-w-0 shrink">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button 
               onClick={() => setDrawerOpen(true)}
-              className="text-primary hover:text-primary transition-colors cursor-pointer active:scale-95 pr-2 focus:outline-none flex items-center justify-center font-bold"
+              className="text-primary hover:text-primary transition-colors cursor-pointer active:scale-95 focus:outline-none flex items-center justify-center font-bold shrink-0"
               title="Open Navigation"
             >
               <Menu className="w-6 h-6 stroke-[2.5px]" />
             </button>
             <div 
               onClick={handleLogoClick}
-              className="font-headline text-[24px] font-extrabold tracking-tighter text-primary select-none cursor-pointer hover:opacity-85 transition-opacity"
+              className="font-headline text-[22px] sm:text-[24px] font-extrabold tracking-tighter text-primary select-none cursor-pointer hover:opacity-85 transition-opacity truncate"
               title="RK"
             >
               RK.
@@ -157,7 +157,7 @@ export default function App() {
           </div>
 
           {/* Desktop Nav menu Links */}
-          <nav className="hidden md:flex gap-8 items-center">
+          <nav className="hidden md:flex gap-8 items-center justify-center">
             {[
               { id: 'portfolio' as ViewTab, label: 'Portfolio' },
               { id: 'experience' as ViewTab, label: 'Experience' },
@@ -186,7 +186,7 @@ export default function App() {
               <button
                 onClick={toggleTheme}
                 aria-label="Toggle dark mode"
-                className="p-2 rounded-full liquid-glass hover:scale-105 active:scale-95 transition-all text-primary border border-outline-variant/40 cursor-pointer flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 shrink-0"
+                className="p-2 rounded-full bg-surface-container border border-outline-variant/40 hover:scale-105 active:scale-95 transition-all text-primary cursor-pointer flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 shrink-0"
                 title={theme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
               >
                 {theme === 'light' ? (
@@ -208,17 +208,17 @@ export default function App() {
       </header>
 
       {/* Main View Port Canvas */}
-      <main className="pt-24 min-h-[calc(100vh-140px)]">
+      <main className="pt-20 sm:pt-24 w-full overflow-x-clip min-h-[calc(100vh-140px)]">
         
         {/* VIEW 1: Main Portfolio Home Tab */}
         {activeTab === 'portfolio' && (
           <div>
             {/* HERO SEGMENT */}
-            <section className="relative min-h-[720px] flex flex-col justify-center px-6 md:px-12 max-w-6xl mx-auto overflow-hidden">
+            <section className="relative min-h-[720px] flex flex-col justify-center px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden">
               {/* Technical Dot Grids */}
               <div className="absolute inset-0 grid-pattern opacity-40 -z-10" />
               
-              <div className="max-w-4xl relative z-10">
+              <div className="max-w-4xl w-full min-w-0 relative z-10">
                 {/* Available for opportunity ping pill */}
                 <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary mb-8 animate-fade-in liquid-glass">
                   <span className="relative flex h-2.5 w-2.5">
@@ -231,7 +231,7 @@ export default function App() {
                 </div>
 
                 {/* Bold Giant Headlines */}
-                <h1 className="font-headline text-[58px] md:text-[94px] font-extrabold tracking-tighter leading-[0.9] mb-8 select-none">
+                <h1 className="font-headline text-[clamp(2.25rem,10vw,3.625rem)] md:text-[94px] font-extrabold tracking-tighter leading-[0.95] mb-8 select-none break-words">
                   Rishabh <br />
                   <span className="text-primary select-text hover:opacity-90 transition-opacity duration-400">Kharbanda</span>
                 </h1>
@@ -242,10 +242,10 @@ export default function App() {
                 </p>
 
                   {/* Main page navigation shortcuts */}
-                  <div className="flex flex-wrap gap-4 items-center">
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center w-full">
                     <button 
                       onClick={() => handleNavClick('contact')}
-                      className="bg-primary text-on-primary px-8 py-4 font-mono text-[11px] font-extrabold tracking-widest rounded-full uppercase hover:brightness-110 active:scale-95 transition-all text-center cursor-pointer"
+                      className="bg-primary text-on-primary px-6 sm:px-8 py-3.5 sm:py-4 font-mono text-[10px] sm:text-[11px] font-extrabold tracking-wider sm:tracking-widest rounded-full uppercase hover:brightness-110 active:scale-95 transition-all text-center cursor-pointer w-full sm:w-auto"
                     >
                       Start a Conversation
                     </button>
@@ -256,7 +256,7 @@ export default function App() {
                           element.scrollIntoView({ behavior: 'smooth' });
                         }
                       }}
-                      className="border border-outline hover:border-primary px-8 py-4 font-mono text-[11px] font-extrabold tracking-widest rounded-full uppercase text-on-surface hover:text-primary transition-all text-center cursor-pointer"
+                      className="border border-outline hover:border-primary px-6 sm:px-8 py-3.5 sm:py-4 font-mono text-[10px] sm:text-[11px] font-extrabold tracking-wider sm:tracking-widest rounded-full uppercase text-on-surface hover:text-primary transition-all text-center cursor-pointer w-full sm:w-auto"
                     >
                       View Portfolio
                     </button>
@@ -271,12 +271,12 @@ export default function App() {
             </section>
 
             {/* KPI BENTO METRIC CARDS GRID */}
-            <section className="py-20 px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
+            <section className="py-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <KPIBento />
             </section>
 
             {/* NEW SECTION 02: ADVANCED MARKETING COCKPIT SIMULATOR */}
-            <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
+            <section className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <div className="mb-14">
                 <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
                   02 / Marketing Growth Simulator
@@ -293,7 +293,7 @@ export default function App() {
             </section>
 
             {/* PROFILE & ABOUT PHILOSOPHY */}
-            <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
+            <section className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
                 <div className="md:col-span-4">
                   <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
@@ -334,7 +334,7 @@ export default function App() {
 
             {/* QUICK EXPERIENCE BRIEF STATS OVERVIEW */}
             <section className="py-24 bg-gradient-to-br from-primary/5 via-secondary/5 to-surface-variant/10 border-t border-b border-outline-variant/30 backdrop-blur-md">
-              <div className="px-6 md:px-12 max-w-6xl mx-auto">
+              <div className="px-4 sm:px-6 md:px-12 max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
                   <div>
                     <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
@@ -404,7 +404,7 @@ export default function App() {
             </section>
 
             {/* DETAILED PROJECT PORTFOLIO SECTION */}
-            <section id="home-featured" className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+            <section id="home-featured" className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto">
               <div className="mb-16">
                 <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
                   05 / Projects
@@ -424,7 +424,7 @@ export default function App() {
 
         {/* VIEW 2: Dedicated Experience Timeline View */}
         {activeTab === 'experience' && (
-          <section className="py-16 px-6 md:px-12 max-w-6xl mx-auto relative">
+          <section className="py-16 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto relative">
             <div className="absolute inset-0 grid-accent opacity-[0.03] pointer-events-none" />
             
             {/* Header intro segment */}
@@ -447,7 +447,7 @@ export default function App() {
 
         {/* VIEW 3: Technical Skills Arsenal Detailed Page */}
         {activeTab === 'skills' && (
-          <section className="py-16 px-6 md:px-12 max-w-6xl mx-auto relative">
+          <section className="py-16 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto relative">
             <div className="mb-20">
               <span className="font-mono text-[10px] text-primary tracking-[0.2em] mb-4 block uppercase font-bold">
                 04 / Skills &amp; Credentials
@@ -466,7 +466,7 @@ export default function App() {
 
         {/* VIEW 4: Dedicated Contact Page */}
         {activeTab === 'contact' && (
-          <section className="py-16 px-6 md:px-12 max-w-6xl mx-auto relative">
+          <section className="py-16 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto relative">
             {/* Background Grid Accent */}
             <div className="absolute inset-0 grid-background opacity-10 pointer-events-none mask-fade" />
             
@@ -520,7 +520,7 @@ export default function App() {
 
         {/* VIEW 5: Contact success screen Tab */}
         {activeTab === 'sent-success' && (
-          <section className="py-20 px-6 md:px-12 max-w-6xl mx-auto flex items-center justify-center">
+          <section className="py-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto flex items-center justify-center">
             <SuccessScreen 
               formPayload={formPayload} 
               onBack={() => {

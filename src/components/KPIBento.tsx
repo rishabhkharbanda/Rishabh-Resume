@@ -69,7 +69,7 @@ export default function KPIBento() {
             </p>
 
             {/* Tooltip Popup container */}
-            <div className="absolute bottom-[104%] left-1/2 -translate-x-1/2 w-64 p-4 rounded-2xl liquid-glass border border-primary/25 shadow-xl opacity-0 translate-y-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-y-0 transition-all duration-300 pointer-events-none z-50 text-center text-xs backdrop-blur-xl">
+            <div className="absolute bottom-[104%] left-1/2 -translate-x-1/2 w-64 max-w-[calc(100vw-2rem)] p-4 rounded-2xl liquid-glass border border-primary/25 shadow-xl opacity-0 translate-y-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-y-0 transition-all duration-300 pointer-events-none z-50 text-center text-xs backdrop-blur-xl hidden md:block">
               <div className="font-mono text-[9px] text-primary font-extrabold uppercase tracking-wider mb-1">
                 Strategic Insight
               </div>
