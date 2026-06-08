@@ -101,7 +101,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
               </div>
               <div>
                 <p className="font-mono text-[9px] text-on-surface-variant mb-0.5 tracking-wider font-extrabold uppercase select-none">LOCATION</p>
-                <p className="font-sans text-sm text-on-surface font-medium">Hyderabad, India</p>
+                <p className="font-sans text-sm text-on-surface font-medium">Delhi NCR, India</p>
               </div>
             </div>
           </div>
@@ -127,18 +127,21 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
           </div>
         </div>
 
-        {/* Map Visualization of Hyderabad City */}
+        {/* Map Visualization of Delhi NCR */}
         <div className="relative aspect-video bg-surface-container overflow-hidden border border-outline-variant/40 rounded-3xl group/map">
           <img 
-            alt="Hyderabad Hub map visual" 
+            alt="Delhi NCR map visual" 
             className="w-full h-full object-cover grayscale opacity-55 group-hover/map:grayscale-0 group-hover/map:opacity-85 transition-all duration-700" 
             referrerPolicy="no-referrer"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxOGHCBso8GGUCGvJIl7I2LvW7dubU31T_RgT5-_74V7qDcVFGPV9L7-5UOhe8ZhDEFuWGHZPxXtNZnwYP--j_Xz9p_xPdu9-foaMOVoZKn26ByWMQk5pamtrjG8TEpNvp0JnlF-tyzezXOyKx3lJN4MB6RK4wrDhRSCE7RPca2PjU87pYkkP3K-QfTI1fPcvbbXq8viPJV0p_AWz6G2nx9xJXoxyyfViwMaxNVKReQ3pnLsx2N4eCwdzXxeLPF9SWIy6IkwSomuz1"
+            src="https://maps.googleapis.com/maps/api/staticmap?center=Delhi+NCR,India&zoom=10&size=640x360&maptype=roadmap&style=feature:all|element:labels|visibility:simplified&key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Delhi_NCR_metropolitan_area.svg/640px-Delhi_NCR_metropolitan_area.svg.png';
+            }}
           />
           <div className="absolute inset-0 bg-primary/10 mix-blend-overlay pointer-events-none" />
           <div className="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md p-3.5 border border-outline-variant/40 rounded-xl">
             <p className="font-mono text-[10px] text-primary uppercase tracking-widest font-extrabold">
-              HYDERABAD HUB
+              DELHI NCR
             </p>
           </div>
         </div>
