@@ -114,15 +114,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-background selection:bg-primary selection:text-on-primary relative">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-background text-on-background selection:bg-primary selection:text-on-primary relative">
       
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
       <VisitStatsPanel isOpen={statsOpen} onClose={() => setStatsOpen(false)} />
 
-      {/* Decorative background liquid bubbles */}
-      <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none liquid-blob -z-10" />
-      <div className="absolute top-[60%] left-[-15%] w-[600px] h-[600px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none liquid-blob-alt -z-10" />
+      {/* Decorative background liquid bubbles — clipped to viewport */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
+        <div className="absolute top-[20%] right-[-5%] w-[min(500px,90vw)] h-[min(500px,90vw)] bg-primary/5 rounded-full blur-[100px] liquid-blob" />
+        <div className="absolute top-[60%] left-[-5%] w-[min(600px,95vw)] h-[min(600px,95vw)] bg-secondary/5 rounded-full blur-[120px] liquid-blob-alt" />
+      </div>
 
       {/* Drawer navigation */}
       <NavigationDrawer 
@@ -133,11 +135,11 @@ export default function App() {
       />
 
       {/* Main Top Header Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-surface/30 backdrop-blur-xl border-b border-outline-variant/30 shadow-xs">
-        <div className="flex justify-between items-center px-6 md:px-12 py-4 max-w-7xl mx-auto w-full">
+      <header className="fixed top-0 inset-x-0 z-50 w-full max-w-[100vw] overflow-hidden bg-surface/80 dark:bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-xs">
+        <div className="flex justify-between items-center gap-2 px-4 sm:px-6 md:px-12 py-3 sm:py-4 max-w-7xl mx-auto w-full min-w-0">
           
           {/* Logo and Menu Trigger */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0 shrink">
             <button 
               onClick={() => setDrawerOpen(true)}
               className="text-primary hover:text-primary transition-colors cursor-pointer active:scale-95 pr-2 focus:outline-none flex items-center justify-center font-bold"
@@ -180,24 +182,26 @@ export default function App() {
           </nav>
 
             {/* Right Top Contact CTA Trigger & Theme Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={toggleTheme}
                 aria-label="Toggle dark mode"
-                className="p-2.5 rounded-full liquid-glass hover:scale-105 active:scale-95 transition-all text-primary hover:text-primary/8 font-extrabold border border-outline-variant/40 cursor-pointer flex items-center justify-center h-10 w-10 shrink-0"
+                className="p-2 rounded-full liquid-glass hover:scale-105 active:scale-95 transition-all text-primary border border-outline-variant/40 cursor-pointer flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 shrink-0"
                 title={theme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
               >
                 {theme === 'light' ? (
-                  <Moon className="w-5 h-5 stroke-[2.5px] text-primary" />
+                  <Moon className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5px] text-primary" />
                 ) : (
-                  <Sun className="w-5 h-5 stroke-[2.5px] text-primary" />
+                  <Sun className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5px] text-primary" />
                 )}
               </button>
               <button 
                 onClick={() => handleNavClick('contact')}
-                className="bg-primary text-on-primary hover:bg-primary/95 px-6 py-2.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all text-center cursor-pointer font-extrabold border-none"
+                aria-label="Contact"
+                className="bg-primary text-on-primary hover:bg-primary/95 h-9 w-9 sm:h-auto sm:w-auto sm:px-6 sm:py-2.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all flex items-center justify-center cursor-pointer font-extrabold border-none shrink-0"
               >
-                Contact
+                <Mail className="w-4 h-4 sm:hidden" />
+                <span className="hidden sm:inline">Contact</span>
               </button>
             </div>
         </div>
