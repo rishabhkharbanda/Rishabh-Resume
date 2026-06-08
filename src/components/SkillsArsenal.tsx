@@ -55,7 +55,7 @@ export default function SkillsArsenal() {
       detail: 'Expertise in lower-funnel acquisition, budgeting strategies, and optimizing CAC/ROAS across gaming and e-commerce.',
     },
     {
-      name: 'Funnel Optimization & CRO',
+      name: 'Funnel Optimization',
       value: 92,
       detail: 'Landing page redesign, user journey analysis, and conversion rate optimization across international campaigns.',
     },
@@ -65,9 +65,24 @@ export default function SkillsArsenal() {
       detail: 'Specialized in D0–D30 behavior analysis, churn reduction, and lifecycle journeys via WebEngage and Clevertap.',
     },
     {
-      name: 'Dashboard Design & Analytics',
+      name: 'CAC/ROAS Analysis',
+      value: 94,
+      detail: 'Deep analysis of acquisition costs and return on ad spend across multi-channel, multi-market campaigns.',
+    },
+    {
+      name: 'Dashboard Design',
       value: 93,
       detail: 'Built 8+ Tableau dashboards tracking CAC, ROI, ROAS, and KPIs across multi-market operations.',
+    },
+    {
+      name: 'A/B Testing',
+      value: 88,
+      detail: 'Structured experimentation on creatives, landing pages, and audience segments to validate growth hypotheses.',
+    },
+    {
+      name: 'Competitor Research',
+      value: 91,
+      detail: 'Competitor benchmarking and feature-gap analysis to inform product enhancements and market positioning.',
     },
   ];
 

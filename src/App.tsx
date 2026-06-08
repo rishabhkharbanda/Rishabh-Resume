@@ -312,7 +312,7 @@ export default function App() {
                 </div>
                 <div className="md:col-span-8">
                   <p className="font-sans text-[17px] md:text-lg text-on-surface-variant leading-relaxed mb-10">
-                    As a Senior Marketing Analyst with 5+ years of experience across gaming, e-commerce, and B2C growth, I focus on driving results through performance marketing, funnel optimization, and lifecycle analytics — from international campaign dashboards to geo-segmented acquisition strategies.
+                    Passionate about translating complex data into clear insights that help teams make smarter, faster decisions — from international campaign dashboards and geo-segmented acquisition strategies to lifecycle analytics and funnel optimization.
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-6">

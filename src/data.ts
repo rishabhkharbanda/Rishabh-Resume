@@ -8,7 +8,7 @@ import {
 } from './types';
 
 export const profileSummary =
-  'Results-driven Senior Marketing Analyst with 5+ years of experience across gaming, e-commerce, and B2C growth — specialising in performance marketing, funnel optimization, and life-cycle analytics. Proven track record of reducing CAC by 17%, cutting ad spend by 55% while maintaining outcomes, and driving 70% MoM e-commerce growth.';
+  'Results-driven Senior Marketing Analyst with 5+ years of experience across gaming, e-commerce, and B2C growth — specialising in performance marketing, funnel optimization, and life-cycle analytics. Proven track record of reducing CAC by 17%, cutting ad spend by 55% while maintaining outcomes, and driving 70% MoM e-commerce growth. Skilled in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage, with hands-on experience across international markets (Malaysia, Australia, Papua New Guinea). Passionate about translating complex data into clear insights that help teams make smarter, faster decisions.';
 
 export const portfolioExperiences: ExperienceItem[] = [
   {
@@ -135,17 +135,6 @@ export const portfolioProjects: ProjectItem[] = [
     longDescription:
       'Established a customer segmentation project for an e-commerce platform using Python for data analysis and machine learning. Applied clustering algorithms to segment customers based on purchasing behavior and demographic data. Visualized the segments in Tableau, highlighting key characteristics of each segment — providing insights for targeted marketing strategies and personalized customer experiences.',
   },
-  {
-    id: 'international-campaigns',
-    title: 'International Campaign Analytics',
-    description: 'Multi-market performance dashboards and CRO for Malaysia, Australia, and Papua New Guinea.',
-    tags: ['AppsFlyer', 'Tableau', 'CRO'],
-    imgUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCxB_5iAI8DahKYG2v23N2IG6zf2UquBlffrQAaWZZaAZ7TcACc8bALrJnnNNB75fCEZcGR_d8Gc0NKw_wxrEJMK-uA0KYKFeBnb5PbibVB4c5RKyzk6719gwyiVydGfi1nCTZXm066iEzl0AJT8tKcn-NxyD0r4u_QiOm7nBXtsHIxVbPmS1qyl4ijNYGIYUeZbqZ0KcpvQ2g3xs0f5NadCf-Kxr8nGVOEiTxCjj-yhPO8ZbscZTmGWdZxk7QfgoevUjvDgAb_NNf1',
-    metricValue: '18% ↑',
-    metricLabel: 'Conversion Rate',
-    longDescription:
-      'Built 8+ Tableau dashboards tracking CAC, ROI, and ROAS across three international markets. Optimized paid media bidding and audience targeting while redesigning 10+ landing pages — increasing conversion rates by 18% and campaign sign-ups by 25%.',
-  },
 ];
 
 export const portfolioSkills: SkillItem[] = [
@@ -165,7 +154,7 @@ export const portfolioSkills: SkillItem[] = [
 
 export const portfolioCertifications: CertificationItem[] = [
   { title: 'Google Digital Marketing Certification', issuer: 'Google' },
-  { title: 'Python Developer Certification', issuer: 'Udemy' },
+  { title: 'Udemy Python Developer Certification', issuer: 'Udemy' },
 ];
 
 export const portfolioEducation: EducationItem[] = [
@@ -178,13 +167,13 @@ export const portfolioEducation: EducationItem[] = [
   {
     degree: 'Higher Secondary',
     institution: 'M.G. Convent School, Lucknow',
-    period: '2017 - 2019',
+    period: 'June 2017 - October 2019',
     detail: 'Strong foundation in mathematics and science.',
   },
   {
     degree: 'High School',
     institution: 'Rasphil Academy, Lucknow',
-    period: '2013 - 2015',
+    period: 'March 2013 - February 2015',
     detail: 'Developed strong communication and teamwork skills.',
   },
 ];
@@ -194,4 +183,4 @@ export const portfolioLanguages: LanguageItem[] = [
   { name: 'Hindi', level: 'Fluent' },
 ];
 
-export const resumePdfUrl = `${import.meta.env.BASE_URL}Rishabh_Kharbanda_CV_v2.pdf`;
+export const resumePdfUrl = `${import.meta.env.BASE_URL}Rishabh_Kharbanda.pdf`;
