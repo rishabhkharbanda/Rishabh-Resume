@@ -63,3 +63,14 @@ Both run through one free **Google Apps Script** backend (contact emails + uniqu
 | **Hidden stats panel** | Triple-click **RK.** in the header, or open `?rkstats` on the site URL, then enter your PIN |
 
 Default PIN in the script is `rk2026` until you set `STATS_SECRET` in Script properties.
+
+## Profile photo
+
+Replace `public/avatar.png` with your professional headshot (square or portrait, min. 500×500px). It appears in the hero section and navigation drawer.
+
+```bash
+cp /path/to/your-photo.jpg public/avatar.png
+git add public/avatar.png
+git commit -m "Update profile photo"
+git push origin main
+```

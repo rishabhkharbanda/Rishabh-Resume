@@ -12,6 +12,7 @@ import {
   Copy 
 } from 'lucide-react';
 import { ViewTab } from '../types';
+import ProfileAvatar from './ProfileAvatar';
 
 interface NavigationDrawerProps {
   isOpen: boolean;
@@ -73,15 +74,7 @@ export default function NavigationDrawer({
             </button>
 
             <div className="flex flex-col gap-4 mt-2">
-              <div className="w-20 h-20 rounded-xl border border-primary/30 overflow-hidden bg-surface-container-high relative">
-                <img 
-                  alt="Rishabh Kharbanda portrait" 
-                  className="w-full h-full object-cover" 
-                  referrerPolicy="no-referrer"
-                  src={`${import.meta.env.BASE_URL}avatar.png`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/25 pointer-events-none" />
-              </div>
+              <ProfileAvatar className="w-20 h-20 rounded-xl" />
               <div>
                 <h2 className="font-headline text-2xl font-bold text-primary tracking-tight">Rishabh Kharbanda</h2>
                 <p className="font-sans text-sm text-on-surface font-semibold leading-tight mt-1">Senior Marketing Analyst</p>
