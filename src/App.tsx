@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, 
   ArrowDown, 
@@ -37,6 +37,8 @@ import FeaturedProjects from './components/FeaturedProjects';
 import ContactForm from './components/ContactForm';
 import SuccessScreen from './components/SuccessScreen';
 import ScrollToTop from './components/ScrollToTop';
+import VisitStatsPanel from './components/VisitStatsPanel';
+import { trackVisit } from './config/api';
 
 export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -66,11 +68,42 @@ export default function App() {
     subject: string;
     message: string;
   } | null>(null);
+  const [statsOpen, setStatsOpen] = useState(false);
+  const logoClickCount = useRef(0);
+  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    trackVisit();
+    if (new URLSearchParams(window.location.search).has('rkstats')) {
+      setStatsOpen(true);
+    }
+  }, []);
 
   // Smooth scroll helper or direct tab changer depending on state
   const handleNavClick = (tab: ViewTab) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLogoClick = () => {
+    logoClickCount.current += 1;
+
+    if (logoClickTimer.current) {
+      clearTimeout(logoClickTimer.current);
+    }
+
+    if (logoClickCount.current >= 3) {
+      logoClickCount.current = 0;
+      setStatsOpen(true);
+      return;
+    }
+
+    logoClickTimer.current = setTimeout(() => {
+      if (logoClickCount.current === 1) {
+        handleNavClick('portfolio');
+      }
+      logoClickCount.current = 0;
+    }, 450);
   };
 
   // Callback on successful contact submission
@@ -85,6 +118,7 @@ export default function App() {
       
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
+      <VisitStatsPanel isOpen={statsOpen} onClose={() => setStatsOpen(false)} />
 
       {/* Decorative background liquid bubbles */}
       <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none liquid-blob -z-10" />
@@ -112,8 +146,9 @@ export default function App() {
               <Menu className="w-6 h-6 stroke-[2.5px]" />
             </button>
             <div 
-              onClick={() => handleNavClick('portfolio')}
+              onClick={handleLogoClick}
               className="font-headline text-[24px] font-extrabold tracking-tighter text-primary select-none cursor-pointer hover:opacity-85 transition-opacity"
+              title="RK"
             >
               RK.
             </div>
