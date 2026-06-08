@@ -8,7 +8,7 @@ interface ProfileAvatarProps {
 
 export default function ProfileAvatar({
   className = 'w-20 h-20',
-  imageClassName = 'object-[center_18%]',
+  imageClassName = 'object-[center_32%]',
 }: ProfileAvatarProps) {
   return (
     <div
