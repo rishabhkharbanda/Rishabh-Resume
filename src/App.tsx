@@ -26,7 +26,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
-import { profileSummary, resumePdfUrl } from './data';
+import { profileSummary, resumePdfUrl, portfolioExperiences } from './data';
 import { ViewTab } from './types';
 import NavigationDrawer from './components/NavigationDrawer';
 import KPIBento from './components/KPIBento';
@@ -361,51 +361,52 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Brief Yong Yung Casino */}
-                  <div className="liquid-glass border border-outline-variant/40 p-8 rounded-3xl relative group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2025 - 2026</span>
-                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Freelance</span>
-                      </div>
-                      <h3 className="font-headline text-xl font-bold text-on-surface">Freelance Marketing Analyst</h3>
-                      <p className="text-primary font-mono text-sm font-semibold mb-6">Yong Yung Casino · Malaysia, Australia &amp; PNG</p>
-                      
-                      <div className="space-y-4 text-on-surface-variant text-sm font-sans">
-                        <div className="flex gap-3">
-                          <span className="text-primary mt-1">•</span>
-                          <p>Built 8+ Tableau dashboards tracking CAC, ROI, and ROAS across three international markets — cutting reporting turnaround by 40%.</p>
+                  {portfolioExperiences.slice(0, 4).map((experience) => (
+                    <div
+                      key={`${experience.company}-${experience.period}`}
+                      className="liquid-glass border border-outline-variant/40 p-8 rounded-3xl relative group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-3 gap-2">
+                          <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">
+                            {experience.period.replace(' - ', ' – ')}
+                          </span>
+                          <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase shrink-0">
+                            {experience.role.includes('Freelance')
+                              ? 'Freelance'
+                              : experience.role.includes('Senior')
+                                ? 'Senior'
+                                : experience.role.includes('Manager')
+                                  ? 'Manager'
+                                  : 'Analyst'}
+                          </span>
                         </div>
-                        <div className="flex gap-3">
-                          <span className="text-primary mt-1">•</span>
-                          <p>Optimized landing pages and paid media to increase conversion rates by 18% and campaign sign-ups by 25%.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                        <h3 className="font-headline text-xl font-bold text-on-surface">{experience.role}</h3>
+                        <p className="text-primary font-mono text-sm font-semibold mb-6">
+                          {experience.company}
+                          {experience.location ? ` · ${experience.location.split(' · ')[0]}` : ''}
+                        </p>
 
-                  {/* Brief HDW */}
-                  <div className="liquid-glass border border-outline-variant/40 p-8 rounded-3xl relative group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">2024 - 2025</span>
-                        <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded border border-primary/25 uppercase">Senior Role</span>
-                      </div>
-                      <h3 className="font-headline text-xl font-bold text-on-surface">Senior Marketing Analyst</h3>
-                      <p className="text-primary font-mono text-sm font-semibold mb-6">Head Digital Works · Gaming &amp; Fantasy Sports</p>
-                      
-                      <div className="space-y-4 text-on-surface-variant text-sm font-sans">
-                        <div className="flex gap-3">
-                          <span className="text-primary mt-1">•</span>
-                          <p>Lowered CAC by 17% through geo-segmentation and player value tier optimization (HVP, MVP).</p>
-                        </div>
-                        <div className="flex gap-3">
-                          <span className="text-primary mt-1">•</span>
-                          <p>Reduced monthly ad spend from ₹4 Cr to ₹1.8 Cr while maintaining acquisition outcomes and cutting churn by 15%.</p>
+                        <div className="space-y-4 text-on-surface-variant text-sm font-sans">
+                          {experience.points.slice(0, 2).map((point) => (
+                            <div key={`${point.label ?? 'detail'}-${point.text.slice(0, 40)}`} className="flex gap-3">
+                              <span className="text-primary mt-1">•</span>
+                              <p>
+                                {point.label ? (
+                                  <>
+                                    <span className="font-semibold text-on-surface">{point.label}: </span>
+                                    {point.text}
+                                  </>
+                                ) : (
+                                  point.text
+                                )}
+                              </p>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </section>
@@ -443,7 +444,7 @@ export default function App() {
                 Professional Journey
               </h1>
               <p className="font-sans text-lg text-on-surface-variant max-w-2xl leading-relaxed">
-                A chronology of driving measurable growth through analytical rigor and strategic marketing optimization across diverse industries.
+                Five roles across gaming, e-commerce, B2C growth, and international markets — from freelance marketing analytics to senior performance strategy and data-driven account management.
               </p>
             </div>
 

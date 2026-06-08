@@ -15,13 +15,25 @@ export const portfolioExperiences: ExperienceItem[] = [
     company: 'Yong Yung Casino',
     role: 'Freelance Marketing Analyst',
     period: 'OCT 2025 - MAY 2026',
-    location: 'Malaysia, Australia & Papua New Guinea',
-    descriptionTitle: 'International Growth & Analytics',
+    location: 'Malaysia, Australia & Papua New Guinea Markets',
+    descriptionTitle: 'Role Highlights',
     points: [
-      'Developed 8+ Tableau dashboards to monitor CAC, ROI, ROAS, and campaign performance across Malaysia, Australia, and Papua New Guinea — improving reporting efficiency and reducing turnaround time by 40%.',
-      'Analysed paid media performance across multiple channels and international markets, optimizing bidding strategies, audience targeting, and creatives to increase conversion rates by 18% and reduce Cost per Lead (CPL).',
-      'Redesigned and optimised 10+ landing pages through user journey analysis and UX enhancements, reducing funnel drop-offs and increasing campaign sign-ups by 25%.',
-      'Designed wireframes and user interfaces in Figma for 3+ government websites, collaborating with developers and stakeholders to deliver user-centric, accessible digital experiences.',
+      {
+        label: 'Marketing Analytics',
+        text: 'Developed 8+ Tableau dashboards to monitor CAC, ROI, ROAS, and campaign performance across Malaysia, Australia, and Papua New Guinea, improving reporting efficiency and reducing turnaround time by 40%.',
+      },
+      {
+        label: 'Performance Marketing',
+        text: 'Analysed paid media performance across multiple channels and international markets, optimizing bidding strategies, audience targeting, and creatives to increase conversion rates by 18% and reduce Cost per Lead (CPL).',
+      },
+      {
+        label: 'Conversion Rate Optimisation (CRO)',
+        text: 'Redesigned and optimised 10+ landing pages through user journey analysis and UX enhancements, reducing funnel drop-offs and increasing campaign sign-ups by 25%.',
+      },
+      {
+        label: 'UI/UX Design',
+        text: 'Designed wireframes and user interfaces in Figma for 3+ government websites, collaborating with developers and stakeholders to deliver user-centric, accessible digital experiences.',
+      },
     ],
     metrics: [
       { label: 'DASHBOARDS', value: '8+', trend: 'up', subLabel: 'Built' },
@@ -35,13 +47,28 @@ export const portfolioExperiences: ExperienceItem[] = [
     role: 'Senior Marketing Analyst',
     period: 'SEP 2024 - SEP 2025',
     location: 'Hyderabad, India · Gaming & Fantasy Sports',
-    descriptionTitle: 'Key Strategic Initiatives',
+    descriptionTitle: 'Role Highlights',
     points: [
-      'Strategically optimized marketing channels based on geo-segmentation and player value tiers (HVP, MVP), resulting in a 17% reduction in CAC.',
-      'Revamped the performance strategy to achieve better results with a reduced monthly budget of ₹1.8 Cr, compared to the earlier spend of ₹4 Cr.',
-      'Leveraged D0–D30 user behavior analysis to identify churn patterns and implemented targeted onboarding journeys via WebEngage, resulting in a 15% decrease in new user churn.',
-      'Led detailed competitor benchmarking and identified feature gaps, enabling product enhancements that expanded the company’s SOM.',
-      'Led high-impact poker tournaments across Goa casinos and premier institutes (IITs & IIMs), fostering early-stage user loyalty and accelerating brand recognition.',
+      {
+        label: 'Performance Marketing & Campaign Strategy Development',
+        text: 'Strategically optimized marketing channels based on Geo segmentation and player value tiers (HVP, MVP), resulting in a 17% reduction in CAC.',
+      },
+      {
+        label: 'Spend Management',
+        text: 'Revamped the performance strategy and implemented key optimizations that enabled the team to achieve better results with a reduced monthly budget of ₹1.8 Cr, compared to the earlier spend of ₹4 Cr.',
+      },
+      {
+        label: 'User Behavior Insights',
+        text: 'Leveraged D0–D30 user behavior analysis to identify churn patterns and implemented targeted onboarding journeys via WebEngage, resulting in a 15% decrease in new user churn.',
+      },
+      {
+        label: 'Strategy & Market Research',
+        text: 'Led detailed competitor bench-marking and identified feature gaps, enabling product enhancements that expanded the company’s SOM.',
+      },
+      {
+        label: 'Offline Acquisition',
+        text: 'Led high-impact poker tournaments across Goa casinos and premier institutes (IITs & IIMs), fostering early-stage user loyalty and accelerating brand recognition in a competitive market.',
+      },
     ],
     metrics: [
       { label: 'CAC REDUCTION', value: '17%', trend: 'down', subLabel: 'CAC Reduced' },
@@ -55,13 +82,28 @@ export const portfolioExperiences: ExperienceItem[] = [
     role: 'Data Analyst',
     period: 'DEC 2023 - AUG 2024',
     location: 'Gurugram, India',
-    descriptionTitle: 'Growth & Analytics',
+    descriptionTitle: 'Role Highlights',
     points: [
-      'Spearheaded e-commerce strategy, increasing online sales by 70% MoM.',
-      'Designed and implemented 3 dashboards for key performance metrics (KPIs), enabling data-driven decision-making.',
-      'Increased customer retention by 80% through deep customer understanding and targeted initiatives.',
-      'Crafted and optimized marketing programs, raising AOV (Average Order Value) by 60% and improved ROAS by 20%.',
-      'Utilized Python for data cleaning and analysis.',
+      {
+        label: 'E-commerce Growth',
+        text: 'Spearheaded e-commerce strategy, increasing online sales by 70% MoM.',
+      },
+      {
+        label: 'Data-Driven Insights',
+        text: 'Designed and implemented 3 dashboards for key performance metrics (KPIs), enabling data-driven decision-making.',
+      },
+      {
+        label: 'Customer Champion',
+        text: 'Increased customer retention by 80% through deep customer understanding and targeted initiatives.',
+      },
+      {
+        label: 'Marketing Optimization',
+        text: 'Crafted and optimized marketing programs, raising AOV (Average Order Value) by 60% and improved ROAS (Return on Ad Spend) by 20%.',
+      },
+      {
+        label: 'Technical Expertise',
+        text: 'Utilized Python for data cleaning and analysis.',
+      },
     ],
     metrics: [
       { label: 'SALES GROWTH', value: '70%', trend: 'up', subLabel: 'MoM Growth' },
@@ -75,13 +117,27 @@ export const portfolioExperiences: ExperienceItem[] = [
     role: 'Data Analyst',
     period: 'SEP 2022 - NOV 2023',
     location: 'Gurugram, India',
-    descriptionTitle: 'Business Intelligence',
+    descriptionTitle: 'Role Highlights',
     points: [
-      'Executed in-depth data analysis with Tableau and Power BI, unveiling key trends that led to a 22% increase in customer retention and a 30% boost in quarterly revenue.',
-      'Developed and deployed statistical models and predictive analyses which resulted in 100 new customers on average daily.',
-      'Maintained 100% data accuracy, consistency, and security.',
-      'Coordinated with IT, business development, marketing, and operations teams to launch a new product line, resulting in a 20% increase in sales and a 15% reduction in project turnaround time.',
-      'Delivered presentations with clarity and coherence, achieving a 95% satisfaction rate from stakeholders.',
+      {
+        text: 'Executed in-depth data analysis with Tableau and Power BI, unveiling key trends and opportunities that led to a 22% increase in customer retention and a 30% boost in quarterly revenue.',
+      },
+      {
+        label: 'Data-Driven Decision Making',
+        text: 'Developed and deployed statistical models and predictive analyses which resulted in 100 new customers on average daily.',
+      },
+      {
+        label: 'Data Integrity',
+        text: 'Maintained 100% data accuracy, consistency, and security.',
+      },
+      {
+        label: 'Cross-functional collaboration',
+        text: 'Coordinated with IT, business development, marketing, and operations teams to launch a new product line, resulting in a 20% increase in sales and a 15% reduction in project turnaround time.',
+      },
+      {
+        label: 'Communication',
+        text: 'Deliver presentations with clarity and coherence, resulting in a 95% satisfaction rate from stakeholders.',
+      },
     ],
     metrics: [
       { label: 'REVENUE GROWTH', value: '30%', trend: 'up', subLabel: 'Quarterly Revenue' },
@@ -95,13 +151,28 @@ export const portfolioExperiences: ExperienceItem[] = [
     role: 'Key Account Manager',
     period: 'APR 2021 - AUG 2022',
     location: 'Gurugram, India',
-    descriptionTitle: 'Account & Operations',
+    descriptionTitle: 'Role Highlights',
     points: [
-      'Proactively resolved issues, leading to a 75% reduction in client escalations.',
-      'Streamlined operations as the single point of contact and reduced complaints by 80% by resolving client issues.',
-      'Actively participated in team meetings and brainstorming sessions, leading to innovative solutions and a 25% increase in productivity.',
-      'Handled GST management, payments, and UTR generation and reported a growth of 200%.',
-      'Generated MIS reports to facilitate efficient tracking and monitoring, improving decision-making processes by 25%.',
+      {
+        label: 'Account Management',
+        text: 'Proactively resolved issues, leading to a 75% reduction in client escalations.',
+      },
+      {
+        label: 'Operational Efficiency',
+        text: 'Streamlined operations as the single point of contact and reduced complaints by 80% by resolving client issues.',
+      },
+      {
+        label: 'Teamwork',
+        text: 'Actively participated in team meetings and brainstorming sessions, leading to innovative solutions and a 25% increase in productivity.',
+      },
+      {
+        label: 'Financial Management',
+        text: 'Handled GST management, payments, and UTR generation and reported a growth of 200%.',
+      },
+      {
+        label: 'Reporting',
+        text: 'Generated MIS reports to facilitate efficient tracking and monitoring, improving decision-making processes by 25%.',
+      },
     ],
     metrics: [
       { label: 'ESCALATIONS', value: '75% ↓', trend: 'down', subLabel: 'Client Escalations' },

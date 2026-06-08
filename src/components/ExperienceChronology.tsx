@@ -99,10 +99,17 @@ function ExperienceBlock({
 
         <ul className="space-y-4">
           {experience.points.map((point) => (
-            <li key={point.slice(0, 40)} className="flex gap-3">
+            <li key={`${point.label ?? 'detail'}-${point.text.slice(0, 48)}`} className="flex gap-3">
               <span className="text-primary text-xl leading-none font-bold select-none">•</span>
               <p className="font-sans text-[13px] md:text-sm text-on-surface-variant leading-relaxed">
-                {point}
+                {point.label ? (
+                  <>
+                    <span className="font-semibold text-on-surface">{point.label}: </span>
+                    {point.text}
+                  </>
+                ) : (
+                  point.text
+                )}
               </p>
             </li>
           ))}

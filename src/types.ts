@@ -5,13 +5,18 @@ export interface Metric {
   subLabel?: string;
 }
 
+export interface ExperiencePoint {
+  label?: string;
+  text: string;
+}
+
 export interface ExperienceItem {
   company: string;
   role: string;
   period: string;
   location?: string;
   descriptionTitle?: string;
-  points: string[];
+  points: ExperiencePoint[];
   metrics: Metric[];
 }
 
