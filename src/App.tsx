@@ -26,7 +26,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
-import { profileSummary, resumePdfUrl, portfolioExperiences } from './data';
+import { profileSummary, resumePdfUrl, resumePdfFilename, portfolioExperiences } from './data';
 import { ViewTab } from './types';
 import NavigationDrawer from './components/NavigationDrawer';
 import KPIBento from './components/KPIBento';
@@ -515,7 +515,7 @@ export default function App() {
                   href={resumePdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  download
+                  download={resumePdfFilename}
                 >
                   DOWNLOAD RESUME
                 </a>

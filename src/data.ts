@@ -213,4 +213,5 @@ export const portfolioLanguages: LanguageItem[] = [
   { name: 'Hindi', level: 'Fluent' },
 ];
 
-export const resumePdfUrl = `${import.meta.env.BASE_URL}Rishabh_Kharbanda.pdf`;
+export const resumePdfFilename = 'Rishabh_Kharbanda.pdf';
+export const resumePdfUrl = `${import.meta.env.BASE_URL}${resumePdfFilename}?v=3`;
