@@ -47,11 +47,14 @@ Both run through one free **Google Apps Script** backend (contact emails + uniqu
 2. Paste the code from `scripts/portfolio-backend-google-apps-script.gs` and save
 3. **Project settings** → **Script properties** → add:
    - `STATS_SECRET` = your private PIN (e.g. `rk2026`) — used to view stats
-4. **Deploy** → **New deployment** → **Web app**
+4. **Run** → select `authorizeSetup` → **Run** → **Allow** all permissions (spreadsheet + email)
+5. **Deploy** → **New deployment** → **Web app**
    - Execute as: **Me**
    - Who has access: **Anyone**
-5. Copy the **Web app URL** → GitHub secret `VITE_PORTFOLIO_API_URL` (or `.env` locally)
-6. **Important:** Use `scripts/portfolio-backend-google-apps-script.gs` (not the older contact-only script). If stats show zero, your secret likely points to the contact-only deployment — redeploy the full backend and update the secret, then push to `main` to rebuild the site.
+6. Copy the **Web app URL** → GitHub secret `VITE_PORTFOLIO_API_URL` (or `.env` locally)
+7. Push to `main` to rebuild the site
+
+**If you see "Failed to fetch" or permission errors:** run `authorizeSetup` again in Apps Script, then **Deploy → Manage deployments → Edit → New version → Deploy**.
 
 ### What you get
 

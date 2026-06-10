@@ -4,12 +4,19 @@
  * Setup:
  * 1. https://script.google.com → New project → paste this file
  * 2. Project Settings → Script properties → add STATS_SECRET = your private PIN
- * 3. Deploy → New deployment → Web app (Execute as: Me, Anyone)
- * 4. Optional: Triggers → Add → sendDailyVisitDigest → Day timer → 8am–9am
- * 5. Copy Web app URL → VITE_PORTFOLIO_API_URL (GitHub secret + .env)
+ * 3. Run → authorizeSetup → Allow all permissions (creates analytics spreadsheet)
+ * 4. Deploy → New deployment → Web app (Execute as: Me, Anyone)
+ * 5. Optional: Triggers → Add → sendDailyVisitDigest → Day timer → 8am–9am
+ * 6. Copy Web app URL → VITE_PORTFOLIO_API_URL (GitHub secret + .env)
  */
 
 const RECIPIENT_EMAIL = 'rishabhkharbanda08@gmail.com';
+
+/** Run once from the Apps Script editor to grant spreadsheet + email permissions. */
+function authorizeSetup() {
+  const ss = getSpreadsheet_();
+  Logger.log('Authorized. Analytics sheet: ' + ss.getUrl());
+}
 const VISITS_SHEET = 'Visits';
 const UNIQUES_SHEET = 'UniqueVisitors';
 
@@ -25,18 +32,28 @@ function doPost(e) {
 function doGet(e) {
   const params = getParams_(e);
   const action = String(params.action || 'health').toLowerCase();
+  const callback = sanitizeCallback_(params.callback);
 
-  // GET visit logging is more reliable from static sites (GitHub Pages) than POST.
-  if (action === 'visit') return logVisit_(params);
-  if (action === 'stats') return getStats_(params);
+  // GET + JSONP is the most reliable transport from GitHub Pages (no CORS).
+  if (action === 'visit') return logVisit_(params, callback);
+  if (action === 'stats') return getStats_(params, callback);
   if (action === 'health') {
-    return jsonResponse_({
-      result: 'ok',
-      message: 'Portfolio API is live.',
-      analytics: true,
-    });
+    return jsonResponse_(
+      {
+        result: 'ok',
+        message: 'Portfolio API is live.',
+        analytics: true,
+      },
+      callback
+    );
   }
-  return jsonResponse_({ result: 'error', message: 'Unknown action.' });
+  return jsonResponse_({ result: 'error', message: 'Unknown action.' }, callback);
+}
+
+function sanitizeCallback_(name) {
+  const value = String(name || '').trim();
+  if (/^rkCb_[a-zA-Z0-9_]+$/.test(value)) return value;
+  return '';
 }
 
 function getParams_(e) {
@@ -109,11 +126,11 @@ function handleContact_(params) {
   }
 }
 
-function logVisit_(params) {
+function logVisit_(params, callback) {
   try {
     const visitorId = String(params.visitorId || '').trim();
     if (!visitorId) {
-      return jsonResponse_({ result: 'error', message: 'Missing visitorId.' });
+      return jsonResponse_({ result: 'error', message: 'Missing visitorId.' }, callback);
     }
 
     const referrer = String(params.referrer || 'direct').slice(0, 500);
@@ -138,44 +155,54 @@ function logVisit_(params) {
       uniques.getRange(row, 3, 1, 2).setValues([[now, count + 1]]);
     }
 
-    return jsonResponse_({
-      result: 'success',
-      isNewUnique: isNewUnique,
-      uniqueVisitors: Math.max(0, uniques.getLastRow() - 1),
-      totalPageViews: Math.max(0, visits.getLastRow() - 1),
-    });
+    return jsonResponse_(
+      {
+        result: 'success',
+        isNewUnique: isNewUnique,
+        uniqueVisitors: Math.max(0, uniques.getLastRow() - 1),
+        totalPageViews: Math.max(0, visits.getLastRow() - 1),
+      },
+      callback
+    );
   } catch (error) {
-    return jsonResponse_({ result: 'error', message: String(error) });
+    return jsonResponse_({ result: 'error', message: String(error) }, callback);
   }
 }
 
-function getStats_(params) {
-  const key = String(params.key || '');
-  const secret =
-    PropertiesService.getScriptProperties().getProperty('STATS_SECRET') || 'rk2026';
+function getStats_(params, callback) {
+  try {
+    const key = String(params.key || '');
+    const secret =
+      PropertiesService.getScriptProperties().getProperty('STATS_SECRET') || 'rk2026';
 
-  if (key !== secret) {
-    return jsonResponse_({ result: 'error', message: 'Invalid access PIN.' });
+    if (key !== secret) {
+      return jsonResponse_({ result: 'error', message: 'Invalid access PIN.' }, callback);
+    }
+
+    const ss = getSpreadsheet_();
+    const visits = ss.getSheetByName(VISITS_SHEET);
+    const uniques = ss.getSheetByName(UNIQUES_SHEET);
+
+    const uniqueVisitors = Math.max(0, uniques.getLastRow() - 1);
+    const totalPageViews = Math.max(0, visits.getLastRow() - 1);
+    const todayPageViews = countTodayRows_(visits);
+    const todayNewUniques = countTodayNewUniques_(visits);
+
+    return jsonResponse_(
+      {
+        result: 'success',
+        uniqueVisitors: uniqueVisitors,
+        totalPageViews: totalPageViews,
+        todayPageViews: todayPageViews,
+        todayNewUniques: todayNewUniques,
+        sheetUrl: ss.getUrl(),
+        updatedAt: new Date().toISOString(),
+      },
+      callback
+    );
+  } catch (error) {
+    return jsonResponse_({ result: 'error', message: String(error) }, callback);
   }
-
-  const ss = getSpreadsheet_();
-  const visits = ss.getSheetByName(VISITS_SHEET);
-  const uniques = ss.getSheetByName(UNIQUES_SHEET);
-
-  const uniqueVisitors = Math.max(0, uniques.getLastRow() - 1);
-  const totalPageViews = Math.max(0, visits.getLastRow() - 1);
-  const todayPageViews = countTodayRows_(visits);
-  const todayNewUniques = countTodayNewUniques_(visits);
-
-  return jsonResponse_({
-    result: 'success',
-    uniqueVisitors: uniqueVisitors,
-    totalPageViews: totalPageViews,
-    todayPageViews: todayPageViews,
-    todayNewUniques: todayNewUniques,
-    sheetUrl: ss.getUrl(),
-    updatedAt: new Date().toISOString(),
-  });
 }
 
 /** Optional daily email — add as time-driven trigger in Apps Script */
@@ -308,8 +335,12 @@ function countTodayNewUniques_(sheet) {
   return count;
 }
 
-function jsonResponse_(payload) {
-  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
-    ContentService.MimeType.JSON
-  );
+function jsonResponse_(payload, callback) {
+  const text = JSON.stringify(payload);
+  if (callback) {
+    return ContentService.createTextOutput(callback + '(' + text + ')').setMimeType(
+      ContentService.MimeType.JAVASCRIPT
+    );
+  }
+  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
 }

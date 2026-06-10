@@ -10,6 +10,7 @@ export interface ContactFormPayload {
   message: string;
 }
 
+/** Submit via hidden iframe — avoids CORS issues with Google Apps Script POST. */
 export async function submitContactForm(payload: ContactFormPayload): Promise<void> {
   if (!CONTACT_FORM_ENDPOINT) {
     throw new Error(
@@ -17,36 +18,66 @@ export async function submitContactForm(payload: ContactFormPayload): Promise<vo
     );
   }
 
-  const body = new URLSearchParams({
-    action: 'contact',
-    name: payload.name.trim(),
-    email: payload.email.trim(),
-    subject: payload.subject.trim(),
-    message: payload.message.trim(),
-  });
-
-  const response = await fetch(CONTACT_FORM_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    body: body.toString(),
-    redirect: 'follow',
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      'Unable to send your message right now. Please email rishabhkharbanda08@gmail.com directly.'
-    );
-  }
-
-  try {
-    const data = (await response.json()) as { result?: string; message?: string };
-    if (data.result === 'error') {
-      throw new Error(data.message || 'Message could not be sent. Please try again or email directly.');
+  return new Promise((resolve, reject) => {
+    const iframeName = 'rk_contact_iframe';
+    let iframe = document.getElementById(iframeName) as HTMLIFrameElement | null;
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = iframeName;
+      iframe.id = iframeName;
+      iframe.title = 'Contact form response';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
     }
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('could not be sent')) {
-      throw error;
-    }
-    // Google Apps Script may return a non-JSON body on success — treat as sent.
-  }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = CONTACT_FORM_ENDPOINT;
+    form.target = iframeName;
+    form.style.display = 'none';
+    form.acceptCharset = 'UTF-8';
+
+    const fields: Record<string, string> = {
+      action: 'contact',
+      name: payload.name.trim(),
+      email: payload.email.trim(),
+      subject: payload.subject.trim(),
+      message: payload.message.trim(),
+    };
+
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      resolve();
+    }, 4000);
+
+    const cleanup = () => {
+      window.clearTimeout(timeout);
+      form.remove();
+    };
+
+    iframe.onload = () => {
+      cleanup();
+      resolve();
+    };
+
+    iframe.onerror = () => {
+      cleanup();
+      reject(
+        new Error(
+          'Unable to send your message right now. Please email rishabhkharbanda08@gmail.com directly.'
+        )
+      );
+    };
+
+    document.body.appendChild(form);
+    form.submit();
+  });
 }
