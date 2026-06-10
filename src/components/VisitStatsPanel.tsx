@@ -112,15 +112,38 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
               </a>
             )}
 
-            <button
-              onClick={() => {
-                setStats(null);
-                setPin('');
-              }}
-              className="w-full border border-outline-variant py-2.5 rounded-full font-mono text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary"
-            >
-              Lock
-            </button>
+            {error && <p className="text-sm text-red-500">{error}</p>}
+
+            <div className="flex gap-2">
+              <button
+                onClick={async () => {
+                  setLoading(true);
+                  setError(null);
+                  try {
+                    const data = await fetchVisitStats(pin);
+                    setStats(data);
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : 'Failed to refresh stats.');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
+                className="flex-1 border border-outline-variant py-2.5 rounded-full font-mono text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary disabled:opacity-50"
+              >
+                {loading ? 'Refreshing…' : 'Refresh'}
+              </button>
+              <button
+                onClick={() => {
+                  setStats(null);
+                  setPin('');
+                  setError(null);
+                }}
+                className="flex-1 border border-outline-variant py-2.5 rounded-full font-mono text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary"
+              >
+                Lock
+              </button>
+            </div>
           </div>
         )}
       </div>

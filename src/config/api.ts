@@ -2,7 +2,7 @@
 export const PORTFOLIO_API_URL =
   import.meta.env.VITE_PORTFOLIO_API_URL ||
   import.meta.env.VITE_CONTACT_FORM_URL ||
-  'https://script.google.com/macros/s/AKfycbwRFtwcgbRbNpqjZfTfHQCvHPwhfOoZYVG214tJRPAx3pBqzaWKCoWERDqWkpuObzJdeA/exec';
+  '';
 
 const VISITOR_ID_KEY = 'rk_visitor_id';
 const SESSION_VISIT_KEY = 'rk_visit_logged';
@@ -25,49 +25,105 @@ function getVisitorId(): string {
   return id;
 }
 
+function buildApiUrl(params: Record<string, string>): string {
+  if (!PORTFOLIO_API_URL) return '';
+
+  const url = new URL(PORTFOLIO_API_URL);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  return url.toString();
+}
+
+async function postForm(params: Record<string, string>): Promise<Response | null> {
+  if (!PORTFOLIO_API_URL) return null;
+
+  return fetch(PORTFOLIO_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    body: new URLSearchParams(params).toString(),
+    redirect: 'follow',
+  });
+}
+
 /** Log one page view per browser session (unique visitors tracked server-side). */
 export async function trackVisit(): Promise<void> {
-  if (sessionStorage.getItem(SESSION_VISIT_KEY)) return;
+  if (!PORTFOLIO_API_URL || sessionStorage.getItem(SESSION_VISIT_KEY)) return;
 
-  const formData = new FormData();
-  formData.append('action', 'visit');
-  formData.append('visitorId', getVisitorId());
-  formData.append('page', window.location.pathname + window.location.search);
-  formData.append('referrer', document.referrer || 'direct');
-  formData.append('userAgent', navigator.userAgent);
+  const params = {
+    action: 'visit',
+    visitorId: getVisitorId(),
+    page: window.location.pathname + window.location.search,
+    referrer: document.referrer || 'direct',
+    userAgent: navigator.userAgent.slice(0, 300),
+  };
 
   try {
-    await fetch(PORTFOLIO_API_URL, {
-      method: 'POST',
-      body: formData,
-      redirect: 'follow',
-    });
-    sessionStorage.setItem(SESSION_VISIT_KEY, '1');
+    // GET is the most reliable transport for Google Apps Script from GitHub Pages.
+    const getResponse = await fetch(buildApiUrl(params), { redirect: 'follow' });
+    if (getResponse.ok) {
+      const data = (await getResponse.json()) as { result?: string };
+      if (data.result === 'success') {
+        sessionStorage.setItem(SESSION_VISIT_KEY, '1');
+        return;
+      }
+    }
+
+    // Fallback to POST for older deployments.
+    const postResponse = await postForm(params);
+    if (postResponse?.ok) {
+      sessionStorage.setItem(SESSION_VISIT_KEY, '1');
+    }
   } catch {
     // Silent fail — analytics should never block the site
   }
 }
 
+function isAnalyticsBackend(data: Record<string, unknown>): boolean {
+  return (
+    data.result === 'success' &&
+    typeof data.uniqueVisitors === 'number' &&
+    typeof data.totalPageViews === 'number'
+  );
+}
+
 export async function fetchVisitStats(pin: string): Promise<VisitStats> {
-  const url = `${PORTFOLIO_API_URL}?action=stats&key=${encodeURIComponent(pin)}`;
+  if (!PORTFOLIO_API_URL) {
+    throw new Error(
+      'Analytics API is not configured. Add VITE_PORTFOLIO_API_URL in GitHub repository secrets and redeploy.'
+    );
+  }
+
+  const url = buildApiUrl({ action: 'stats', key: pin.trim() });
   const response = await fetch(url, { redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error('Could not load stats. Check your PIN and API URL.');
   }
 
-  const data = (await response.json()) as VisitStats & { result?: string; message?: string };
+  let data: Record<string, unknown>;
+  try {
+    data = (await response.json()) as Record<string, unknown>;
+  } catch {
+    throw new Error('Analytics backend returned an invalid response. Redeploy the portfolio Apps Script.');
+  }
 
   if (data.result === 'error') {
-    throw new Error(data.message || 'Invalid PIN.');
+    throw new Error(String(data.message || 'Invalid PIN.'));
+  }
+
+  if (!isAnalyticsBackend(data)) {
+    throw new Error(
+      'Analytics backend is not set up. In Google Apps Script, paste scripts/portfolio-backend-google-apps-script.gs, deploy as Web app (Anyone), then update the VITE_PORTFOLIO_API_URL GitHub secret and redeploy the site.'
+    );
   }
 
   return {
-    uniqueVisitors: data.uniqueVisitors ?? 0,
-    totalPageViews: data.totalPageViews ?? 0,
-    todayPageViews: data.todayPageViews ?? 0,
-    todayNewUniques: data.todayNewUniques ?? 0,
-    sheetUrl: data.sheetUrl,
-    updatedAt: data.updatedAt,
+    uniqueVisitors: data.uniqueVisitors as number,
+    totalPageViews: data.totalPageViews as number,
+    todayPageViews: (data.todayPageViews as number) ?? 0,
+    todayNewUniques: (data.todayNewUniques as number) ?? 0,
+    sheetUrl: data.sheetUrl as string | undefined,
+    updatedAt: data.updatedAt as string | undefined,
   };
 }

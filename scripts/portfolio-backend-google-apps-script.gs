@@ -14,7 +14,7 @@ const VISITS_SHEET = 'Visits';
 const UNIQUES_SHEET = 'UniqueVisitors';
 
 function doPost(e) {
-  const params = e && e.parameter ? e.parameter : {};
+  const params = getParams_(e);
   const action = String(params.action || 'contact').toLowerCase();
 
   if (action === 'visit') return logVisit_(params);
@@ -23,12 +23,56 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const params = e && e.parameter ? e.parameter : {};
+  const params = getParams_(e);
   const action = String(params.action || 'health').toLowerCase();
 
+  // GET visit logging is more reliable from static sites (GitHub Pages) than POST.
+  if (action === 'visit') return logVisit_(params);
   if (action === 'stats') return getStats_(params);
-  if (action === 'health') return jsonResponse_({ result: 'ok', message: 'Portfolio API is live.' });
+  if (action === 'health') {
+    return jsonResponse_({
+      result: 'ok',
+      message: 'Portfolio API is live.',
+      analytics: true,
+    });
+  }
   return jsonResponse_({ result: 'error', message: 'Unknown action.' });
+}
+
+function getParams_(e) {
+  const params = {};
+  if (e && e.parameter) {
+    Object.keys(e.parameter).forEach(function (key) {
+      params[key] = e.parameter[key];
+    });
+  }
+
+  if (e && e.postData && e.postData.contents) {
+    const contentType = String(e.postData.type || '');
+    if (contentType.indexOf('application/x-www-form-urlencoded') >= 0) {
+      parseUrlEncoded_(e.postData.contents).forEach(function (pair) {
+        params[pair[0]] = pair[1];
+      });
+    }
+  }
+
+  return params;
+}
+
+function parseUrlEncoded_(body) {
+  return String(body || '')
+    .split('&')
+    .filter(function (part) {
+      return part.length > 0;
+    })
+    .map(function (part) {
+      const idx = part.indexOf('=');
+      if (idx === -1) return [decodeURIComponent(part.replace(/\+/g, ' ')), ''];
+      return [
+        decodeURIComponent(part.slice(0, idx).replace(/\+/g, ' ')),
+        decodeURIComponent(part.slice(idx + 1).replace(/\+/g, ' ')),
+      ];
+    });
 }
 
 function handleContact_(params) {

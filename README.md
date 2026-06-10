@@ -51,6 +51,7 @@ Both run through one free **Google Apps Script** backend (contact emails + uniqu
    - Execute as: **Me**
    - Who has access: **Anyone**
 5. Copy the **Web app URL** → GitHub secret `VITE_PORTFOLIO_API_URL` (or `.env` locally)
+6. **Important:** Use `scripts/portfolio-backend-google-apps-script.gs` (not the older contact-only script). If stats show zero, your secret likely points to the contact-only deployment — redeploy the full backend and update the secret, then push to `main` to rebuild the site.
 
 ### What you get
 

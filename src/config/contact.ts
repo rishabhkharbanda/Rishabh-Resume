@@ -11,16 +11,24 @@ export interface ContactFormPayload {
 }
 
 export async function submitContactForm(payload: ContactFormPayload): Promise<void> {
-  const formData = new FormData();
-  formData.append('action', 'contact');
-  formData.append('name', payload.name.trim());
-  formData.append('email', payload.email.trim());
-  formData.append('subject', payload.subject.trim());
-  formData.append('message', payload.message.trim());
+  if (!CONTACT_FORM_ENDPOINT) {
+    throw new Error(
+      'Contact form is not configured. Please email rishabhkharbanda08@gmail.com directly.'
+    );
+  }
+
+  const body = new URLSearchParams({
+    action: 'contact',
+    name: payload.name.trim(),
+    email: payload.email.trim(),
+    subject: payload.subject.trim(),
+    message: payload.message.trim(),
+  });
 
   const response = await fetch(CONTACT_FORM_ENDPOINT, {
     method: 'POST',
-    body: formData,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    body: body.toString(),
     redirect: 'follow',
   });
 
