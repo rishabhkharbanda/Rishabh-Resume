@@ -1,4 +1,4 @@
-# Rishabh Kharbanda — Portfolio 
+# Rishabh Kharbanda — Portfolio
 
 Senior Marketing Analyst & Data Strategist portfolio built with React, Vite, and Tailwind CSS.
 
