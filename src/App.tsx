@@ -39,6 +39,7 @@ import SuccessScreen from './components/SuccessScreen';
 import ScrollToTop from './components/ScrollToTop';
 import VisitStatsPanel from './components/VisitStatsPanel';
 import ProfileAvatar from './components/ProfileAvatar';
+import CornerAvatar from './components/CornerAvatar';
 import { trackVisit } from './config/api';
 
 export default function App() {
@@ -119,6 +120,7 @@ export default function App() {
       
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
+      <CornerAvatar />
       <VisitStatsPanel isOpen={statsOpen} onClose={() => setStatsOpen(false)} />
 
       {/* Decorative background liquid bubbles — clipped to viewport */}
