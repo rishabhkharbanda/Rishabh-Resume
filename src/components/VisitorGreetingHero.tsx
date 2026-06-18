@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowDown, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { mascotAvatarUrl } from '../config/assets';
 import {
   GREETING_PART_ONE,
@@ -11,6 +11,9 @@ import {
 import { ViewTab } from '../types';
 
 type Phase = 'enter' | 'typing-one' | 'pause' | 'typing-two' | 'chips';
+
+const SCROLL_DISMISS_THRESHOLD = 48;
+const AUTO_HIDE_MS = 10_000;
 
 interface VisitorGreetingHeroProps {
   onNavigate: (tab: ViewTab) => void;
@@ -51,8 +54,13 @@ export default function VisitorGreetingHero({
   onScrollTo,
 }: VisitorGreetingHeroProps) {
   const [phase, setPhase] = useState<Phase>('enter');
-  const typeOne = useTypewriter(GREETING_PART_ONE, phase === 'typing-one');
-  const typeTwo = useTypewriter(GREETING_PART_TWO, phase === 'typing-two');
+  const [panelVisible, setPanelVisible] = useState(true);
+  const typeOne = useTypewriter(GREETING_PART_ONE, phase === 'typing-one' && panelVisible);
+  const typeTwo = useTypewriter(GREETING_PART_TWO, phase === 'typing-two' && panelVisible);
+
+  const dismissPanel = useCallback(() => {
+    setPanelVisible(false);
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setPhase('typing-one'), 650);
@@ -80,8 +88,28 @@ export default function VisitorGreetingHero({
     }
   }, [phase, typeTwo.done]);
 
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > SCROLL_DISMISS_THRESHOLD) {
+        dismissPanel();
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [dismissPanel]);
+
+  useEffect(() => {
+    if (phase !== 'chips' || !panelVisible) return;
+
+    const timer = window.setTimeout(dismissPanel, AUTO_HIDE_MS);
+    return () => window.clearTimeout(timer);
+  }, [phase, panelVisible, dismissPanel]);
+
   const handleChipClick = useCallback(
     (id: GreetingAction) => {
+      dismissPanel();
+
       switch (id) {
         case 'wins':
           onScrollTo('home-wins');
@@ -100,7 +128,7 @@ export default function VisitorGreetingHero({
           break;
       }
     },
-    [onNavigate, onScrollTo],
+    [dismissPanel, onNavigate, onScrollTo],
   );
 
   const bubbleBody =
@@ -108,109 +136,130 @@ export default function VisitorGreetingHero({
       ? `${GREETING_PART_ONE}\n\n${typeTwo.displayed}`
       : typeOne.displayed;
 
-  const showBubble = phase !== 'enter';
-  const showTyping = phase === 'pause';
-  const showChips = phase === 'chips';
+  const showBubble = panelVisible && phase !== 'enter';
+  const showTyping = panelVisible && phase === 'pause';
+  const showChips = panelVisible && phase === 'chips';
 
   return (
-    <section className="visitor-greeting-hero relative min-h-[min(100vh,920px)] flex flex-col justify-end px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden pb-8 sm:pb-12">
-      <div className="absolute inset-0 grid-pattern opacity-40 -z-10" />
+    <div
+      className="visitor-greeting-root fixed bottom-0 left-0 z-40 w-full pointer-events-none"
+      style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+      aria-hidden={!panelVisible && phase === 'chips'}
+    >
+      <div className="flex items-end gap-3 sm:gap-4 p-2 sm:p-4 max-w-7xl">
+        <motion.div
+          className="shrink-0 pointer-events-auto"
+          initial={{ y: 120, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: 'spring', damping: 18, stiffness: 130, delay: 0.15 }}
+        >
+          <motion.img
+            src={mascotAvatarUrl}
+            alt="Rishabh — your guide through this portfolio"
+            className="visitor-greeting-avatar w-[clamp(96px,22vw,160px)] h-auto object-contain object-bottom drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+            draggable={false}
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </motion.div>
 
-      <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(220px,320px)] gap-8 lg:gap-12 items-end">
-        <div className="flex flex-col sm:flex-row items-end gap-4 sm:gap-6 min-w-0">
-          <motion.div
-            className="shrink-0 self-center sm:self-end"
-            initial={{ y: 140, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: 'spring', damping: 18, stiffness: 130, delay: 0.15 }}
-          >
-            <motion.img
-              src={mascotAvatarUrl}
-              alt="Rishabh — your guide through this portfolio"
-              className="visitor-greeting-avatar w-[clamp(120px,28vw,200px)] h-auto object-contain object-bottom drop-shadow-[0_16px_36px_rgba(0,0,0,0.28)]"
-              draggable={false}
-              animate={{ y: [0, -7, 0] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </motion.div>
-
-          <AnimatePresence>
-            {showBubble && (
-              <motion.div
-                key="speech-bubble"
-                initial={{ opacity: 0, y: 16, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', damping: 20, stiffness: 180 }}
-                className="flex-1 min-w-0 w-full"
-              >
-                <div className="visitor-greeting-bubble liquid-glass rounded-3xl rounded-bl-md border border-outline-variant/50 px-5 py-4 sm:px-6 sm:py-5 shadow-lg">
-                  <div className="flex items-center gap-2 mb-3 text-primary">
-                    <MessageCircle className="w-4 h-4 shrink-0" aria-hidden />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
-                      Rishabh
-                    </span>
-                  </div>
-
-                  <p className="visitor-greeting-text font-sans text-[15px] sm:text-[17px] text-on-surface leading-relaxed whitespace-pre-line">
-                    {bubbleBody}
-                    {(phase === 'typing-one' || phase === 'typing-two') && (
-                      <span className="visitor-greeting-cursor" aria-hidden>
-                        |
-                      </span>
-                    )}
-                  </p>
-
-                  {showTyping && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="mt-4 font-mono text-[11px] text-on-surface-variant tracking-wide"
-                    >
-                      Typing
-                      <span className="visitor-greeting-ellipsis" aria-hidden>
-                        ...
-                      </span>
-                    </motion.p>
-                  )}
+        <AnimatePresence>
+          {showBubble && (
+            <motion.div
+              key="greeting-panel"
+              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+              className="flex flex-1 min-w-0 items-end gap-3 sm:gap-4 pointer-events-auto"
+            >
+              <div className="visitor-greeting-bubble liquid-glass flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant/50 px-4 py-3.5 sm:px-6 sm:py-5 shadow-lg max-w-2xl">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3 text-primary">
+                  <MessageCircle className="w-4 h-4 shrink-0" aria-hidden />
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
+                    Rishabh
+                  </span>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
 
-        <div className="flex flex-col gap-3 lg:pb-2">
-          <AnimatePresence>
-            {showChips &&
-              GREETING_RESPONSES.map((chip, index) => (
-                <motion.button
-                  key={chip.id}
-                  type="button"
-                  initial={{ opacity: 0, x: 24, y: 8 }}
-                  animate={{ opacity: 1, x: 0, y: 0 }}
-                  transition={{
-                    delay: index * 0.1,
-                    type: 'spring',
-                    damping: 18,
-                    stiffness: 160,
-                  }}
-                  whileHover={{ scale: 1.03, x: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleChipClick(chip.id)}
-                  className="visitor-greeting-chip liquid-glass text-left px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl border border-outline-variant/45 font-sans text-sm sm:text-[15px] font-medium text-on-surface hover:border-primary/45 hover:text-primary transition-colors cursor-pointer"
-                >
-                  {chip.label}
-                </motion.button>
-              ))}
-          </AnimatePresence>
-        </div>
+                <p className="visitor-greeting-text font-sans text-sm sm:text-[16px] text-on-surface leading-relaxed whitespace-pre-line">
+                  {bubbleBody}
+                  {(phase === 'typing-one' || phase === 'typing-two') && (
+                    <span className="visitor-greeting-cursor" aria-hidden>
+                      |
+                    </span>
+                  )}
+                </p>
+
+                {showTyping && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-3 font-mono text-[11px] text-on-surface-variant tracking-wide"
+                  >
+                    Typing
+                    <span className="visitor-greeting-ellipsis" aria-hidden>
+                      ...
+                    </span>
+                  </motion.p>
+                )}
+              </div>
+
+              <div className="hidden lg:flex flex-col gap-2.5 shrink-0 max-w-[240px]">
+                <AnimatePresence>
+                  {showChips &&
+                    GREETING_RESPONSES.map((chip, index) => (
+                      <motion.button
+                        key={chip.id}
+                        type="button"
+                        initial={{ opacity: 0, x: 16, y: 6 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        exit={{ opacity: 0, x: 8 }}
+                        transition={{
+                          delay: index * 0.08,
+                          type: 'spring',
+                          damping: 18,
+                          stiffness: 160,
+                        }}
+                        whileHover={{ scale: 1.03, x: -3 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleChipClick(chip.id)}
+                        className="visitor-greeting-chip liquid-glass text-left px-4 py-2.5 rounded-2xl border border-outline-variant/45 font-sans text-sm font-medium text-on-surface hover:border-primary/45 hover:text-primary transition-colors cursor-pointer whitespace-nowrap"
+                      >
+                        {chip.label}
+                      </motion.button>
+                    ))}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-50 select-none hidden md:flex">
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] font-medium scale-90 text-primary">
-          Scroll
-        </span>
-        <ArrowDown className="w-4 h-4 animate-bounce text-primary" />
-      </div>
-    </section>
+      <AnimatePresence>
+        {showChips && (
+          <motion.div
+            key="mobile-chips"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            className="lg:hidden flex gap-2 overflow-x-auto px-3 pb-2 pointer-events-auto scrollbar-none"
+          >
+            {GREETING_RESPONSES.map((chip, index) => (
+              <motion.button
+                key={chip.id}
+                type="button"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.06 }}
+                onClick={() => handleChipClick(chip.id)}
+                className="visitor-greeting-chip liquid-glass shrink-0 px-3.5 py-2 rounded-full border border-outline-variant/45 font-sans text-xs font-medium text-on-surface hover:border-primary/45 hover:text-primary transition-colors cursor-pointer"
+              >
+                {chip.label}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
