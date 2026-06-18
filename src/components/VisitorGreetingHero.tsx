@@ -13,9 +13,8 @@ import { ViewTab } from '../types';
 
 type HeroPhase = 'enter' | 'typing-one' | 'pause' | 'typing-two' | 'chips';
 
-const SCROLL_DISMISS_THRESHOLD = 48;
 const AUTO_HIDE_MS = 10_000;
-const MARKETER_AUTO_HIDE_MS = 14_000;
+const SCROLL_DISMISS_DELTA = 12;
 const HEADER_OFFSET_PX = 96;
 
 interface VisitorGreetingHeroProps {
@@ -50,6 +49,40 @@ function useTypewriter(text: string, active: boolean, speed = 24) {
   }, [text, active, speed]);
 
   return { displayed, done };
+}
+
+function useSpeechPanelDismiss(
+  isVisible: boolean,
+  onDismiss: () => void,
+  inactivityEnabled: boolean,
+) {
+  const scrollYWhenShown = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!isVisible) {
+      scrollYWhenShown.current = null;
+      return;
+    }
+
+    scrollYWhenShown.current = window.scrollY;
+
+    const onScroll = () => {
+      if (scrollYWhenShown.current === null) return;
+      if (Math.abs(window.scrollY - scrollYWhenShown.current) > SCROLL_DISMISS_DELTA) {
+        onDismiss();
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isVisible, onDismiss]);
+
+  useEffect(() => {
+    if (!isVisible || !inactivityEnabled) return;
+
+    const timer = window.setTimeout(onDismiss, AUTO_HIDE_MS);
+    return () => window.clearTimeout(timer);
+  }, [isVisible, inactivityEnabled, onDismiss]);
 }
 
 interface SpeechBubbleProps {
@@ -123,6 +156,15 @@ export default function VisitorGreetingHero({
     setMarketerPanelVisible(false);
   }, []);
 
+  const showHeroBubble = heroPanelVisible && heroPhase !== 'enter';
+  const showHeroTyping = heroPanelVisible && heroPhase === 'pause';
+  const showHeroChips = heroPanelVisible && heroPhase === 'chips';
+  const showMarketerBubble = marketerPanelVisible;
+  const activeBubbleKey = showMarketerBubble ? 'marketer' : showHeroBubble ? 'hero' : null;
+
+  useSpeechPanelDismiss(showHeroBubble, dismissHeroPanel, heroPhase === 'chips');
+  useSpeechPanelDismiss(showMarketerBubble, dismissMarketerPanel, marketerType.done);
+
   useEffect(() => {
     const timer = window.setTimeout(() => setHeroPhase('typing-one'), 650);
     return () => window.clearTimeout(timer);
@@ -150,24 +192,6 @@ export default function VisitorGreetingHero({
   }, [heroPhase, typeTwo.done]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > SCROLL_DISMISS_THRESHOLD) {
-        dismissHeroPanel();
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [dismissHeroPanel]);
-
-  useEffect(() => {
-    if (heroPhase !== 'chips' || !heroPanelVisible) return;
-
-    const timer = window.setTimeout(dismissHeroPanel, AUTO_HIDE_MS);
-    return () => window.clearTimeout(timer);
-  }, [heroPhase, heroPanelVisible, dismissHeroPanel]);
-
-  useEffect(() => {
     const heading = document.getElementById('home-marketer-heading');
     if (!heading) return;
 
@@ -189,13 +213,6 @@ export default function VisitorGreetingHero({
     observer.observe(heading);
     return () => observer.disconnect();
   }, [dismissHeroPanel]);
-
-  useEffect(() => {
-    if (!marketerPanelVisible || !marketerType.done) return;
-
-    const timer = window.setTimeout(dismissMarketerPanel, MARKETER_AUTO_HIDE_MS);
-    return () => window.clearTimeout(timer);
-  }, [marketerPanelVisible, marketerType.done, dismissMarketerPanel]);
 
   const handleChipClick = useCallback(
     (id: GreetingAction) => {
@@ -233,12 +250,6 @@ export default function VisitorGreetingHero({
     heroPhase === 'typing-two' || heroPhase === 'chips'
       ? `${GREETING_PART_ONE}\n\n${typeTwo.displayed}`
       : typeOne.displayed;
-
-  const showHeroBubble = heroPanelVisible && heroPhase !== 'enter';
-  const showHeroTyping = heroPanelVisible && heroPhase === 'pause';
-  const showHeroChips = heroPanelVisible && heroPhase === 'chips';
-  const showMarketerBubble = marketerPanelVisible;
-  const activeBubbleKey = showMarketerBubble ? 'marketer' : showHeroBubble ? 'hero' : null;
 
   const heroChipsDesktop = (
     <div className="hidden lg:flex flex-col gap-2.5 shrink-0 max-w-[240px]">
