@@ -289,3 +289,66 @@ html.dark body {
   background: #5c6e57;
 }
 
+/* Visitor greeting hero — first-load conversational intro */
+.visitor-greeting-cursor {
+  display: inline-block;
+  margin-left: 1px;
+  color: var(--color-primary);
+  animation: visitorCursorBlink 0.9s step-end infinite;
+}
+
+.visitor-greeting-ellipsis {
+  display: inline-block;
+  animation: visitorEllipsis 1.2s ease-in-out infinite;
+}
+
+@keyframes visitorCursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes visitorEllipsis {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.visitor-greeting-chip {
+  animation: visitorChipFloat 4.5s ease-in-out infinite;
+}
+
+.visitor-greeting-chip:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.visitor-greeting-chip:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+.visitor-greeting-chip:nth-child(4) {
+  animation-delay: 1.2s;
+}
+
+.visitor-greeting-chip:nth-child(5) {
+  animation-delay: 1.6s;
+}
+
+@keyframes visitorChipFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+

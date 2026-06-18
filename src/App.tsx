@@ -6,7 +6,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, 
-  ArrowDown, 
   Workflow, 
   TrendingDown, 
   TrendingUp, 
@@ -26,7 +25,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
-import { profileSummary, resumePdfUrl, resumePdfFilename, portfolioExperiences } from './data';
+import { resumePdfUrl, resumePdfFilename, portfolioExperiences } from './data';
 import { ViewTab } from './types';
 import NavigationDrawer from './components/NavigationDrawer';
 import KPIBento from './components/KPIBento';
@@ -38,8 +37,7 @@ import ContactForm from './components/ContactForm';
 import SuccessScreen from './components/SuccessScreen';
 import ScrollToTop from './components/ScrollToTop';
 import VisitStatsPanel from './components/VisitStatsPanel';
-import ProfileAvatar from './components/ProfileAvatar';
-import CornerAvatar from './components/CornerAvatar';
+import VisitorGreetingHero from './components/VisitorGreetingHero';
 import { trackVisit } from './config/api';
 
 export default function App() {
@@ -87,6 +85,13 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleLogoClick = () => {
     logoClickCount.current += 1;
 
@@ -120,7 +125,6 @@ export default function App() {
       
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
-      <CornerAvatar />
       <VisitStatsPanel isOpen={statsOpen} onClose={() => setStatsOpen(false)} />
 
       {/* Decorative background liquid bubbles — clipped to viewport */}
@@ -216,76 +220,18 @@ export default function App() {
         {/* VIEW 1: Main Portfolio Home Tab */}
         {activeTab === 'portfolio' && (
           <div>
-            {/* HERO SEGMENT */}
-            <section className="relative min-h-[720px] flex flex-col justify-center px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden">
-              {/* Technical Dot Grids */}
-              <div className="absolute inset-0 grid-pattern opacity-40 -z-10" />
-
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-14 items-center w-full min-w-0 relative z-10">
-              <div className="max-w-4xl w-full min-w-0 order-2 lg:order-1">
-                {/* Available for opportunity ping pill */}
-                <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary mb-8 animate-fade-in liquid-glass">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
-                  </span>
-                  <span className="font-mono text-[10px] uppercase font-extrabold tracking-widest select-none text-primary">
-                    Available for opportunities
-                  </span>
-                </div>
-
-                {/* Bold Giant Headlines */}
-                <h1 className="font-headline text-[clamp(2.25rem,10vw,3.625rem)] md:text-[94px] font-extrabold tracking-tighter leading-[0.95] mb-8 select-none break-words">
-                  Rishabh <br />
-                  <span className="text-primary select-text hover:opacity-90 transition-opacity duration-400">Kharbanda</span>
-                </h1>
-
-                {/* Premium Introduction Paragraph */}
-                <p className="font-sans text-[17px] md:text-xl text-on-surface-variant mb-12 max-w-2xl leading-relaxed font-medium">
-                  {profileSummary}
-                </p>
-
-                  {/* Main page navigation shortcuts */}
-                  <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center w-full">
-                    <button 
-                      onClick={() => handleNavClick('contact')}
-                      className="bg-primary text-on-primary px-6 sm:px-8 py-3.5 sm:py-4 font-mono text-[10px] sm:text-[11px] font-extrabold tracking-wider sm:tracking-widest rounded-full uppercase hover:brightness-110 active:scale-95 transition-all text-center cursor-pointer w-full sm:w-auto"
-                    >
-                      Start a Conversation
-                    </button>
-                    <button 
-                      onClick={() => {
-                        const element = document.getElementById('home-featured');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="border border-outline hover:border-primary px-6 sm:px-8 py-3.5 sm:py-4 font-mono text-[10px] sm:text-[11px] font-extrabold tracking-wider sm:tracking-widest rounded-full uppercase text-on-surface hover:text-primary transition-all text-center cursor-pointer w-full sm:w-auto"
-                    >
-                      View Portfolio
-                    </button>
-                  </div>
-              </div>
-
-              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-                <ProfileAvatar className="w-44 h-44 sm:w-52 sm:h-52 lg:w-64 lg:h-64 rounded-3xl" />
-              </div>
-              </div>
-
-              {/* Bounce to scroll down */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-50 select-none hidden md:flex">
-                <span className="font-mono text-[9px] uppercase tracking-[0.3em] font-medium scale-90 text-primary">Scroll</span>
-                <ArrowDown className="w-4 h-4 animate-bounce text-primary" />
-              </div>
-            </section>
+            <VisitorGreetingHero
+              onNavigate={handleNavClick}
+              onScrollTo={scrollToSection}
+            />
 
             {/* KPI BENTO METRIC CARDS GRID */}
-            <section className="py-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
+            <section id="home-wins" className="py-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <KPIBento />
             </section>
 
             {/* NEW SECTION 02: ADVANCED MARKETING COCKPIT SIMULATOR */}
-            <section className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
+            <section id="home-marketer" className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <div className="mb-14">
                 <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
                   02 / Marketing Growth Simulator
@@ -342,7 +288,7 @@ export default function App() {
             </section>
 
             {/* QUICK EXPERIENCE BRIEF STATS OVERVIEW */}
-            <section className="py-24 bg-gradient-to-br from-primary/5 via-secondary/5 to-surface-variant/10 border-t border-b border-outline-variant/30 backdrop-blur-md">
+            <section id="home-hire" className="py-24 bg-gradient-to-br from-primary/5 via-secondary/5 to-surface-variant/10 border-t border-b border-outline-variant/30 backdrop-blur-md">
               <div className="px-4 sm:px-6 md:px-12 max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
                   <div>
