@@ -173,7 +173,7 @@ export default function VisitorGreetingHero({
               transition={{ type: 'spring', damping: 20, stiffness: 180 }}
               className="flex flex-1 min-w-0 items-end gap-3 sm:gap-4 pointer-events-auto"
             >
-              <div className="visitor-greeting-bubble liquid-glass flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant/50 px-4 py-3.5 sm:px-6 sm:py-5 shadow-lg max-w-2xl">
+              <div className="visitor-greeting-bubble flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant px-4 py-3.5 sm:px-6 sm:py-5 shadow-lg max-w-2xl">
                 <div className="flex items-center gap-2 mb-2 sm:mb-3 text-primary">
                   <MessageCircle className="w-4 h-4 shrink-0" aria-hidden />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
@@ -223,7 +223,7 @@ export default function VisitorGreetingHero({
                         whileHover={{ scale: 1.03, x: -3 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleChipClick(chip.id)}
-                        className="visitor-greeting-chip liquid-glass text-left px-4 py-2.5 rounded-2xl border border-outline-variant/45 font-sans text-sm font-medium text-on-surface hover:border-primary/45 hover:text-primary transition-colors cursor-pointer whitespace-nowrap"
+                        className="visitor-greeting-chip text-left px-4 py-2.5 rounded-2xl border border-outline-variant font-sans text-sm font-medium text-on-surface hover:border-primary hover:text-primary transition-colors cursor-pointer whitespace-nowrap"
                       >
                         {chip.label}
                       </motion.button>
@@ -252,7 +252,7 @@ export default function VisitorGreetingHero({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.06 }}
                 onClick={() => handleChipClick(chip.id)}
-                className="visitor-greeting-chip liquid-glass shrink-0 px-3.5 py-2 rounded-full border border-outline-variant/45 font-sans text-xs font-medium text-on-surface hover:border-primary/45 hover:text-primary transition-colors cursor-pointer"
+                className="visitor-greeting-chip shrink-0 px-3.5 py-2 rounded-full border border-outline-variant font-sans text-xs font-medium text-on-surface hover:border-primary hover:text-primary transition-colors cursor-pointer"
               >
                 {chip.label}
               </motion.button>
