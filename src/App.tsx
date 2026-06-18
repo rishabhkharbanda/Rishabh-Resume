@@ -287,7 +287,10 @@ export default function App() {
             {/* NEW SECTION 02: ADVANCED MARKETING COCKPIT SIMULATOR */}
             <section id="home-marketer" className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/60">
               <div className="mb-14">
-                <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
+                <span
+                  id="home-marketer-heading"
+                  className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block"
+                >
                   02 / Marketing Growth Simulator
                 </span>
                 <h2 className="font-headline text-3xl font-extrabold tracking-tight leading-snug">
