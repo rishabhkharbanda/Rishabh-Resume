@@ -31,6 +31,7 @@ jobs:
           rm -rf assets
           cp -r dist/assets assets
           cp dist/avatar.png avatar.png
+          cp dist/avatar-mascot.png avatar-mascot.png
           cp dist/Rishabh_Kharbanda.pdf Rishabh_Kharbanda.pdf
           cp dist/favicon.ico favicon.ico
           cp dist/favicon.svg favicon.svg
@@ -43,7 +44,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html assets/ avatar.png Rishabh_Kharbanda.pdf favicon.ico favicon.svg favicon-32.png apple-touch-icon.png favicon-512.png .nojekyll
+          git add index.html assets/ avatar.png avatar-mascot.png Rishabh_Kharbanda.pdf favicon.ico favicon.svg favicon-32.png apple-touch-icon.png favicon-512.png .nojekyll
           git diff --staged --quiet && echo "No changes to deploy" && exit 0
           git commit -m "deploy: build site for GitHub Pages [skip ci]"
           git push

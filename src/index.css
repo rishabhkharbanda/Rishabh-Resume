@@ -289,4 +289,20 @@ html.dark body {
   background: #5c6e57;
 }
 
+/* Fixed bottom-left mascot avatar */
+.corner-avatar-btn {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.55) 35%, rgba(0, 0, 0, 0.92) 100%);
+  padding: 0.25rem 0.5rem 0;
+  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.dark .corner-avatar-btn {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 40%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+@media (max-width: 480px) {
+  .corner-avatar-img {
+    width: 80px !important;
+  }
+}
 
