@@ -23,3 +23,15 @@ export const GREETING_RESPONSES: { id: GreetingAction; label: string }[] = [
   { id: 'marketer', label: 'How do you think as a marketer?' },
   { id: 'talk', label: "Let's talk" },
 ];
+
+export const MARKETER_SIMULATOR_SPEECH = `Most marketers celebrate when a campaign launches.
+
+I start asking questions.
+
+What happens if CAC increases by 20%?
+
+What if retention drops next month?
+
+What if we're buying growth that's actually destroying profit?
+
+This sandbox is how I pressure-test marketing decisions before real money gets spent.`;
