@@ -171,7 +171,7 @@ export default function VisitorGreetingHero({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
               transition={{ type: 'spring', damping: 20, stiffness: 180 }}
-              className="flex flex-1 min-w-0 items-end gap-3 sm:gap-4 pointer-events-auto"
+              className="flex flex-1 min-w-0 items-start gap-3 sm:gap-4 pointer-events-auto mb-16 sm:mb-20 md:mb-24 lg:mb-[6.5rem]"
             >
               <div className="visitor-greeting-bubble flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant px-4 py-3.5 sm:px-6 sm:py-5 shadow-lg max-w-2xl">
                 <div className="flex items-center gap-2 mb-2 sm:mb-3 text-primary">
