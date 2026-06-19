@@ -169,7 +169,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
       {/* Right Column: Contact Input Form */}
       <div className="md:col-span-7">
         <div className="liquid-glass-active p-8 md:p-12 border border-outline-variant/40 rounded-3xl shadow-xl">
-          <form className="space-y-8" onSubmit={handleFormSubmit}>
+          <form id="contact-form" className="space-y-8" onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Full Name */}
               <div className="space-y-2">

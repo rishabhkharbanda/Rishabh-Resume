@@ -480,7 +480,7 @@ export default function App() {
 
         {/* VIEW 4: Dedicated Contact Page */}
         {activeTab === 'contact' && (
-          <section className="py-16 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto relative">
+          <section id="contact-section" className="py-16 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto relative">
             {/* Background Grid Accent */}
             <div className="absolute inset-0 grid-background opacity-10 pointer-events-none mask-fade" />
             
