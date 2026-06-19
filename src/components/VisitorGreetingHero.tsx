@@ -16,6 +16,7 @@ type HeroPhase = 'enter' | 'typing-one' | 'pause' | 'typing-two' | 'chips';
 type ActiveSpeech = 'hero' | 'marketer' | 'experience' | null;
 
 const AUTO_HIDE_MS = 10_000;
+const TYPEWRITER_SPEED_MS = 48;
 const SCROLL_DISMISS_DELTA = 12;
 const HEADER_OFFSET_PX = 96;
 const SECTION_DISMISS_GRACE_MS = 1_200;
@@ -23,7 +24,7 @@ const LINE_HOLD_MS = 550;
 const LINE_GAP_MS = 320;
 
 type SpeechDismissOptions = {
-  inactivityEnabled?: boolean;
+  contentComplete?: boolean;
   scrollMode?: 'any' | 'section-away' | 'none';
   sectionHeadingId?: string;
 };
@@ -33,7 +34,7 @@ interface VisitorGreetingHeroProps {
   onScrollTo: (id: string) => void;
 }
 
-function useTypewriter(text: string, active: boolean, speed = 24) {
+function useTypewriter(text: string, active: boolean, speed = TYPEWRITER_SPEED_MS) {
   const [displayed, setDisplayed] = useState('');
   const [done, setDone] = useState(false);
 
@@ -69,7 +70,7 @@ function useSequentialLineSpeech(lines: string[], panelActive: boolean) {
 
   const line = lines[lineIndex] ?? '';
   const shouldType = panelActive && showBubble && !sequenceComplete;
-  const { displayed, done } = useTypewriter(line, shouldType, 22);
+  const { displayed, done } = useTypewriter(line, shouldType);
 
   useEffect(() => {
     if (!panelActive) {
@@ -120,25 +121,25 @@ function useSequentialLineSpeech(lines: string[], panelActive: boolean) {
 }
 
 function useSpeechPanelDismiss(
-  isVisible: boolean,
+  panelActive: boolean,
   onDismiss: () => void,
   options: SpeechDismissOptions = {},
 ) {
   const {
-    inactivityEnabled = false,
+    contentComplete = false,
     scrollMode = 'none',
     sectionHeadingId,
   } = options;
 
   useEffect(() => {
-    if (!isVisible || !inactivityEnabled) return;
+    if (!panelActive || !contentComplete) return;
 
     const timer = window.setTimeout(onDismiss, AUTO_HIDE_MS);
     return () => window.clearTimeout(timer);
-  }, [isVisible, inactivityEnabled, onDismiss]);
+  }, [panelActive, contentComplete, onDismiss]);
 
   useEffect(() => {
-    if (!isVisible || scrollMode !== 'any') return;
+    if (!panelActive || scrollMode !== 'any') return;
 
     const scrollYWhenShown = window.scrollY;
 
@@ -150,10 +151,10 @@ function useSpeechPanelDismiss(
 
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isVisible, scrollMode, onDismiss]);
+  }, [panelActive, scrollMode, onDismiss]);
 
   useEffect(() => {
-    if (!isVisible || scrollMode !== 'section-away' || !sectionHeadingId) return;
+    if (!panelActive || scrollMode !== 'section-away' || !sectionHeadingId) return;
 
     const heading = document.getElementById(sectionHeadingId);
     if (!heading) return;
@@ -181,7 +182,7 @@ function useSpeechPanelDismiss(
       window.clearTimeout(graceTimer);
       observer.disconnect();
     };
-  }, [isVisible, scrollMode, sectionHeadingId, onDismiss]);
+  }, [panelActive, scrollMode, sectionHeadingId, onDismiss]);
 }
 
 function useSectionSpeechTrigger(
@@ -222,7 +223,7 @@ interface SpeechBubbleProps {
 function SpeechBubble({ body, showCursor, showTyping, chips }: SpeechBubbleProps) {
   return (
     <div className="flex flex-1 min-w-0 items-start gap-3 sm:gap-4 pointer-events-auto mb-16 sm:mb-20 md:mb-24 lg:mb-[6.5rem]">
-      <div className="visitor-greeting-bubble flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant px-4 py-3.5 sm:px-6 sm:py-5 shadow-lg max-w-2xl">
+      <div className="visitor-greeting-bubble flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant px-4 py-3.5 sm:px-6 sm:py-5 max-w-2xl">
         <div className="flex items-center gap-2 mb-2 sm:mb-3 text-primary">
           <MessageCircle className="w-4 h-4 shrink-0" aria-hidden />
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
@@ -274,7 +275,6 @@ export default function VisitorGreetingHero({
   const marketerType = useTypewriter(
     MARKETER_SIMULATOR_SPEECH,
     marketerPanelVisible,
-    20,
   );
   const experienceSpeech = useSequentialLineSpeech(
     EXPERIENCE_OVERVIEW_LINES,
@@ -319,21 +319,21 @@ export default function VisitorGreetingHero({
         ? 'hero'
         : null;
 
-  useSpeechPanelDismiss(showHeroBubble, dismissHeroPanel, {
+  useSpeechPanelDismiss(heroPanelVisible, dismissHeroPanel, {
     scrollMode: 'any',
-    inactivityEnabled: heroPhase === 'chips',
+    contentComplete: heroPhase === 'chips',
   });
 
   useSpeechPanelDismiss(marketerPanelVisible, dismissMarketerPanel, {
     scrollMode: 'section-away',
     sectionHeadingId: 'home-marketer-heading',
-    inactivityEnabled: marketerType.done,
+    contentComplete: marketerType.done,
   });
 
   useSpeechPanelDismiss(experiencePanelVisible, dismissExperiencePanel, {
     scrollMode: 'section-away',
     sectionHeadingId: 'home-hire-heading',
-    inactivityEnabled: experienceSpeech.sequenceComplete,
+    contentComplete: experienceSpeech.sequenceComplete,
   });
 
   useEffect(() => {
