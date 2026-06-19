@@ -144,6 +144,10 @@ function logVisit_(params, callback) {
     const visitorTimezone = String(params.visitorTimezone || '').slice(0, 60);
     const screenSize = String(params.screenSize || '').slice(0, 20);
     const deviceType = String(params.deviceType || '').slice(0, 20);
+    const visitorIp = String(params.visitorIp || '').slice(0, 45);
+    const visitorCity = String(params.visitorCity || '').slice(0, 80);
+    const visitorRegion = String(params.visitorRegion || '').slice(0, 80);
+    const visitorCountry = String(params.visitorCountry || '').slice(0, 80);
     const now = new Date();
 
     const ss = getSpreadsheet_();
@@ -165,6 +169,10 @@ function logVisit_(params, callback) {
       visitorConfidence,
       atsVendor,
       classificationSignals,
+      visitorIp,
+      visitorCity,
+      visitorRegion,
+      visitorCountry,
     ]);
 
     if (isNewUnique) {
@@ -193,6 +201,10 @@ function logVisit_(params, callback) {
       visitorTimezone: visitorTimezone,
       screenSize: screenSize,
       deviceType: deviceType,
+      visitorIp: visitorIp,
+      visitorCity: visitorCity,
+      visitorRegion: visitorRegion,
+      visitorCountry: visitorCountry,
       visitedAt: now,
     });
 
@@ -314,7 +326,9 @@ function notifyVisit_(details) {
         'Browser: ' + profile.browserLabel + '\n' +
         'Screen: ' + (details.screenSize || 'unknown') + '\n' +
         'Language: ' + (details.visitorLanguage || 'unknown') + '\n' +
-        'Timezone: ' + (details.visitorTimezone || 'unknown') + '\n\n' +
+        'Timezone: ' + (details.visitorTimezone || 'unknown') + '\n' +
+        'IP address: ' + (details.visitorIp || 'unknown') + '\n' +
+        'Location: ' + formatVisitorLocation_(details) + '\n\n' +
         'Signals: ' + (details.classificationSignals || 'none') + '\n' +
         'User agent: ' + details.userAgent + '\n' +
         'Visitor ID: ' + details.visitorId.slice(0, 12) + '…\n\n' +
@@ -327,6 +341,15 @@ function notifyVisit_(details) {
   } catch (error) {
     // Non-blocking if email fails
   }
+}
+
+function formatVisitorLocation_(details) {
+  const parts = [details.visitorCity, details.visitorRegion, details.visitorCountry].filter(function (part) {
+    return part && String(part).trim().length > 0;
+  });
+
+  if (parts.length === 0) return 'unknown';
+  return parts.join(', ');
 }
 
 function buildVisitorProfile_(details) {
@@ -440,6 +463,10 @@ function setupSheets_(ss) {
       'VisitorConfidence',
       'AtsVendor',
       'ClassificationSignals',
+      'VisitorIp',
+      'VisitorCity',
+      'VisitorRegion',
+      'VisitorCountry',
     ]);
   } else {
     ensureVisitColumns_(visits);
@@ -468,6 +495,10 @@ function ensureVisitColumns_(visits) {
     'VisitorConfidence',
     'AtsVendor',
     'ClassificationSignals',
+    'VisitorIp',
+    'VisitorCity',
+    'VisitorRegion',
+    'VisitorCountry',
   ];
 
   if (visits.getLastRow() === 0) {
