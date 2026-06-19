@@ -140,6 +140,10 @@ function logVisit_(params, callback) {
     const visitorConfidence = String(params.visitorConfidence || '').slice(0, 20);
     const atsVendor = String(params.atsVendor || '').slice(0, 80);
     const classificationSignals = String(params.classificationSignals || '').slice(0, 200);
+    const visitorLanguage = String(params.visitorLanguage || '').slice(0, 20);
+    const visitorTimezone = String(params.visitorTimezone || '').slice(0, 60);
+    const screenSize = String(params.screenSize || '').slice(0, 20);
+    const deviceType = String(params.deviceType || '').slice(0, 20);
     const now = new Date();
 
     const ss = getSpreadsheet_();
@@ -165,11 +169,32 @@ function logVisit_(params, callback) {
 
     if (isNewUnique) {
       uniques.appendRow([visitorId, now, now, 1, visitorType, atsVendor]);
-      notifyNewUniqueVisitor_(visitorId, referrer, page, visitorType, atsVendor);
     } else {
       const count = Number(uniques.getRange(row, 4).getValue()) || 0;
       uniques.getRange(row, 3, 1, 2).setValues([[now, count + 1]]);
     }
+
+    const visitCount = isNewUnique
+      ? 1
+      : Number(uniques.getRange(row, 4).getValue()) || 1;
+
+    notifyVisit_({
+      visitorId: visitorId,
+      referrer: referrer,
+      page: page,
+      userAgent: userAgent,
+      visitorType: visitorType,
+      visitorConfidence: visitorConfidence,
+      atsVendor: atsVendor,
+      classificationSignals: classificationSignals,
+      isNewUnique: isNewUnique,
+      visitCount: visitCount,
+      visitorLanguage: visitorLanguage,
+      visitorTimezone: visitorTimezone,
+      screenSize: screenSize,
+      deviceType: deviceType,
+      visitedAt: now,
+    });
 
     return jsonResponse_(
       {
@@ -242,12 +267,18 @@ function sendDailyVisitDigest() {
   const todayPageViews = countTodayRows_(visits);
   const todayNewUniques = countTodayNewUniques_(visits);
 
+  const typeStats = getVisitorTypeStats_(visits, uniques);
+
   const body =
     'Portfolio visit summary\n\n' +
     'Unique visitors (all time): ' + uniqueVisitors + '\n' +
     'Total page views (all time): ' + totalPageViews + '\n' +
     'Page views today: ' + todayPageViews + '\n' +
     'New unique visitors today: ' + todayNewUniques + '\n\n' +
+    'Human page views: ' + typeStats.humanPageViews + '\n' +
+    'ATS page views: ' + typeStats.atsPageViews + '\n' +
+    'Human uniques: ' + typeStats.humanUniques + '\n' +
+    'ATS uniques: ' + typeStats.atsUniques + '\n\n' +
     'Full data: ' + ss.getUrl();
 
   MailApp.sendEmail({
@@ -257,34 +288,120 @@ function sendDailyVisitDigest() {
   });
 }
 
-function notifyNewUniqueVisitor_(visitorId, referrer, page, visitorType, atsVendor) {
+function notifyVisit_(details) {
   try {
     const ss = getSpreadsheet_();
     const uniqueVisitors = Math.max(0, ss.getSheetByName(UNIQUES_SHEET).getLastRow() - 1);
-    const typeLabel =
-      visitorType === 'ats'
-        ? 'ATS / recruiting crawler' + (atsVendor ? ' (' + atsVendor + ')' : '')
-        : visitorType === 'human'
-          ? 'Likely human'
-          : visitorType === 'bot'
-            ? 'Bot / crawler'
-            : 'Unclassified';
+    const typeStats = getVisitorTypeStats_(ss.getSheetByName(VISITS_SHEET), ss.getSheetByName(UNIQUES_SHEET));
+    const profile = buildVisitorProfile_(details);
+    const visitLabel = details.isNewUnique
+      ? 'First-time visitor'
+      : 'Returning visitor (visit #' + details.visitCount + ')';
 
     MailApp.sendEmail({
       to: RECIPIENT_EMAIL,
-      subject: '[Portfolio] New unique visitor #' + uniqueVisitors + ' — ' + typeLabel,
+      subject: profile.subject,
       body:
-        'Someone new visited your portfolio.\n\n' +
-        'Visitor type: ' + typeLabel + '\n' +
-        'Unique visitors total: ' + uniqueVisitors + '\n' +
-        'Page: ' + page + '\n' +
-        'Referrer: ' + referrer + '\n' +
-        'Visitor ID: ' + visitorId.slice(0, 8) + '…\n\n' +
+        'Who visited your portfolio\n' +
+        '========================\n\n' +
+        'Visitor type: ' + profile.typeLabel + '\n' +
+        'Confidence: ' + (details.visitorConfidence || 'n/a') + '\n' +
+        'Visit status: ' + visitLabel + '\n\n' +
+        'When: ' + profile.when + '\n' +
+        'Page: ' + details.page + '\n' +
+        'Came from: ' + profile.referrerLabel + '\n\n' +
+        'Device: ' + profile.deviceLabel + '\n' +
+        'Browser: ' + profile.browserLabel + '\n' +
+        'Screen: ' + (details.screenSize || 'unknown') + '\n' +
+        'Language: ' + (details.visitorLanguage || 'unknown') + '\n' +
+        'Timezone: ' + (details.visitorTimezone || 'unknown') + '\n\n' +
+        'Signals: ' + (details.classificationSignals || 'none') + '\n' +
+        'User agent: ' + details.userAgent + '\n' +
+        'Visitor ID: ' + details.visitorId.slice(0, 12) + '…\n\n' +
+        '---\n' +
+        'All-time uniques: ' + uniqueVisitors + '\n' +
+        'Human uniques: ' + typeStats.humanUniques + ' | ATS uniques: ' + typeStats.atsUniques + '\n' +
+        'Human page views: ' + typeStats.humanPageViews + ' | ATS page views: ' + typeStats.atsPageViews + '\n\n' +
         'Dashboard: ' + ss.getUrl(),
     });
   } catch (error) {
     // Non-blocking if email fails
   }
+}
+
+function buildVisitorProfile_(details) {
+  const typeLabel =
+    details.visitorType === 'ats'
+      ? 'ATS / recruiting crawler' + (details.atsVendor ? ' (' + details.atsVendor + ')' : '')
+      : details.visitorType === 'human'
+        ? 'Likely human'
+        : details.visitorType === 'bot'
+          ? 'Bot / crawler'
+          : 'Unclassified visitor';
+
+  const subjectPrefix =
+    details.visitorType === 'human'
+      ? '[Portfolio] Human visited your site'
+      : details.visitorType === 'ats'
+        ? '[Portfolio] ATS visited your site'
+        : details.visitorType === 'bot'
+          ? '[Portfolio] Bot visited your site'
+          : '[Portfolio] Someone visited your site';
+
+  const subjectSuffix = details.isNewUnique ? '' : ' (returning)';
+
+  return {
+    typeLabel: typeLabel,
+    subject: subjectPrefix + subjectSuffix + (details.atsVendor ? ' — ' + details.atsVendor : ''),
+    when: Utilities.formatDate(details.visitedAt, Session.getScriptTimeZone(), 'EEE, MMM d, yyyy h:mm a z'),
+    referrerLabel: formatReferrerSource_(details.referrer),
+    deviceLabel: formatDeviceLabel_(details.deviceType, details.userAgent),
+    browserLabel: parseBrowserLabel_(details.userAgent),
+  };
+}
+
+function formatReferrerSource_(referrer) {
+  const value = String(referrer || 'direct').trim();
+  if (!value || value === 'direct') return 'Direct / no referrer';
+
+  try {
+    const host = value.replace(/^https?:\/\//i, '').split('/')[0].toLowerCase();
+    if (host.indexOf('google.') >= 0) return 'Google (' + host + ')';
+    if (host.indexOf('linkedin.') >= 0) return 'LinkedIn (' + host + ')';
+    if (host.indexOf('greenhouse.io') >= 0) return 'Greenhouse ATS';
+    if (host.indexOf('lever.co') >= 0) return 'Lever ATS';
+    if (host.indexOf('myworkdayjobs.com') >= 0 || host.indexOf('workday.com') >= 0) return 'Workday ATS';
+    return host;
+  } catch (error) {
+    return value.slice(0, 120);
+  }
+}
+
+function formatDeviceLabel_(deviceType, userAgent) {
+  const ua = String(userAgent || '');
+  let os = 'Unknown OS';
+
+  if (/windows nt/i.test(ua)) os = 'Windows';
+  else if (/mac os x|macintosh/i.test(ua)) os = 'macOS';
+  else if (/android/i.test(ua)) os = 'Android';
+  else if (/iphone|ipad|ipod/i.test(ua)) os = 'iOS';
+  else if (/linux/i.test(ua)) os = 'Linux';
+
+  const device = String(deviceType || 'desktop');
+  return device.charAt(0).toUpperCase() + device.slice(1) + ' · ' + os;
+}
+
+function parseBrowserLabel_(userAgent) {
+  const ua = String(userAgent || '');
+
+  if (/edg\//i.test(ua)) return 'Microsoft Edge';
+  if (/chrome\//i.test(ua) && !/edg\//i.test(ua)) return 'Chrome';
+  if (/safari\//i.test(ua) && !/chrome\//i.test(ua)) return 'Safari';
+  if (/firefox\//i.test(ua)) return 'Firefox';
+  if (/linkedinbot/i.test(ua)) return 'LinkedIn crawler';
+  if (/greenhouse/i.test(ua)) return 'Greenhouse crawler';
+
+  return ua.slice(0, 80) || 'Unknown browser';
 }
 
 function getSpreadsheet_() {

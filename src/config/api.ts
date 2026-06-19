@@ -1,6 +1,6 @@
 /** Google Apps Script web app — contact form + visit analytics */
 import { jsonpRequest } from './jsonp';
-import { classifyVisitorWithBehavior } from './visitorClassification';
+import { classifyVisitorWithBehavior, getVisitorContext } from './visitorClassification';
 
 export const PORTFOLIO_API_URL =
   import.meta.env.VITE_PORTFOLIO_API_URL ||
@@ -77,6 +77,7 @@ export async function trackVisit(): Promise<void> {
 
   try {
     const classification = await classifyVisitorWithBehavior({ timeoutMs: 2500 });
+    const context = getVisitorContext();
 
     const data = await jsonpRequest<ApiResponse>(PORTFOLIO_API_URL, {
       action: 'visit',
@@ -88,6 +89,10 @@ export async function trackVisit(): Promise<void> {
       visitorConfidence: classification.confidence,
       atsVendor: classification.atsVendor || '',
       classificationSignals: classification.signals.join(',').slice(0, 200),
+      visitorLanguage: context.visitorLanguage,
+      visitorTimezone: context.visitorTimezone,
+      screenSize: context.screenSize,
+      deviceType: context.deviceType,
     });
 
     if (data.result === 'success') {

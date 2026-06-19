@@ -213,3 +213,27 @@ export function isHumanVisitor(classification: VisitorClassification): boolean {
 export function isAtsVisitor(classification: VisitorClassification): boolean {
   return classification.type === 'ats';
 }
+
+export function getDeviceType(userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : ''): string {
+  if (/ipad|tablet/i.test(userAgent)) return 'tablet';
+  if (/mobile|iphone|ipod|android/i.test(userAgent)) return 'mobile';
+  return 'desktop';
+}
+
+export function getVisitorContext() {
+  if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+    return {
+      visitorLanguage: '',
+      visitorTimezone: '',
+      screenSize: '',
+      deviceType: 'unknown',
+    };
+  }
+
+  return {
+    visitorLanguage: navigator.language || '',
+    visitorTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+    screenSize: `${window.screen.width}x${window.screen.height}`,
+    deviceType: getDeviceType(),
+  };
+}
