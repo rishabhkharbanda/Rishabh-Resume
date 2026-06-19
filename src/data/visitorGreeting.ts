@@ -35,3 +35,13 @@ What if retention drops next month?
 What if we're buying growth that's actually destroying profit?
 
 This sandbox is how I pressure-test marketing decisions before real money gets spent.`;
+
+export const EXPERIENCE_OVERVIEW_LINES = [
+  "I've never been interested in marketing for the sake of marketing.",
+  'What fascinated me was understanding why people behave the way they do.',
+  "Over the last 5+ years, I've worked across gaming, fantasy sports, e-commerce, and multi-market businesses across APAC.",
+  'Different industries.',
+  'Different audiences.',
+  'Same challenge.',
+  'Turn data into decisions that drive growth.',
+];
