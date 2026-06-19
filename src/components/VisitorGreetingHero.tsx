@@ -16,6 +16,13 @@ type HeroPhase = 'enter' | 'typing-one' | 'pause' | 'typing-two' | 'chips';
 const AUTO_HIDE_MS = 10_000;
 const SCROLL_DISMISS_DELTA = 12;
 const HEADER_OFFSET_PX = 96;
+const SECTION_DISMISS_GRACE_MS = 1_200;
+
+type SpeechDismissOptions = {
+  inactivityEnabled?: boolean;
+  scrollMode?: 'any' | 'section-away' | 'none';
+  sectionHeadingId?: string;
+};
 
 interface VisitorGreetingHeroProps {
   onNavigate: (tab: ViewTab) => void;
@@ -54,28 +61,13 @@ function useTypewriter(text: string, active: boolean, speed = 24) {
 function useSpeechPanelDismiss(
   isVisible: boolean,
   onDismiss: () => void,
-  inactivityEnabled: boolean,
+  options: SpeechDismissOptions = {},
 ) {
-  const scrollYWhenShown = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!isVisible) {
-      scrollYWhenShown.current = null;
-      return;
-    }
-
-    scrollYWhenShown.current = window.scrollY;
-
-    const onScroll = () => {
-      if (scrollYWhenShown.current === null) return;
-      if (Math.abs(window.scrollY - scrollYWhenShown.current) > SCROLL_DISMISS_DELTA) {
-        onDismiss();
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [isVisible, onDismiss]);
+  const {
+    inactivityEnabled = false,
+    scrollMode = 'none',
+    sectionHeadingId,
+  } = options;
 
   useEffect(() => {
     if (!isVisible || !inactivityEnabled) return;
@@ -83,6 +75,52 @@ function useSpeechPanelDismiss(
     const timer = window.setTimeout(onDismiss, AUTO_HIDE_MS);
     return () => window.clearTimeout(timer);
   }, [isVisible, inactivityEnabled, onDismiss]);
+
+  useEffect(() => {
+    if (!isVisible || scrollMode !== 'any') return;
+
+    const scrollYWhenShown = window.scrollY;
+
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - scrollYWhenShown) > SCROLL_DISMISS_DELTA) {
+        onDismiss();
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isVisible, scrollMode, onDismiss]);
+
+  useEffect(() => {
+    if (!isVisible || scrollMode !== 'section-away' || !sectionHeadingId) return;
+
+    const heading = document.getElementById(sectionHeadingId);
+    if (!heading) return;
+
+    let canDismissOnLeave = false;
+    const graceTimer = window.setTimeout(() => {
+      canDismissOnLeave = true;
+    }, SECTION_DISMISS_GRACE_MS);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (canDismissOnLeave && !entry.isIntersecting) {
+          onDismiss();
+        }
+      },
+      {
+        root: null,
+        rootMargin: `-${HEADER_OFFSET_PX}px 0px -35% 0px`,
+        threshold: 0,
+      },
+    );
+
+    observer.observe(heading);
+    return () => {
+      window.clearTimeout(graceTimer);
+      observer.disconnect();
+    };
+  }, [isVisible, scrollMode, sectionHeadingId, onDismiss]);
 }
 
 interface SpeechBubbleProps {
@@ -162,8 +200,16 @@ export default function VisitorGreetingHero({
   const showMarketerBubble = marketerPanelVisible;
   const activeBubbleKey = showMarketerBubble ? 'marketer' : showHeroBubble ? 'hero' : null;
 
-  useSpeechPanelDismiss(showHeroBubble, dismissHeroPanel, heroPhase === 'chips');
-  useSpeechPanelDismiss(showMarketerBubble, dismissMarketerPanel, marketerType.done);
+  useSpeechPanelDismiss(showHeroBubble, dismissHeroPanel, {
+    scrollMode: 'any',
+    inactivityEnabled: heroPhase === 'chips',
+  });
+
+  useSpeechPanelDismiss(showMarketerBubble, dismissMarketerPanel, {
+    scrollMode: 'section-away',
+    sectionHeadingId: 'home-marketer-heading',
+    inactivityEnabled: marketerType.done,
+  });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setHeroPhase('typing-one'), 650);
