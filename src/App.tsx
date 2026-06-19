@@ -349,7 +349,10 @@ export default function App() {
               <div className="px-4 sm:px-6 md:px-12 max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
                   <div>
-                    <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
+                    <span
+                      id="home-hire-heading"
+                      className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block"
+                    >
                       04 / Experience Overview
                     </span>
                     <h2 className="font-headline text-3xl font-extrabold tracking-tight leading-snug">

@@ -7,16 +7,20 @@ import {
   GREETING_PART_TWO,
   GREETING_RESPONSES,
   MARKETER_SIMULATOR_SPEECH,
+  EXPERIENCE_OVERVIEW_LINES,
   GreetingAction,
 } from '../data/visitorGreeting';
 import { ViewTab } from '../types';
 
 type HeroPhase = 'enter' | 'typing-one' | 'pause' | 'typing-two' | 'chips';
+type ActiveSpeech = 'hero' | 'marketer' | 'experience' | null;
 
 const AUTO_HIDE_MS = 10_000;
 const SCROLL_DISMISS_DELTA = 12;
 const HEADER_OFFSET_PX = 96;
 const SECTION_DISMISS_GRACE_MS = 1_200;
+const LINE_HOLD_MS = 550;
+const LINE_GAP_MS = 320;
 
 type SpeechDismissOptions = {
   inactivityEnabled?: boolean;
@@ -56,6 +60,63 @@ function useTypewriter(text: string, active: boolean, speed = 24) {
   }, [text, active, speed]);
 
   return { displayed, done };
+}
+
+function useSequentialLineSpeech(lines: string[], panelActive: boolean) {
+  const [lineIndex, setLineIndex] = useState(0);
+  const [showBubble, setShowBubble] = useState(false);
+  const [sequenceComplete, setSequenceComplete] = useState(false);
+
+  const line = lines[lineIndex] ?? '';
+  const shouldType = panelActive && showBubble && !sequenceComplete;
+  const { displayed, done } = useTypewriter(line, shouldType, 22);
+
+  useEffect(() => {
+    if (!panelActive) {
+      setLineIndex(0);
+      setShowBubble(false);
+      setSequenceComplete(false);
+      return;
+    }
+
+    setLineIndex(0);
+    setShowBubble(true);
+    setSequenceComplete(false);
+  }, [panelActive]);
+
+  useEffect(() => {
+    if (!shouldType || !done) return;
+
+    const timer = window.setTimeout(() => {
+      setShowBubble(false);
+    }, LINE_HOLD_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [shouldType, done, lineIndex]);
+
+  useEffect(() => {
+    if (!panelActive || showBubble || sequenceComplete) return;
+
+    const timer = window.setTimeout(() => {
+      if (lineIndex >= lines.length - 1) {
+        setSequenceComplete(true);
+        return;
+      }
+
+      setLineIndex((prev) => prev + 1);
+      setShowBubble(true);
+    }, LINE_GAP_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [panelActive, showBubble, sequenceComplete, lineIndex, lines.length]);
+
+  return {
+    body: displayed,
+    showBubble: showBubble && panelActive,
+    showCursor: showBubble && !done,
+    sequenceComplete,
+    lineIndex,
+  };
 }
 
 function useSpeechPanelDismiss(
@@ -123,6 +184,34 @@ function useSpeechPanelDismiss(
   }, [isVisible, scrollMode, sectionHeadingId, onDismiss]);
 }
 
+function useSectionSpeechTrigger(
+  headingId: string,
+  shownRef: React.MutableRefObject<boolean>,
+  onTrigger: () => void,
+) {
+  useEffect(() => {
+    const heading = document.getElementById(headingId);
+    if (!heading) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !shownRef.current) {
+          shownRef.current = true;
+          onTrigger();
+        }
+      },
+      {
+        root: null,
+        rootMargin: `-${HEADER_OFFSET_PX}px 0px -55% 0px`,
+        threshold: 0,
+      },
+    );
+
+    observer.observe(heading);
+    return () => observer.disconnect();
+  }, [headingId, onTrigger, shownRef]);
+}
+
 interface SpeechBubbleProps {
   body: string;
   showCursor?: boolean;
@@ -176,7 +265,9 @@ export default function VisitorGreetingHero({
   const [heroPhase, setHeroPhase] = useState<HeroPhase>('enter');
   const [heroPanelVisible, setHeroPanelVisible] = useState(true);
   const [marketerPanelVisible, setMarketerPanelVisible] = useState(false);
+  const [experiencePanelVisible, setExperiencePanelVisible] = useState(false);
   const marketerShownRef = useRef(false);
+  const experienceShownRef = useRef(false);
 
   const typeOne = useTypewriter(GREETING_PART_ONE, heroPhase === 'typing-one' && heroPanelVisible);
   const typeTwo = useTypewriter(GREETING_PART_TWO, heroPhase === 'typing-two' && heroPanelVisible);
@@ -184,6 +275,10 @@ export default function VisitorGreetingHero({
     MARKETER_SIMULATOR_SPEECH,
     marketerPanelVisible,
     20,
+  );
+  const experienceSpeech = useSequentialLineSpeech(
+    EXPERIENCE_OVERVIEW_LINES,
+    experiencePanelVisible,
   );
 
   const dismissHeroPanel = useCallback(() => {
@@ -194,21 +289,51 @@ export default function VisitorGreetingHero({
     setMarketerPanelVisible(false);
   }, []);
 
+  const dismissExperiencePanel = useCallback(() => {
+    setExperiencePanelVisible(false);
+  }, []);
+
+  const triggerMarketerSpeech = useCallback(() => {
+    dismissHeroPanel();
+    dismissExperiencePanel();
+    setMarketerPanelVisible(true);
+  }, [dismissHeroPanel, dismissExperiencePanel]);
+
+  const triggerExperienceSpeech = useCallback(() => {
+    dismissHeroPanel();
+    dismissMarketerPanel();
+    setExperiencePanelVisible(true);
+  }, [dismissHeroPanel, dismissMarketerPanel]);
+
   const showHeroBubble = heroPanelVisible && heroPhase !== 'enter';
   const showHeroTyping = heroPanelVisible && heroPhase === 'pause';
   const showHeroChips = heroPanelVisible && heroPhase === 'chips';
   const showMarketerBubble = marketerPanelVisible;
-  const activeBubbleKey = showMarketerBubble ? 'marketer' : showHeroBubble ? 'hero' : null;
+  const showExperienceBubble = experienceSpeech.showBubble;
+
+  const activeSpeech: ActiveSpeech = showExperienceBubble
+    ? 'experience'
+    : showMarketerBubble
+      ? 'marketer'
+      : showHeroBubble
+        ? 'hero'
+        : null;
 
   useSpeechPanelDismiss(showHeroBubble, dismissHeroPanel, {
     scrollMode: 'any',
     inactivityEnabled: heroPhase === 'chips',
   });
 
-  useSpeechPanelDismiss(showMarketerBubble, dismissMarketerPanel, {
+  useSpeechPanelDismiss(marketerPanelVisible, dismissMarketerPanel, {
     scrollMode: 'section-away',
     sectionHeadingId: 'home-marketer-heading',
     inactivityEnabled: marketerType.done,
+  });
+
+  useSpeechPanelDismiss(experiencePanelVisible, dismissExperiencePanel, {
+    scrollMode: 'section-away',
+    sectionHeadingId: 'home-hire-heading',
+    inactivityEnabled: experienceSpeech.sequenceComplete,
   });
 
   useEffect(() => {
@@ -237,28 +362,8 @@ export default function VisitorGreetingHero({
     }
   }, [heroPhase, typeTwo.done]);
 
-  useEffect(() => {
-    const heading = document.getElementById('home-marketer-heading');
-    if (!heading) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !marketerShownRef.current) {
-          marketerShownRef.current = true;
-          dismissHeroPanel();
-          setMarketerPanelVisible(true);
-        }
-      },
-      {
-        root: null,
-        rootMargin: `-${HEADER_OFFSET_PX}px 0px -55% 0px`,
-        threshold: 0,
-      },
-    );
-
-    observer.observe(heading);
-    return () => observer.disconnect();
-  }, [dismissHeroPanel]);
+  useSectionSpeechTrigger('home-marketer-heading', marketerShownRef, triggerMarketerSpeech);
+  useSectionSpeechTrigger('home-hire-heading', experienceShownRef, triggerExperienceSpeech);
 
   const handleChipClick = useCallback(
     (id: GreetingAction) => {
@@ -273,14 +378,19 @@ export default function VisitorGreetingHero({
           break;
         case 'hire':
           onScrollTo('home-hire');
+          window.setTimeout(() => {
+            if (!experienceShownRef.current) {
+              experienceShownRef.current = true;
+              triggerExperienceSpeech();
+            }
+          }, 700);
           break;
         case 'marketer':
           onScrollTo('home-marketer');
           window.setTimeout(() => {
             if (!marketerShownRef.current) {
               marketerShownRef.current = true;
-              dismissHeroPanel();
-              setMarketerPanelVisible(true);
+              triggerMarketerSpeech();
             }
           }, 700);
           break;
@@ -289,7 +399,7 @@ export default function VisitorGreetingHero({
           break;
       }
     },
-    [dismissHeroPanel, onNavigate, onScrollTo],
+    [dismissHeroPanel, onNavigate, onScrollTo, triggerExperienceSpeech, triggerMarketerSpeech],
   );
 
   const heroBubbleBody =
@@ -349,7 +459,23 @@ export default function VisitorGreetingHero({
         </motion.div>
 
         <AnimatePresence mode="wait">
-          {activeBubbleKey === 'marketer' && (
+          {activeSpeech === 'experience' && (
+            <motion.div
+              key={`experience-line-${experienceSpeech.lineIndex}`}
+              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 180 }}
+              className="flex flex-1 min-w-0"
+            >
+              <SpeechBubble
+                body={experienceSpeech.body}
+                showCursor={experienceSpeech.showCursor}
+              />
+            </motion.div>
+          )}
+
+          {activeSpeech === 'marketer' && (
             <motion.div
               key="marketer-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -365,7 +491,7 @@ export default function VisitorGreetingHero({
             </motion.div>
           )}
 
-          {activeBubbleKey === 'hero' && (
+          {activeSpeech === 'hero' && (
             <motion.div
               key="hero-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -386,7 +512,7 @@ export default function VisitorGreetingHero({
       </div>
 
       <AnimatePresence>
-        {showHeroChips && !showMarketerBubble && (
+        {showHeroChips && activeSpeech !== 'marketer' && activeSpeech !== 'experience' && (
           <motion.div
             key="mobile-chips"
             initial={{ opacity: 0, y: 10 }}
