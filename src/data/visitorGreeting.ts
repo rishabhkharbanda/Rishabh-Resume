@@ -45,3 +45,14 @@ export const EXPERIENCE_OVERVIEW_LINES = [
   'Same challenge.',
   'Turn data into decisions that drive growth.',
 ];
+
+export const AVATAR_ASSIST_PROMPTS = [
+  {
+    headline: 'Hey, looking for something specific?',
+    subline: "I can help you find what you're after.",
+  },
+  {
+    headline: 'Need a quick shortcut?',
+    subline: "Let's connect.",
+  },
+] as const;

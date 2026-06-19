@@ -8,6 +8,7 @@ import {
   GREETING_RESPONSES,
   MARKETER_SIMULATOR_SPEECH,
   EXPERIENCE_OVERVIEW_LINES,
+  AVATAR_ASSIST_PROMPTS,
   GreetingAction,
 } from '../data/visitorGreeting';
 import { ViewTab } from '../types';
@@ -22,6 +23,8 @@ const HEADER_OFFSET_PX = 96;
 const SECTION_DISMISS_GRACE_MS = 1_200;
 const LINE_HOLD_MS = 550;
 const LINE_GAP_MS = 320;
+const ASSIST_POPUP_AUTO_HIDE_MS = 7_000;
+const ASSIST_CLICK_COOLDOWN_MS = 18_000;
 
 type SpeechDismissOptions = {
   contentComplete?: boolean;
@@ -259,6 +262,58 @@ function SpeechBubble({ body, showCursor, showTyping, chips }: SpeechBubbleProps
   );
 }
 
+interface AssistPopupProps {
+  headline: string;
+  subline: string;
+  onContact: () => void;
+  onDismiss: () => void;
+}
+
+function AssistPopup({ headline, subline, onContact, onDismiss }: AssistPopupProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16, x: -8, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, x: -6, scale: 0.98 }}
+      transition={{ type: 'spring', damping: 22, stiffness: 200 }}
+      className="flex flex-1 min-w-0 items-start pointer-events-auto mb-16 sm:mb-20 md:mb-24 lg:mb-[6.5rem]"
+    >
+      <div className="visitor-greeting-bubble visitor-assist-popup flex-1 min-w-0 rounded-3xl rounded-bl-md border border-outline-variant px-4 py-3.5 sm:px-5 sm:py-4 max-w-sm">
+        <div className="flex items-center gap-2 mb-2 text-primary">
+          <MessageCircle className="w-4 h-4 shrink-0" aria-hidden />
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
+            Rishabh
+          </span>
+        </div>
+
+        <p className="font-sans text-sm sm:text-[15px] text-on-surface leading-snug font-medium">
+          {headline}
+        </p>
+        <p className="font-sans text-sm text-on-surface-variant leading-snug mt-1.5">
+          {subline}
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2 mt-4">
+          <button
+            type="button"
+            onClick={onContact}
+            className="bg-primary text-on-primary px-4 py-2 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+          >
+            Contact Me
+          </button>
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-primary/40 px-4 py-2 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider active:scale-95 transition-all cursor-pointer"
+          >
+            Not Now
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function VisitorGreetingHero({
   onNavigate,
   onScrollTo,
@@ -269,6 +324,11 @@ export default function VisitorGreetingHero({
   const [experiencePanelVisible, setExperiencePanelVisible] = useState(false);
   const marketerShownRef = useRef(false);
   const experienceShownRef = useRef(false);
+  const assistVariantRef = useRef(0);
+  const assistCooldownUntilRef = useRef(0);
+
+  const [assistPopupVisible, setAssistPopupVisible] = useState(false);
+  const [assistPrompt, setAssistPrompt] = useState(AVATAR_ASSIST_PROMPTS[0]);
 
   const typeOne = useTypewriter(GREETING_PART_ONE, heroPhase === 'typing-one' && heroPanelVisible);
   const typeTwo = useTypewriter(GREETING_PART_TWO, heroPhase === 'typing-two' && heroPanelVisible);
@@ -318,6 +378,53 @@ export default function VisitorGreetingHero({
       : showHeroBubble
         ? 'hero'
         : null;
+
+  const isContextualSpeechActive =
+    activeSpeech !== null ||
+    (experiencePanelVisible && !experienceSpeech.sequenceComplete);
+
+  const dismissAssistPopup = useCallback(() => {
+    setAssistPopupVisible(false);
+    assistCooldownUntilRef.current = Date.now() + ASSIST_CLICK_COOLDOWN_MS;
+  }, []);
+
+  const handleContactMe = useCallback(() => {
+    dismissAssistPopup();
+    onNavigate('contact');
+    window.setTimeout(() => {
+      const form = document.getElementById('contact-form');
+      if (form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      const firstField = form?.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+        'input:not([type="hidden"]), textarea',
+      );
+      firstField?.focus({ preventScroll: true });
+    }, 450);
+  }, [dismissAssistPopup, onNavigate]);
+
+  const handleAvatarClick = useCallback(() => {
+    if (isContextualSpeechActive || assistPopupVisible) return;
+    if (Date.now() < assistCooldownUntilRef.current) return;
+
+    const prompt = AVATAR_ASSIST_PROMPTS[assistVariantRef.current % AVATAR_ASSIST_PROMPTS.length];
+    assistVariantRef.current += 1;
+    setAssistPrompt(prompt);
+    setAssistPopupVisible(true);
+  }, [isContextualSpeechActive, assistPopupVisible]);
+
+  useEffect(() => {
+    if (!assistPopupVisible) return;
+
+    const timer = window.setTimeout(dismissAssistPopup, ASSIST_POPUP_AUTO_HIDE_MS);
+    return () => window.clearTimeout(timer);
+  }, [assistPopupVisible, dismissAssistPopup]);
+
+  useEffect(() => {
+    if (isContextualSpeechActive && assistPopupVisible) {
+      setAssistPopupVisible(false);
+    }
+  }, [isContextualSpeechActive, assistPopupVisible]);
 
   useSpeechPanelDismiss(heroPanelVisible, dismissHeroPanel, {
     scrollMode: 'any',
@@ -442,24 +549,45 @@ export default function VisitorGreetingHero({
       style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
     >
       <div className="flex items-end gap-3 sm:gap-4 p-2 sm:p-4 max-w-7xl">
-        <motion.div
-          className="shrink-0 pointer-events-auto"
+        <motion.button
+          type="button"
+          onClick={handleAvatarClick}
+          disabled={isContextualSpeechActive}
+          aria-label={
+            isContextualSpeechActive
+              ? 'Rishabh is speaking'
+              : 'Ask Rishabh for help'
+          }
+          className="shrink-0 pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl disabled:cursor-default"
           initial={{ y: 120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'spring', damping: 18, stiffness: 130, delay: 0.15 }}
+          whileHover={isContextualSpeechActive ? undefined : { scale: 1.04, y: -4 }}
+          whileTap={isContextualSpeechActive ? undefined : { scale: 0.98 }}
         >
           <motion.img
             src={mascotAvatarUrl}
-            alt="Rishabh — your guide through this portfolio"
+            alt=""
+            aria-hidden
             className="visitor-greeting-avatar w-[clamp(96px,22vw,160px)] h-auto object-contain object-bottom drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
             draggable={false}
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
           />
-        </motion.div>
+        </motion.button>
 
         <AnimatePresence mode="wait">
-          {activeSpeech === 'experience' && (
+          {assistPopupVisible && !isContextualSpeechActive && (
+            <AssistPopup
+              key="assist-popup"
+              headline={assistPrompt.headline}
+              subline={assistPrompt.subline}
+              onContact={handleContactMe}
+              onDismiss={dismissAssistPopup}
+            />
+          )}
+
+          {!assistPopupVisible && activeSpeech === 'experience' && (
             <motion.div
               key={`experience-line-${experienceSpeech.lineIndex}`}
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -475,7 +603,7 @@ export default function VisitorGreetingHero({
             </motion.div>
           )}
 
-          {activeSpeech === 'marketer' && (
+          {!assistPopupVisible && activeSpeech === 'marketer' && (
             <motion.div
               key="marketer-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -491,7 +619,7 @@ export default function VisitorGreetingHero({
             </motion.div>
           )}
 
-          {activeSpeech === 'hero' && (
+          {!assistPopupVisible && activeSpeech === 'hero' && (
             <motion.div
               key="hero-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
