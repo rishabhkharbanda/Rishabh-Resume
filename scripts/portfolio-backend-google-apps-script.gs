@@ -1,6 +1,7 @@
 /**
- * Portfolio backend — contact form + visit analytics
+ * Portfolio backend — contact form + visit analytics (Google Sheets)
  *
+ * Sheets: Visits (every page view), UniqueVisitors (one row per visitor), Contacts (form submissions)
  * Setup:
  * 1. https://script.google.com → New project → paste this file
  * 2. Project Settings → Script properties → add STATS_SECRET = your private PIN
@@ -19,6 +20,60 @@ function authorizeSetup() {
 }
 const VISITS_SHEET = 'Visits';
 const UNIQUES_SHEET = 'UniqueVisitors';
+const CONTACTS_SHEET = 'Contacts';
+
+const VISIT_HEADERS = [
+  'Timestamp',
+  'VisitorId',
+  'IsNewUnique',
+  'VisitNumber',
+  'Referrer',
+  'Page',
+  'UserAgent',
+  'VisitorType',
+  'VisitorConfidence',
+  'AtsVendor',
+  'ClassificationSignals',
+  'VisitorLanguage',
+  'VisitorTimezone',
+  'ScreenSize',
+  'DeviceType',
+  'Browser',
+  'DeviceLabel',
+  'ReferrerSource',
+  'VisitorIp',
+  'VisitorCity',
+  'VisitorRegion',
+  'VisitorCountry',
+];
+
+const UNIQUE_HEADERS = [
+  'VisitorId',
+  'FirstSeen',
+  'LastSeen',
+  'VisitCount',
+  'VisitorType',
+  'AtsVendor',
+  'VisitorConfidence',
+  'ClassificationSignals',
+  'FirstReferrer',
+  'LastReferrer',
+  'LastPage',
+  'UserAgent',
+  'VisitorLanguage',
+  'VisitorTimezone',
+  'ScreenSize',
+  'DeviceType',
+  'Browser',
+  'DeviceLabel',
+  'ReferrerSource',
+  'VisitorIp',
+  'VisitorCity',
+  'VisitorRegion',
+  'VisitorCountry',
+];
+
+const CONTACT_HEADERS = ['Timestamp', 'Name', 'Email', 'Subject', 'Message'];
 
 function doPost(e) {
   const params = getParams_(e);
@@ -120,6 +175,14 @@ function handleContact_(params) {
       name: name + ' (Portfolio)',
     });
 
+    logContactToSheet_({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message,
+      submittedAt: new Date(),
+    });
+
     return jsonResponse_({ result: 'success' });
   } catch (error) {
     return jsonResponse_({ result: 'error', message: String(error) });
@@ -133,86 +196,36 @@ function logVisit_(params, callback) {
       return jsonResponse_({ result: 'error', message: 'Missing visitorId.' }, callback);
     }
 
-    const referrer = String(params.referrer || 'direct').slice(0, 500);
-    const page = String(params.page || '/').slice(0, 200);
-    const userAgent = String(params.userAgent || '').slice(0, 300);
-    const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer);
-    const visitorConfidence = String(params.visitorConfidence || '').slice(0, 20);
-    const atsVendor = String(params.atsVendor || '').slice(0, 80);
-    const classificationSignals = String(params.classificationSignals || '').slice(0, 200);
-    const visitorLanguage = String(params.visitorLanguage || '').slice(0, 20);
-    const visitorTimezone = String(params.visitorTimezone || '').slice(0, 60);
-    const screenSize = String(params.screenSize || '').slice(0, 20);
-    const deviceType = String(params.deviceType || '').slice(0, 20);
-    const visitorIp = String(params.visitorIp || '').slice(0, 45);
-    const visitorCity = String(params.visitorCity || '').slice(0, 80);
-    const visitorRegion = String(params.visitorRegion || '').slice(0, 80);
-    const visitorCountry = String(params.visitorCountry || '').slice(0, 80);
-    const now = new Date();
-
     const ss = getSpreadsheet_();
     const visits = ss.getSheetByName(VISITS_SHEET);
     const uniques = ss.getSheetByName(UNIQUES_SHEET);
-    ensureVisitColumns_(visits);
+    ensureSheetColumns_(visits, VISIT_HEADERS);
+    ensureSheetColumns_(uniques, UNIQUE_HEADERS);
 
     const row = findVisitorRow_(uniques, visitorId);
     const isNewUnique = row === -1;
-
-    visits.appendRow([
-      now,
-      visitorId,
-      isNewUnique,
-      referrer,
-      page,
-      userAgent,
-      visitorType,
-      visitorConfidence,
-      atsVendor,
-      classificationSignals,
-      visitorIp,
-      visitorCity,
-      visitorRegion,
-      visitorCountry,
-    ]);
-
-    if (isNewUnique) {
-      uniques.appendRow([visitorId, now, now, 1, visitorType, atsVendor]);
-    } else {
-      const count = Number(uniques.getRange(row, 4).getValue()) || 0;
-      uniques.getRange(row, 3, 1, 2).setValues([[now, count + 1]]);
-    }
-
+    const visitCountCol = UNIQUE_HEADERS.indexOf('VisitCount') + 1;
     const visitCount = isNewUnique
       ? 1
-      : Number(uniques.getRange(row, 4).getValue()) || 1;
+      : (Number(uniques.getRange(row, visitCountCol).getValue()) || 0) + 1;
 
-    notifyVisit_({
+    const details = buildVisitDetails_(params, {
       visitorId: visitorId,
-      referrer: referrer,
-      page: page,
-      userAgent: userAgent,
-      visitorType: visitorType,
-      visitorConfidence: visitorConfidence,
-      atsVendor: atsVendor,
-      classificationSignals: classificationSignals,
       isNewUnique: isNewUnique,
       visitCount: visitCount,
-      visitorLanguage: visitorLanguage,
-      visitorTimezone: visitorTimezone,
-      screenSize: screenSize,
-      deviceType: deviceType,
-      visitorIp: visitorIp,
-      visitorCity: visitorCity,
-      visitorRegion: visitorRegion,
-      visitorCountry: visitorCountry,
-      visitedAt: now,
+      visitedAt: new Date(),
     });
+
+    appendVisitRow_(visits, details);
+    upsertUniqueVisitor_(uniques, row, details);
+
+    notifyVisit_(details);
 
     return jsonResponse_(
       {
         result: 'success',
         isNewUnique: isNewUnique,
-        visitorType: visitorType,
+        visitorType: details.visitorType,
         uniqueVisitors: Math.max(0, uniques.getLastRow() - 1),
         totalPageViews: Math.max(0, visits.getLastRow() - 1),
       },
@@ -220,6 +233,146 @@ function logVisit_(params, callback) {
     );
   } catch (error) {
     return jsonResponse_({ result: 'error', message: String(error) }, callback);
+  }
+}
+
+function buildVisitDetails_(params, meta) {
+  const referrer = String(params.referrer || 'direct').slice(0, 500);
+  const page = String(params.page || '/').slice(0, 200);
+  const userAgent = String(params.userAgent || '').slice(0, 300);
+  const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer);
+  const deviceType = String(params.deviceType || '').slice(0, 20);
+
+  return {
+    visitorId: meta.visitorId,
+    isNewUnique: meta.isNewUnique,
+    visitCount: meta.visitCount,
+    visitedAt: meta.visitedAt,
+    referrer: referrer,
+    page: page,
+    userAgent: userAgent,
+    visitorType: visitorType,
+    visitorConfidence: String(params.visitorConfidence || '').slice(0, 20),
+    atsVendor: String(params.atsVendor || '').slice(0, 80),
+    classificationSignals: String(params.classificationSignals || '').slice(0, 200),
+    visitorLanguage: String(params.visitorLanguage || '').slice(0, 20),
+    visitorTimezone: String(params.visitorTimezone || '').slice(0, 60),
+    screenSize: String(params.screenSize || '').slice(0, 20),
+    deviceType: deviceType,
+    browserLabel: parseBrowserLabel_(userAgent),
+    deviceLabel: formatDeviceLabel_(deviceType, userAgent),
+    referrerLabel: formatReferrerSource_(referrer),
+    visitorIp: String(params.visitorIp || '').slice(0, 45),
+    visitorCity: String(params.visitorCity || '').slice(0, 80),
+    visitorRegion: String(params.visitorRegion || '').slice(0, 80),
+    visitorCountry: String(params.visitorCountry || '').slice(0, 80),
+  };
+}
+
+function appendVisitRow_(visits, details) {
+  visits.appendRow([
+    details.visitedAt,
+    details.visitorId,
+    details.isNewUnique,
+    details.visitCount,
+    details.referrer,
+    details.page,
+    details.userAgent,
+    details.visitorType,
+    details.visitorConfidence,
+    details.atsVendor,
+    details.classificationSignals,
+    details.visitorLanguage,
+    details.visitorTimezone,
+    details.screenSize,
+    details.deviceType,
+    details.browserLabel,
+    details.deviceLabel,
+    details.referrerLabel,
+    details.visitorIp,
+    details.visitorCity,
+    details.visitorRegion,
+    details.visitorCountry,
+  ]);
+}
+
+function upsertUniqueVisitor_(uniques, row, details) {
+  if (row === -1) {
+    uniques.appendRow([
+      details.visitorId,
+      details.visitedAt,
+      details.visitedAt,
+      1,
+      details.visitorType,
+      details.atsVendor,
+      details.visitorConfidence,
+      details.classificationSignals,
+      details.referrer,
+      details.referrer,
+      details.page,
+      details.userAgent,
+      details.visitorLanguage,
+      details.visitorTimezone,
+      details.screenSize,
+      details.deviceType,
+      details.browserLabel,
+      details.deviceLabel,
+      details.referrerLabel,
+      details.visitorIp,
+      details.visitorCity,
+      details.visitorRegion,
+      details.visitorCountry,
+    ]);
+    return;
+  }
+
+  const firstReferrerCol = UNIQUE_HEADERS.indexOf('FirstReferrer') + 1;
+  const updateColCount = UNIQUE_HEADERS.length - 2;
+  uniques.getRange(row, 3, 1, updateColCount).setValues([[
+    details.visitedAt,
+    details.visitCount,
+    details.visitorType,
+    details.atsVendor,
+    details.visitorConfidence,
+    details.classificationSignals,
+    uniques.getRange(row, firstReferrerCol).getValue() || details.referrer,
+    details.referrer,
+    details.page,
+    details.userAgent,
+    details.visitorLanguage,
+    details.visitorTimezone,
+    details.screenSize,
+    details.deviceType,
+    details.browserLabel,
+    details.deviceLabel,
+    details.referrerLabel,
+    details.visitorIp,
+    details.visitorCity,
+    details.visitorRegion,
+    details.visitorCountry,
+  ]]);
+}
+
+function logContactToSheet_(contact) {
+  try {
+    const ss = getSpreadsheet_();
+    let contacts = ss.getSheetByName(CONTACTS_SHEET);
+    if (!contacts) {
+      contacts = ss.insertSheet(CONTACTS_SHEET);
+      contacts.appendRow(CONTACT_HEADERS);
+    } else {
+      ensureSheetColumns_(contacts, CONTACT_HEADERS);
+    }
+
+    contacts.appendRow([
+      contact.submittedAt,
+      contact.name,
+      contact.email,
+      contact.subject,
+      contact.message,
+    ]);
+  } catch (error) {
+    // Non-blocking if sheet logging fails
   }
 }
 
@@ -444,7 +597,7 @@ function getSpreadsheet_() {
   }
 
   const ss = SpreadsheetApp.openById(sheetId);
-  if (!ss.getSheetByName(VISITS_SHEET)) setupSheets_(ss);
+  setupSheets_(ss);
   return ss;
 }
 
@@ -452,66 +605,56 @@ function setupSheets_(ss) {
   let visits = ss.getSheetByName(VISITS_SHEET);
   if (!visits) {
     visits = ss.insertSheet(VISITS_SHEET);
-    visits.appendRow([
-      'Timestamp',
-      'VisitorId',
-      'IsNewUnique',
-      'Referrer',
-      'Page',
-      'UserAgent',
-      'VisitorType',
-      'VisitorConfidence',
-      'AtsVendor',
-      'ClassificationSignals',
-      'VisitorIp',
-      'VisitorCity',
-      'VisitorRegion',
-      'VisitorCountry',
-    ]);
+    visits.appendRow(VISIT_HEADERS);
   } else {
-    ensureVisitColumns_(visits);
+    ensureSheetColumns_(visits, VISIT_HEADERS);
   }
 
   let uniques = ss.getSheetByName(UNIQUES_SHEET);
   if (!uniques) {
     uniques = ss.insertSheet(UNIQUES_SHEET);
-    uniques.appendRow(['VisitorId', 'FirstSeen', 'LastSeen', 'VisitCount', 'VisitorType', 'AtsVendor']);
-  } else if (uniques.getLastColumn() < 6) {
-    const headers = uniques.getRange(1, 1, 1, Math.max(uniques.getLastColumn(), 4)).getValues()[0];
-    if (!headers[4]) uniques.getRange(1, 5).setValue('VisitorType');
-    if (!headers[5]) uniques.getRange(1, 6).setValue('AtsVendor');
+    uniques.appendRow(UNIQUE_HEADERS);
+  } else {
+    ensureSheetColumns_(uniques, UNIQUE_HEADERS);
+  }
+
+  let contacts = ss.getSheetByName(CONTACTS_SHEET);
+  if (!contacts) {
+    contacts = ss.insertSheet(CONTACTS_SHEET);
+    contacts.appendRow(CONTACT_HEADERS);
+  } else {
+    ensureSheetColumns_(contacts, CONTACT_HEADERS);
   }
 }
 
-function ensureVisitColumns_(visits) {
-  const expected = [
-    'Timestamp',
-    'VisitorId',
-    'IsNewUnique',
-    'Referrer',
-    'Page',
-    'UserAgent',
-    'VisitorType',
-    'VisitorConfidence',
-    'AtsVendor',
-    'ClassificationSignals',
-    'VisitorIp',
-    'VisitorCity',
-    'VisitorRegion',
-    'VisitorCountry',
-  ];
-
-  if (visits.getLastRow() === 0) {
-    visits.appendRow(expected);
+function ensureSheetColumns_(sheet, expectedHeaders) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(expectedHeaders);
     return;
   }
 
-  const headers = visits.getRange(1, 1, 1, visits.getLastColumn()).getValues()[0];
-  for (let i = 0; i < expected.length; i++) {
-    if (!headers[i]) {
-      visits.getRange(1, i + 1).setValue(expected[i]);
+  const currentHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const headerSet = {};
+  currentHeaders.forEach(function (header) {
+    if (header) headerSet[String(header)] = true;
+  });
+
+  let nextColumn = currentHeaders.length;
+  expectedHeaders.forEach(function (header) {
+    if (!headerSet[header]) {
+      nextColumn += 1;
+      sheet.getRange(1, nextColumn).setValue(header);
+      headerSet[header] = true;
     }
-  }
+  });
+}
+
+function getVisitColumnIndex_(headerName) {
+  return VISIT_HEADERS.indexOf(headerName);
+}
+
+function ensureVisitColumns_(visits) {
+  ensureSheetColumns_(visits, VISIT_HEADERS);
 }
 
 function normalizeVisitorType_(rawType, userAgent, referrer) {
@@ -556,11 +699,15 @@ function getVisitorTypeStats_(visits, uniques) {
   const visitLastRow = visits.getLastRow();
   if (visitLastRow >= 2) {
     const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-    const rows = visits.getRange(2, 1, visitLastRow - 1, 7).getValues();
+    const colCount = Math.max(visits.getLastColumn(), VISIT_HEADERS.length);
+    const rows = visits.getRange(2, 1, visitLastRow - 1, colCount).getValues();
+    const typeIndex = getVisitColumnIndex_('VisitorType');
+    const uaIndex = getVisitColumnIndex_('UserAgent');
+    const refIndex = getVisitColumnIndex_('Referrer');
 
     rows.forEach(function (row) {
       const timestamp = row[0];
-      const type = normalizeVisitorType_(row[6], row[5], row[3]);
+      const type = normalizeVisitorType_(row[typeIndex], row[uaIndex], row[refIndex]);
       const isToday =
         timestamp &&
         Utilities.formatDate(new Date(timestamp), Session.getScriptTimeZone(), 'yyyy-MM-dd') === today;
@@ -581,10 +728,11 @@ function getVisitorTypeStats_(visits, uniques) {
 
   const uniqueLastRow = uniques.getLastRow();
   if (uniqueLastRow >= 2) {
-    const cols = Math.max(uniques.getLastColumn(), 5);
+    const cols = Math.max(uniques.getLastColumn(), UNIQUE_HEADERS.length);
     const rows = uniques.getRange(2, 1, uniqueLastRow - 1, cols).getValues();
+    const typeIndex = UNIQUE_HEADERS.indexOf('VisitorType');
     rows.forEach(function (row) {
-      const type = normalizeVisitorType_(row[4], '', '');
+      const type = normalizeVisitorType_(row[typeIndex], '', '');
       if (type === 'human') stats.humanUniques++;
       if (type === 'ats') stats.atsUniques++;
     });
