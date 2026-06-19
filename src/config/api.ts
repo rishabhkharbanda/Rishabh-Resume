@@ -1,5 +1,6 @@
 /** Google Apps Script web app — contact form + visit analytics */
 import { jsonpRequest } from './jsonp';
+import { classifyVisitorWithBehavior } from './visitorClassification';
 
 export const PORTFOLIO_API_URL =
   import.meta.env.VITE_PORTFOLIO_API_URL ||
@@ -14,6 +15,14 @@ export interface VisitStats {
   totalPageViews: number;
   todayPageViews: number;
   todayNewUniques: number;
+  humanPageViews: number;
+  atsPageViews: number;
+  botPageViews: number;
+  unknownPageViews: number;
+  humanUniques: number;
+  atsUniques: number;
+  todayHumanPageViews: number;
+  todayAtsPageViews: number;
   sheetUrl?: string;
   updatedAt?: string;
 }
@@ -25,6 +34,14 @@ interface ApiResponse {
   totalPageViews?: number;
   todayPageViews?: number;
   todayNewUniques?: number;
+  humanPageViews?: number;
+  atsPageViews?: number;
+  botPageViews?: number;
+  unknownPageViews?: number;
+  humanUniques?: number;
+  atsUniques?: number;
+  todayHumanPageViews?: number;
+  todayAtsPageViews?: number;
   sheetUrl?: string;
   updatedAt?: string;
   analytics?: boolean;
@@ -59,12 +76,18 @@ export async function trackVisit(): Promise<void> {
   if (!PORTFOLIO_API_URL || sessionStorage.getItem(SESSION_VISIT_KEY)) return;
 
   try {
+    const classification = await classifyVisitorWithBehavior({ timeoutMs: 2500 });
+
     const data = await jsonpRequest<ApiResponse>(PORTFOLIO_API_URL, {
       action: 'visit',
       visitorId: getVisitorId(),
       page: window.location.pathname + window.location.search,
       referrer: document.referrer || 'direct',
       userAgent: navigator.userAgent.slice(0, 300),
+      visitorType: classification.type,
+      visitorConfidence: classification.confidence,
+      atsVendor: classification.atsVendor || '',
+      classificationSignals: classification.signals.join(',').slice(0, 200),
     });
 
     if (data.result === 'success') {
@@ -113,6 +136,14 @@ export async function fetchVisitStats(pin: string): Promise<VisitStats> {
     totalPageViews: data.totalPageViews ?? 0,
     todayPageViews: data.todayPageViews ?? 0,
     todayNewUniques: data.todayNewUniques ?? 0,
+    humanPageViews: data.humanPageViews ?? 0,
+    atsPageViews: data.atsPageViews ?? 0,
+    botPageViews: data.botPageViews ?? 0,
+    unknownPageViews: data.unknownPageViews ?? 0,
+    humanUniques: data.humanUniques ?? 0,
+    atsUniques: data.atsUniques ?? 0,
+    todayHumanPageViews: data.todayHumanPageViews ?? 0,
+    todayAtsPageViews: data.todayAtsPageViews ?? 0,
     sheetUrl: data.sheetUrl,
     updatedAt: data.updatedAt,
   };

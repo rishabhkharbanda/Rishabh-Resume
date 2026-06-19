@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, BarChart3, Users, Eye, TrendingUp, ExternalLink } from 'lucide-react';
+import { X, BarChart3, Users, Eye, TrendingUp, ExternalLink, UserRound, Bot } from 'lucide-react';
 import { fetchVisitStats, VisitStats } from '../config/api';
 
 interface VisitStatsPanelProps {
@@ -37,6 +37,10 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
         { label: 'Total page views', value: stats.totalPageViews, icon: Eye },
         { label: 'Views today', value: stats.todayPageViews, icon: BarChart3 },
         { label: 'New uniques today', value: stats.todayNewUniques, icon: TrendingUp },
+        { label: 'Human page views', value: stats.humanPageViews, icon: UserRound },
+        { label: 'ATS page views', value: stats.atsPageViews, icon: Bot },
+        { label: 'Human uniques', value: stats.humanUniques, icon: UserRound },
+        { label: 'ATS uniques', value: stats.atsUniques, icon: Bot },
       ]
     : [];
 
@@ -61,7 +65,7 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
         {!stats ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <p className="text-sm text-on-surface-variant leading-relaxed">
-              Enter your private PIN to view unique visits and page views.
+              Enter your private PIN to view visits, including human vs ATS traffic.
             </p>
             <input
               type="password"
@@ -99,6 +103,12 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
                 );
               })}
             </div>
+
+            {(stats.todayHumanPageViews > 0 || stats.todayAtsPageViews > 0) && (
+              <p className="text-xs text-on-surface-variant font-mono text-center">
+                Today: {stats.todayHumanPageViews} human · {stats.todayAtsPageViews} ATS
+              </p>
+            )}
 
             {stats.sheetUrl && (
               <a

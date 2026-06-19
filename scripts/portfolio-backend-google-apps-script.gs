@@ -136,20 +136,36 @@ function logVisit_(params, callback) {
     const referrer = String(params.referrer || 'direct').slice(0, 500);
     const page = String(params.page || '/').slice(0, 200);
     const userAgent = String(params.userAgent || '').slice(0, 300);
+    const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer);
+    const visitorConfidence = String(params.visitorConfidence || '').slice(0, 20);
+    const atsVendor = String(params.atsVendor || '').slice(0, 80);
+    const classificationSignals = String(params.classificationSignals || '').slice(0, 200);
     const now = new Date();
 
     const ss = getSpreadsheet_();
     const visits = ss.getSheetByName(VISITS_SHEET);
     const uniques = ss.getSheetByName(UNIQUES_SHEET);
+    ensureVisitColumns_(visits);
 
     const row = findVisitorRow_(uniques, visitorId);
     const isNewUnique = row === -1;
 
-    visits.appendRow([now, visitorId, isNewUnique, referrer, page, userAgent]);
+    visits.appendRow([
+      now,
+      visitorId,
+      isNewUnique,
+      referrer,
+      page,
+      userAgent,
+      visitorType,
+      visitorConfidence,
+      atsVendor,
+      classificationSignals,
+    ]);
 
     if (isNewUnique) {
-      uniques.appendRow([visitorId, now, now, 1]);
-      notifyNewUniqueVisitor_(visitorId, referrer, page);
+      uniques.appendRow([visitorId, now, now, 1, visitorType, atsVendor]);
+      notifyNewUniqueVisitor_(visitorId, referrer, page, visitorType, atsVendor);
     } else {
       const count = Number(uniques.getRange(row, 4).getValue()) || 0;
       uniques.getRange(row, 3, 1, 2).setValues([[now, count + 1]]);
@@ -159,6 +175,7 @@ function logVisit_(params, callback) {
       {
         result: 'success',
         isNewUnique: isNewUnique,
+        visitorType: visitorType,
         uniqueVisitors: Math.max(0, uniques.getLastRow() - 1),
         totalPageViews: Math.max(0, visits.getLastRow() - 1),
       },
@@ -187,6 +204,7 @@ function getStats_(params, callback) {
     const totalPageViews = Math.max(0, visits.getLastRow() - 1);
     const todayPageViews = countTodayRows_(visits);
     const todayNewUniques = countTodayNewUniques_(visits);
+    const typeStats = getVisitorTypeStats_(visits, uniques);
 
     return jsonResponse_(
       {
@@ -195,6 +213,14 @@ function getStats_(params, callback) {
         totalPageViews: totalPageViews,
         todayPageViews: todayPageViews,
         todayNewUniques: todayNewUniques,
+        humanPageViews: typeStats.humanPageViews,
+        atsPageViews: typeStats.atsPageViews,
+        botPageViews: typeStats.botPageViews,
+        unknownPageViews: typeStats.unknownPageViews,
+        humanUniques: typeStats.humanUniques,
+        atsUniques: typeStats.atsUniques,
+        todayHumanPageViews: typeStats.todayHumanPageViews,
+        todayAtsPageViews: typeStats.todayAtsPageViews,
         sheetUrl: ss.getUrl(),
         updatedAt: new Date().toISOString(),
       },
@@ -231,16 +257,25 @@ function sendDailyVisitDigest() {
   });
 }
 
-function notifyNewUniqueVisitor_(visitorId, referrer, page) {
+function notifyNewUniqueVisitor_(visitorId, referrer, page, visitorType, atsVendor) {
   try {
     const ss = getSpreadsheet_();
     const uniqueVisitors = Math.max(0, ss.getSheetByName(UNIQUES_SHEET).getLastRow() - 1);
+    const typeLabel =
+      visitorType === 'ats'
+        ? 'ATS / recruiting crawler' + (atsVendor ? ' (' + atsVendor + ')' : '')
+        : visitorType === 'human'
+          ? 'Likely human'
+          : visitorType === 'bot'
+            ? 'Bot / crawler'
+            : 'Unclassified';
 
     MailApp.sendEmail({
       to: RECIPIENT_EMAIL,
-      subject: '[Portfolio] New unique visitor #' + uniqueVisitors,
+      subject: '[Portfolio] New unique visitor #' + uniqueVisitors + ' — ' + typeLabel,
       body:
         'Someone new visited your portfolio.\n\n' +
+        'Visitor type: ' + typeLabel + '\n' +
         'Unique visitors total: ' + uniqueVisitors + '\n' +
         'Page: ' + page + '\n' +
         'Referrer: ' + referrer + '\n' +
@@ -277,14 +312,137 @@ function setupSheets_(ss) {
   let visits = ss.getSheetByName(VISITS_SHEET);
   if (!visits) {
     visits = ss.insertSheet(VISITS_SHEET);
-    visits.appendRow(['Timestamp', 'VisitorId', 'IsNewUnique', 'Referrer', 'Page', 'UserAgent']);
+    visits.appendRow([
+      'Timestamp',
+      'VisitorId',
+      'IsNewUnique',
+      'Referrer',
+      'Page',
+      'UserAgent',
+      'VisitorType',
+      'VisitorConfidence',
+      'AtsVendor',
+      'ClassificationSignals',
+    ]);
+  } else {
+    ensureVisitColumns_(visits);
   }
 
   let uniques = ss.getSheetByName(UNIQUES_SHEET);
   if (!uniques) {
     uniques = ss.insertSheet(UNIQUES_SHEET);
-    uniques.appendRow(['VisitorId', 'FirstSeen', 'LastSeen', 'VisitCount']);
+    uniques.appendRow(['VisitorId', 'FirstSeen', 'LastSeen', 'VisitCount', 'VisitorType', 'AtsVendor']);
+  } else if (uniques.getLastColumn() < 6) {
+    const headers = uniques.getRange(1, 1, 1, Math.max(uniques.getLastColumn(), 4)).getValues()[0];
+    if (!headers[4]) uniques.getRange(1, 5).setValue('VisitorType');
+    if (!headers[5]) uniques.getRange(1, 6).setValue('AtsVendor');
   }
+}
+
+function ensureVisitColumns_(visits) {
+  const expected = [
+    'Timestamp',
+    'VisitorId',
+    'IsNewUnique',
+    'Referrer',
+    'Page',
+    'UserAgent',
+    'VisitorType',
+    'VisitorConfidence',
+    'AtsVendor',
+    'ClassificationSignals',
+  ];
+
+  if (visits.getLastRow() === 0) {
+    visits.appendRow(expected);
+    return;
+  }
+
+  const headers = visits.getRange(1, 1, 1, visits.getLastColumn()).getValues()[0];
+  for (let i = 0; i < expected.length; i++) {
+    if (!headers[i]) {
+      visits.getRange(1, i + 1).setValue(expected[i]);
+    }
+  }
+}
+
+function normalizeVisitorType_(rawType, userAgent, referrer) {
+  const value = String(rawType || '').toLowerCase().trim();
+  if (value === 'human' || value === 'ats' || value === 'bot' || value === 'unknown') {
+    return value;
+  }
+
+  const ua = String(userAgent || '').toLowerCase();
+  const ref = String(referrer || '').toLowerCase();
+
+  if (
+    /greenhouse|lever|workday|taleo|icims|smartrecruiters|ashby|bamboohr|jazzhr|jobvite|successfactors|eightfold|phenom|workable|recruitee|breezy|bullhorn|applicant.?tracking|ats.?parser|resume.?parser/.test(
+      ua
+    ) ||
+    /greenhouse\.io|lever\.co|myworkdayjobs\.com|icims\.com|smartrecruiters\.com|ashbyhq\.com|workable\.com|eightfold\.ai|phenom\.com/.test(
+      ref
+    )
+  ) {
+    return 'ats';
+  }
+
+  if (/bot|crawler|spider|headless|puppeteer|playwright|selenium|python-requests|curl\//.test(ua)) {
+    return 'bot';
+  }
+
+  return 'unknown';
+}
+
+function getVisitorTypeStats_(visits, uniques) {
+  const stats = {
+    humanPageViews: 0,
+    atsPageViews: 0,
+    botPageViews: 0,
+    unknownPageViews: 0,
+    humanUniques: 0,
+    atsUniques: 0,
+    todayHumanPageViews: 0,
+    todayAtsPageViews: 0,
+  };
+
+  const visitLastRow = visits.getLastRow();
+  if (visitLastRow >= 2) {
+    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    const rows = visits.getRange(2, 1, visitLastRow - 1, 7).getValues();
+
+    rows.forEach(function (row) {
+      const timestamp = row[0];
+      const type = normalizeVisitorType_(row[6], row[5], row[3]);
+      const isToday =
+        timestamp &&
+        Utilities.formatDate(new Date(timestamp), Session.getScriptTimeZone(), 'yyyy-MM-dd') === today;
+
+      if (type === 'human') {
+        stats.humanPageViews++;
+        if (isToday) stats.todayHumanPageViews++;
+      } else if (type === 'ats') {
+        stats.atsPageViews++;
+        if (isToday) stats.todayAtsPageViews++;
+      } else if (type === 'bot') {
+        stats.botPageViews++;
+      } else {
+        stats.unknownPageViews++;
+      }
+    });
+  }
+
+  const uniqueLastRow = uniques.getLastRow();
+  if (uniqueLastRow >= 2) {
+    const cols = Math.max(uniques.getLastColumn(), 5);
+    const rows = uniques.getRange(2, 1, uniqueLastRow - 1, cols).getValues();
+    rows.forEach(function (row) {
+      const type = normalizeVisitorType_(row[4], '', '');
+      if (type === 'human') stats.humanUniques++;
+      if (type === 'ats') stats.atsUniques++;
+    });
+  }
+
+  return stats;
 }
 
 function findVisitorRow_(sheet, visitorId) {
