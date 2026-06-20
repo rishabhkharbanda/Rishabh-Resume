@@ -579,7 +579,6 @@ export default function VisitorGreetingHero({
         <AnimatePresence mode="wait">
           {assistPopupVisible && !isContextualSpeechActive && (
             <AssistPopup
-              key="assist-popup"
               headline={assistPrompt.headline}
               subline={assistPrompt.subline}
               onContact={handleContactMe}

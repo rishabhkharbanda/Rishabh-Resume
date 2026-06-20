@@ -204,7 +204,8 @@ function logVisit_(params, callback) {
 
     const row = findVisitorRow_(uniques, visitorId);
     const isNewUnique = row === -1;
-    const visitCountCol = UNIQUE_HEADERS.indexOf('VisitCount') + 1;
+    const visitCountCol =
+      getSheetColumnIndex_(uniques, 'VisitCount', UNIQUE_HEADERS.indexOf('VisitCount')) + 1;
     const visitCount = isNewUnique
       ? 1
       : (Number(uniques.getRange(row, visitCountCol).getValue()) || 0) + 1;
@@ -269,88 +270,80 @@ function buildVisitDetails_(params, meta) {
   };
 }
 
+function visitValueMap_(details) {
+  return {
+    Timestamp: details.visitedAt,
+    VisitorId: details.visitorId,
+    IsNewUnique: details.isNewUnique,
+    VisitNumber: details.visitCount,
+    Referrer: details.referrer,
+    Page: details.page,
+    UserAgent: details.userAgent,
+    VisitorType: details.visitorType,
+    VisitorConfidence: details.visitorConfidence,
+    AtsVendor: details.atsVendor,
+    ClassificationSignals: details.classificationSignals,
+    VisitorLanguage: details.visitorLanguage,
+    VisitorTimezone: details.visitorTimezone,
+    ScreenSize: details.screenSize,
+    DeviceType: details.deviceType,
+    Browser: details.browserLabel,
+    DeviceLabel: details.deviceLabel,
+    ReferrerSource: details.referrerLabel,
+    VisitorIp: details.visitorIp,
+    VisitorCity: details.visitorCity,
+    VisitorRegion: details.visitorRegion,
+    VisitorCountry: details.visitorCountry,
+  };
+}
+
+function uniqueValueMap_(details, options) {
+  const firstReferrer = options && options.firstReferrer ? options.firstReferrer : details.referrer;
+  return {
+    VisitorId: details.visitorId,
+    FirstSeen: details.visitedAt,
+    LastSeen: details.visitedAt,
+    VisitCount: options && options.isNew ? 1 : details.visitCount,
+    VisitorType: details.visitorType,
+    AtsVendor: details.atsVendor,
+    VisitorConfidence: details.visitorConfidence,
+    ClassificationSignals: details.classificationSignals,
+    FirstReferrer: firstReferrer,
+    LastReferrer: details.referrer,
+    LastPage: details.page,
+    UserAgent: details.userAgent,
+    VisitorLanguage: details.visitorLanguage,
+    VisitorTimezone: details.visitorTimezone,
+    ScreenSize: details.screenSize,
+    DeviceType: details.deviceType,
+    Browser: details.browserLabel,
+    DeviceLabel: details.deviceLabel,
+    ReferrerSource: details.referrerLabel,
+    VisitorIp: details.visitorIp,
+    VisitorCity: details.visitorCity,
+    VisitorRegion: details.visitorRegion,
+    VisitorCountry: details.visitorCountry,
+  };
+}
+
 function appendVisitRow_(visits, details) {
-  visits.appendRow([
-    details.visitedAt,
-    details.visitorId,
-    details.isNewUnique,
-    details.visitCount,
-    details.referrer,
-    details.page,
-    details.userAgent,
-    details.visitorType,
-    details.visitorConfidence,
-    details.atsVendor,
-    details.classificationSignals,
-    details.visitorLanguage,
-    details.visitorTimezone,
-    details.screenSize,
-    details.deviceType,
-    details.browserLabel,
-    details.deviceLabel,
-    details.referrerLabel,
-    details.visitorIp,
-    details.visitorCity,
-    details.visitorRegion,
-    details.visitorCountry,
-  ]);
+  visits.appendRow(buildRowForSheet_(visits, visitValueMap_(details)));
 }
 
 function upsertUniqueVisitor_(uniques, row, details) {
   if (row === -1) {
-    uniques.appendRow([
-      details.visitorId,
-      details.visitedAt,
-      details.visitedAt,
-      1,
-      details.visitorType,
-      details.atsVendor,
-      details.visitorConfidence,
-      details.classificationSignals,
-      details.referrer,
-      details.referrer,
-      details.page,
-      details.userAgent,
-      details.visitorLanguage,
-      details.visitorTimezone,
-      details.screenSize,
-      details.deviceType,
-      details.browserLabel,
-      details.deviceLabel,
-      details.referrerLabel,
-      details.visitorIp,
-      details.visitorCity,
-      details.visitorRegion,
-      details.visitorCountry,
-    ]);
+    uniques.appendRow(buildRowForSheet_(uniques, uniqueValueMap_(details, { isNew: true })));
     return;
   }
 
-  const firstReferrerCol = UNIQUE_HEADERS.indexOf('FirstReferrer') + 1;
-  const updateColCount = UNIQUE_HEADERS.length - 2;
-  uniques.getRange(row, 3, 1, updateColCount).setValues([[
-    details.visitedAt,
-    details.visitCount,
-    details.visitorType,
-    details.atsVendor,
-    details.visitorConfidence,
-    details.classificationSignals,
-    uniques.getRange(row, firstReferrerCol).getValue() || details.referrer,
-    details.referrer,
-    details.page,
-    details.userAgent,
-    details.visitorLanguage,
-    details.visitorTimezone,
-    details.screenSize,
-    details.deviceType,
-    details.browserLabel,
-    details.deviceLabel,
-    details.referrerLabel,
-    details.visitorIp,
-    details.visitorCity,
-    details.visitorRegion,
-    details.visitorCountry,
-  ]]);
+  const firstReferrerCol = getSheetColumnIndex_(uniques, 'FirstReferrer', UNIQUE_HEADERS.indexOf('FirstReferrer')) + 1;
+  const firstReferrer =
+    firstReferrerCol > 0 ? uniques.getRange(row, firstReferrerCol).getValue() || details.referrer : details.referrer;
+
+  updateSheetRowByHeaders_(uniques, row, uniqueValueMap_(details, { firstReferrer: firstReferrer }), [
+    'VisitorId',
+    'FirstSeen',
+  ]);
 }
 
 function logContactToSheet_(contact) {
@@ -364,13 +357,15 @@ function logContactToSheet_(contact) {
       ensureSheetColumns_(contacts, CONTACT_HEADERS);
     }
 
-    contacts.appendRow([
-      contact.submittedAt,
-      contact.name,
-      contact.email,
-      contact.subject,
-      contact.message,
-    ]);
+    contacts.appendRow(
+      buildRowForSheet_(contacts, {
+        Timestamp: contact.submittedAt,
+        Name: contact.name,
+        Email: contact.email,
+        Subject: contact.subject,
+        Message: contact.message,
+      })
+    );
   } catch (error) {
     // Non-blocking if sheet logging fails
   }
@@ -649,8 +644,72 @@ function ensureSheetColumns_(sheet, expectedHeaders) {
   });
 }
 
+function getSheetHeaders_(sheet) {
+  const lastCol = Math.max(sheet.getLastColumn(), 1);
+  return sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(function (header) {
+    return String(header || '').trim();
+  });
+}
+
+function getSheetColumnIndex_(sheet, headerName, fallbackIndex) {
+  const headers = getSheetHeaders_(sheet);
+  for (let i = 0; i < headers.length; i++) {
+    if (headers[i] === headerName) return i;
+  }
+  return typeof fallbackIndex === 'number' ? fallbackIndex : -1;
+}
+
+function buildRowForSheet_(sheet, valueByHeader) {
+  const headers = getSheetHeaders_(sheet);
+  return headers.map(function (header) {
+    return Object.prototype.hasOwnProperty.call(valueByHeader, header) ? valueByHeader[header] : '';
+  });
+}
+
+function updateSheetRowByHeaders_(sheet, row, valueByHeader, skipHeaders) {
+  const headers = getSheetHeaders_(sheet);
+  const skip = {};
+  (skipHeaders || []).forEach(function (header) {
+    skip[header] = true;
+  });
+
+  headers.forEach(function (header, index) {
+    if (skip[header]) return;
+    if (Object.prototype.hasOwnProperty.call(valueByHeader, header)) {
+      sheet.getRange(row, index + 1).setValue(valueByHeader[header]);
+    }
+  });
+}
+
 function getVisitColumnIndex_(headerName) {
   return VISIT_HEADERS.indexOf(headerName);
+}
+
+function getLegacyVisitTypeIndex_(sheet) {
+  if (getSheetColumnIndex_(sheet, 'VisitNumber', -1) >= 0) return -1;
+  return getSheetColumnIndex_(sheet, 'VisitorType', 6);
+}
+
+function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex) {
+  let raw = typeIndex >= 0 ? row[typeIndex] : '';
+  const rawText = String(raw || '').trim();
+
+  if (!rawText || /^(high|medium|low)$/i.test(rawText)) {
+    if (legacyTypeIndex >= 0 && legacyTypeIndex !== typeIndex) {
+      raw = row[legacyTypeIndex];
+    }
+  }
+
+  const userAgent = uaIndex >= 0 ? row[uaIndex] : '';
+  const referrer = refIndex >= 0 ? row[refIndex] : '';
+  return normalizeVisitorType_(raw, userAgent, referrer);
+}
+
+function isLikelyHumanBrowser_(userAgent) {
+  const ua = String(userAgent || '');
+  if (!ua) return false;
+  if (/bot|crawler|spider|headless|python-requests|curl\/|wget\/|scrapy/i.test(ua)) return false;
+  return /mozilla|chrome|safari|firefox|edg\/|opr\/|mobile/i.test(ua);
 }
 
 function ensureVisitColumns_(visits) {
@@ -658,7 +717,10 @@ function ensureVisitColumns_(visits) {
 }
 
 function normalizeVisitorType_(rawType, userAgent, referrer) {
-  const value = String(rawType || '').toLowerCase().trim();
+  let value = String(rawType || '').toLowerCase().trim();
+  if (value === 'high' || value === 'medium' || value === 'low') {
+    value = '';
+  }
   if (value === 'human' || value === 'ats' || value === 'bot' || value === 'unknown') {
     return value;
   }
@@ -681,6 +743,10 @@ function normalizeVisitorType_(rawType, userAgent, referrer) {
     return 'bot';
   }
 
+  if (isLikelyHumanBrowser_(userAgent)) {
+    return 'human';
+  }
+
   return 'unknown';
 }
 
@@ -700,14 +766,16 @@ function getVisitorTypeStats_(visits, uniques) {
   if (visitLastRow >= 2) {
     const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
     const colCount = Math.max(visits.getLastColumn(), VISIT_HEADERS.length);
-    const rows = visits.getRange(2, 1, visitLastRow - 1, colCount).getValues();
-    const typeIndex = getVisitColumnIndex_('VisitorType');
-    const uaIndex = getVisitColumnIndex_('UserAgent');
-    const refIndex = getVisitColumnIndex_('Referrer');
+    const numRows = visitLastRow - 1;
+    const rows = visits.getRange(2, 1, numRows, colCount).getValues();
+    const typeIndex = getSheetColumnIndex_(visits, 'VisitorType', getVisitColumnIndex_('VisitorType'));
+    const legacyTypeIndex = getLegacyVisitTypeIndex_(visits);
+    const uaIndex = getSheetColumnIndex_(visits, 'UserAgent', getVisitColumnIndex_('UserAgent'));
+    const refIndex = getSheetColumnIndex_(visits, 'Referrer', getVisitColumnIndex_('Referrer'));
 
     rows.forEach(function (row) {
       const timestamp = row[0];
-      const type = normalizeVisitorType_(row[typeIndex], row[uaIndex], row[refIndex]);
+      const type = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex);
       const isToday =
         timestamp &&
         Utilities.formatDate(new Date(timestamp), Session.getScriptTimeZone(), 'yyyy-MM-dd') === today;
@@ -729,10 +797,12 @@ function getVisitorTypeStats_(visits, uniques) {
   const uniqueLastRow = uniques.getLastRow();
   if (uniqueLastRow >= 2) {
     const cols = Math.max(uniques.getLastColumn(), UNIQUE_HEADERS.length);
-    const rows = uniques.getRange(2, 1, uniqueLastRow - 1, cols).getValues();
-    const typeIndex = UNIQUE_HEADERS.indexOf('VisitorType');
+    const numRows = uniqueLastRow - 1;
+    const rows = uniques.getRange(2, 1, numRows, cols).getValues();
+    const typeIndex = getSheetColumnIndex_(uniques, 'VisitorType', UNIQUE_HEADERS.indexOf('VisitorType'));
+    const uaIndex = getSheetColumnIndex_(uniques, 'UserAgent', UNIQUE_HEADERS.indexOf('UserAgent'));
     rows.forEach(function (row) {
-      const type = normalizeVisitorType_(row[typeIndex], '', '');
+      const type = resolveVisitorType_(row, typeIndex, typeIndex, uaIndex, -1);
       if (type === 'human') stats.humanUniques++;
       if (type === 'ats') stats.atsUniques++;
     });
@@ -745,7 +815,9 @@ function findVisitorRow_(sheet, visitorId) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return -1;
 
-  const values = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  const idCol = getSheetColumnIndex_(sheet, 'VisitorId', 0) + 1;
+  const numRows = lastRow - 1;
+  const values = sheet.getRange(2, idCol, numRows, 1).getValues();
   for (let i = 0; i < values.length; i++) {
     if (String(values[i][0]) === visitorId) return i + 2;
   }
@@ -775,12 +847,15 @@ function countTodayNewUniques_(sheet) {
   if (lastRow < 2) return 0;
 
   const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  const rows = sheet.getRange(2, 1, lastRow - 1, 3).getValues();
+  const colCount = Math.max(sheet.getLastColumn(), 3);
+  const numRows = lastRow - 1;
+  const rows = sheet.getRange(2, 1, numRows, colCount).getValues();
+  const isNewIndex = getSheetColumnIndex_(sheet, 'IsNewUnique', 2);
   let count = 0;
 
   rows.forEach(function (row) {
     const value = row[0];
-    const isNew = row[2] === true || String(row[2]).toLowerCase() === 'true';
+    const isNew = row[isNewIndex] === true || String(row[isNewIndex]).toLowerCase() === 'true';
     if (!value || !isNew) return;
     const date = Utilities.formatDate(new Date(value), Session.getScriptTimeZone(), 'yyyy-MM-dd');
     if (date === today) count++;

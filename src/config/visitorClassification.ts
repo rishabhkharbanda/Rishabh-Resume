@@ -154,6 +154,15 @@ export function classifyVisitor(
     };
   }
 
+  if (/mozilla|chrome|safari|firefox|edg\/|opr\/|mobile/i.test(ua)) {
+    return {
+      type: 'human',
+      confidence: humanSignals.length >= 1 ? 'medium' : 'low',
+      atsVendor: null,
+      signals: [...signals, 'ua:browser'],
+    };
+  }
+
   return {
     type: 'unknown',
     confidence: 'low',

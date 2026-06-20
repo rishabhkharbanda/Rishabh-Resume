@@ -41,6 +41,9 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
         { label: 'ATS page views', value: stats.atsPageViews, icon: Bot },
         { label: 'Human uniques', value: stats.humanUniques, icon: UserRound },
         { label: 'ATS uniques', value: stats.atsUniques, icon: Bot },
+        ...(stats.unknownPageViews > 0
+          ? [{ label: 'Unclassified views', value: stats.unknownPageViews, icon: Eye }]
+          : []),
       ]
     : [];
 
