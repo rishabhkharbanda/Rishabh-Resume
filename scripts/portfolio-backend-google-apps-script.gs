@@ -9,6 +9,9 @@
  * 4. Deploy → New deployment → Web app (Execute as: Me, Anyone)
  * 5. Optional: Triggers → Add → sendDailyVisitDigest → Day timer → 8am–9am
  * 6. Copy Web app URL → VITE_PORTFOLIO_API_URL (GitHub secret + .env)
+ *
+ * IMPORTANT: Pushing this repo does NOT update Apps Script. After pulling changes here,
+ * paste this file into script.google.com and Deploy → Manage deployments → New version.
  */
 
 const RECIPIENT_EMAIL = 'rishabhkharbanda08@gmail.com';
@@ -74,6 +77,7 @@ const UNIQUE_HEADERS = [
 ];
 
 const CONTACT_HEADERS = ['Timestamp', 'Name', 'Email', 'Subject', 'Message'];
+const BACKEND_VERSION = 3;
 
 function doPost(e) {
   const params = getParams_(e);
@@ -98,6 +102,8 @@ function doGet(e) {
         result: 'ok',
         message: 'Portfolio API is live.',
         analytics: true,
+        backendVersion: BACKEND_VERSION,
+        features: ['humanAtsStats', 'fullSheetLogging', 'contactLogging'],
       },
       callback
     );
@@ -384,6 +390,10 @@ function getStats_(params, callback) {
     const ss = getSpreadsheet_();
     const visits = ss.getSheetByName(VISITS_SHEET);
     const uniques = ss.getSheetByName(UNIQUES_SHEET);
+    ensureSheetColumns_(visits, VISIT_HEADERS);
+    ensureSheetColumns_(uniques, UNIQUE_HEADERS);
+    repairVisitorTypes_(visits, true);
+    repairVisitorTypes_(uniques, false);
 
     const uniqueVisitors = Math.max(0, uniques.getLastRow() - 1);
     const totalPageViews = Math.max(0, visits.getLastRow() - 1);
@@ -406,6 +416,7 @@ function getStats_(params, callback) {
         atsUniques: typeStats.atsUniques,
         todayHumanPageViews: typeStats.todayHumanPageViews,
         todayAtsPageViews: typeStats.todayAtsPageViews,
+        backendVersion: BACKEND_VERSION,
         sheetUrl: ss.getUrl(),
         updatedAt: new Date().toISOString(),
       },
@@ -690,8 +701,44 @@ function getLegacyVisitTypeIndex_(sheet) {
   return getSheetColumnIndex_(sheet, 'VisitorType', 6);
 }
 
+function findCellInRow_(row, matcher) {
+  for (let i = 0; i < row.length; i++) {
+    const value = row[i];
+    if (matcher(value)) return { index: i, value: value };
+  }
+  return { index: -1, value: '' };
+}
+
+function findUserAgentInRow_(row) {
+  const match = findCellInRow_(row, function (value) {
+    return /mozilla\/5\.0/i.test(String(value || ''));
+  });
+  return String(match.value || '');
+}
+
+function findReferrerInRow_(row) {
+  const match = findCellInRow_(row, function (value) {
+    const text = String(value || '').trim();
+    if (!text || text === 'true' || text === 'false') return false;
+    if (/^\d+$/.test(text)) return false;
+    if (/mozilla\/5\.0/i.test(text)) return false;
+    if (/^(human|ats|bot|unknown|high|medium|low)$/i.test(text)) return false;
+    return /direct|https?:\/\/|linkedin|google|\.io|\.com/i.test(text);
+  });
+  return String(match.value || 'direct');
+}
+
+function findVisitorTypeInRow_(row) {
+  const match = findCellInRow_(row, function (value) {
+    const text = String(value || '').toLowerCase().trim();
+    return text === 'human' || text === 'ats' || text === 'bot' || text === 'unknown';
+  });
+  return String(match.value || '');
+}
+
 function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex) {
-  let raw = typeIndex >= 0 ? row[typeIndex] : '';
+  let raw = findVisitorTypeInRow_(row);
+  if (!raw && typeIndex >= 0) raw = row[typeIndex];
   const rawText = String(raw || '').trim();
 
   if (!rawText || /^(high|medium|low)$/i.test(rawText)) {
@@ -700,9 +747,40 @@ function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex)
     }
   }
 
-  const userAgent = uaIndex >= 0 ? row[uaIndex] : '';
-  const referrer = refIndex >= 0 ? row[refIndex] : '';
+  let userAgent = findUserAgentInRow_(row);
+  if (!userAgent && uaIndex >= 0) userAgent = row[uaIndex];
+
+  let referrer = findReferrerInRow_(row);
+  if ((!referrer || referrer === 'direct') && refIndex >= 0 && row[refIndex]) {
+    referrer = row[refIndex];
+  }
+
   return normalizeVisitorType_(raw, userAgent, referrer);
+}
+
+function repairVisitorTypes_(sheet, isVisitsSheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  const typeCol = getSheetColumnIndex_(sheet, 'VisitorType', isVisitsSheet ? 6 : 4) + 1;
+  if (typeCol <= 0) return;
+
+  const colCount = Math.max(sheet.getLastColumn(), isVisitsSheet ? VISIT_HEADERS.length : UNIQUE_HEADERS.length);
+  const numRows = lastRow - 1;
+  const rows = sheet.getRange(2, 1, numRows, colCount).getValues();
+  const typeIndex = typeCol - 1;
+  const legacyTypeIndex = isVisitsSheet ? getLegacyVisitTypeIndex_(sheet) : typeIndex;
+  const uaIndex = getSheetColumnIndex_(sheet, 'UserAgent', isVisitsSheet ? 5 : UNIQUE_HEADERS.indexOf('UserAgent'));
+  const refIndex = getSheetColumnIndex_(sheet, isVisitsSheet ? 'Referrer' : 'LastReferrer', isVisitsSheet ? 3 : UNIQUE_HEADERS.indexOf('LastReferrer'));
+
+  rows.forEach(function (row, index) {
+    const current = String(row[typeIndex] || '').toLowerCase().trim();
+    if (current === 'human' || current === 'ats' || current === 'bot') return;
+
+    const inferred = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex);
+    if (inferred === 'unknown') return;
+    sheet.getRange(index + 2, typeCol).setValue(inferred);
+  });
 }
 
 function isLikelyHumanBrowser_(userAgent) {

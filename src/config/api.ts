@@ -26,6 +26,8 @@ export interface VisitStats {
   todayAtsPageViews: number;
   sheetUrl?: string;
   updatedAt?: string;
+  backendVersion?: number;
+  backendNeedsUpgrade?: boolean;
 }
 
 interface ApiResponse {
@@ -46,6 +48,8 @@ interface ApiResponse {
   sheetUrl?: string;
   updatedAt?: string;
   analytics?: boolean;
+  backendVersion?: number;
+  features?: string[];
 }
 
 function getVisitorId(): string {
@@ -62,6 +66,27 @@ function formatApiError(message: string): string {
     return 'Apps Script needs permission. Open script.google.com → Run → authorizeSetup → Allow → Deploy → Manage deployments → Edit → New version → Deploy.';
   }
   return message;
+}
+
+function supportsVisitorTypeStats(data: ApiResponse): boolean {
+  return typeof data.humanPageViews === 'number';
+}
+
+export async function fetchBackendHealth(): Promise<{ backendVersion: number; needsUpgrade: boolean }> {
+  if (!PORTFOLIO_API_URL) {
+    return { backendVersion: 0, needsUpgrade: true };
+  }
+
+  try {
+    const data = await jsonpRequest<ApiResponse>(PORTFOLIO_API_URL, { action: 'health' });
+    const backendVersion = data.backendVersion ?? 0;
+    return {
+      backendVersion,
+      needsUpgrade: backendVersion < 3,
+    };
+  } catch {
+    return { backendVersion: 0, needsUpgrade: true };
+  }
 }
 
 function isAnalyticsBackend(data: ApiResponse): boolean {
@@ -159,5 +184,7 @@ export async function fetchVisitStats(pin: string): Promise<VisitStats> {
     todayAtsPageViews: data.todayAtsPageViews ?? 0,
     sheetUrl: data.sheetUrl,
     updatedAt: data.updatedAt,
+    backendVersion: data.backendVersion,
+    backendNeedsUpgrade: !supportsVisitorTypeStats(data),
   };
 }
