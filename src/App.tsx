@@ -419,15 +419,16 @@ export default function App() {
 
             {/* DETAILED PROJECT PORTFOLIO SECTION */}
             <section id="home-featured" className="py-24 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto">
-              <div className="mb-16">
+              <div className="mb-16 max-w-3xl">
                 <span className="font-mono text-[10px] text-primary uppercase font-bold tracking-[0.25em] mb-4 block">
                   05 / Projects
                 </span>
-                <h2 className="font-headline text-3xl font-extrabold tracking-tight">
-                  Featured Impact Highlights
+                <h2 className="font-headline text-3xl sm:text-4xl font-extrabold tracking-tight">
+                  Analytics &amp; Marketing Intelligence Projects
                 </h2>
-                <p className="font-sans text-sm text-on-surface-variant mt-2 max-w-lg">
-                  Explore selected project parameters demonstrating metrics-backed performance optimization models.
+                <p className="font-sans text-sm sm:text-base text-on-surface-variant mt-3 leading-relaxed">
+                  End-to-end work across attribution, lifecycle retention, executive reporting, and
+                  performance optimization — built with SQL, Python, Tableau, AppsFlyer, and WebEngage.
                 </p>
               </div>
 

@@ -1,115 +1,140 @@
-import React, { useState } from 'react';
-import { X, ExternalLink, Activity, Sparkles, TrendingUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, ArrowUpRight, BarChart3, CheckCircle2 } from 'lucide-react';
 import { ProjectItem } from '../types';
 import { portfolioProjects } from '../data';
 
 export default function FeaturedProjects() {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedProject(null);
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [selectedProject]);
+
   return (
     <div className="relative">
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
         {portfolioProjects.map((project) => (
-          <div 
+          <article
             key={project.id}
-            className="liquid-glass border border-outline-variant/40 rounded-3xl overflow-hidden hover:border-primary/50 hover:-translate-y-1.5 transition-all duration-300 group flex flex-col cursor-pointer hover:shadow-xl hover:shadow-primary/5"
+            className="bg-surface-container border border-outline-variant/50 rounded-3xl overflow-hidden hover:border-primary/45 hover:-translate-y-1 transition-all duration-300 group flex flex-col cursor-pointer shadow-sm hover:shadow-lg hover:shadow-primary/5"
             onClick={() => setSelectedProject(project)}
           >
-            {/* Image Wrap */}
-            <div className="h-48 overflow-hidden bg-surface-variant relative">
-              <img 
-                alt={project.title} 
-                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-40" 
-                referrerPolicy="no-referrer"
-                src={project.imgUrl}
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-sm">
-                <span className="bg-primary text-on-primary px-5 py-2.5 rounded-full font-mono text-[10px] uppercase tracking-widest font-extrabold shadow-lg">
-                  VIEW DETAILS
+            <div className={`h-40 relative bg-gradient-to-br ${project.accentClass} overflow-hidden`}>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.22),transparent_55%)]" />
+              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(135deg,transparent_25%,rgba(255,255,255,0.15)_50%,transparent_75%)]" />
+              <div className="absolute top-4 left-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/25 text-white text-[9px] font-mono uppercase tracking-wider font-bold border border-white/15">
+                  <BarChart3 className="w-3 h-3" />
+                  {project.category}
                 </span>
+              </div>
+              <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/15 border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <ArrowUpRight className="w-4 h-4" />
               </div>
             </div>
 
-            {/* Card Info */}
-            <div className="p-8 flex-grow flex flex-col">
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags.map((tag, tIdx) => (
-                  <span 
-                    key={tIdx} 
-                    className="px-3 py-1 bg-primary-container/20 border border-outline-variant/40 rounded-full text-[9px] font-mono font-extrabold tracking-wide uppercase text-primary"
+            <div className="p-6 sm:p-7 flex-grow flex flex-col">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2.5 py-1 bg-primary-container/35 border border-outline-variant/40 rounded-full text-[9px] font-mono font-bold tracking-wide uppercase text-primary"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
 
-              <h3 className="font-headline text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+              <h3 className="font-headline text-lg sm:text-xl font-bold mb-3 group-hover:text-primary transition-colors leading-snug">
                 {project.title}
               </h3>
-              
-              <p className="text-on-surface-variant text-sm mb-6 flex-grow leading-relaxed">
+
+              <p className="text-on-surface-variant text-sm mb-5 flex-grow leading-relaxed">
                 {project.description}
               </p>
 
-              {/* Stat Callout block */}
-              <div className="pt-6 border-t border-outline-variant/30 mt-auto">
-                <div className="text-primary font-headline text-3xl font-extrabold tracking-tight">
-                  {project.metricValue}
+              <div className="pt-5 border-t border-outline-variant/40 mt-auto flex items-end justify-between gap-4">
+                <div>
+                  <div className="text-primary font-headline text-2xl font-extrabold tracking-tight">
+                    {project.metricValue}
+                  </div>
+                  <div className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-bold mt-0.5">
+                    {project.metricLabel}
+                  </div>
                 </div>
-                <div className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-extrabold mt-1">
-                  {project.metricLabel}
-                </div>
+                <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                  Details
+                </span>
               </div>
             </div>
-          </div>
+          </article>
         ))}
       </div>
 
-      {/* Project Long Description Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 bg-black/60 z-[100] backdrop-blur-lg flex items-center justify-center p-4">
-          <div 
-            className="liquid-glass-active border border-outline-variant/40 max-w-2xl w-full rounded-3xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-300"
+        <div
+          className="fixed inset-0 bg-black/75 z-[100] flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+        >
+          <div
+            className="bg-surface border border-outline-variant max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl relative animate-in fade-in zoom-in duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Image */}
-            <div className="h-56 relative bg-surface-variant">
-              <img 
-                src={selectedProject.imgUrl} 
-                alt={selectedProject.title} 
-                className="w-full h-full object-cover opacity-60"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-black/30" />
-              
-              {/* Close Button top-right */}
-              <button 
-                className="absolute top-4 right-4 w-9 h-9 bg-black/40 border border-white/10 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-all cursor-pointer"
+            <div className={`h-48 sm:h-56 relative bg-gradient-to-br ${selectedProject.accentClass}`}>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_60%)]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
+
+              <button
+                type="button"
+                className="absolute top-4 right-4 w-9 h-9 bg-surface/90 border border-outline-variant hover:bg-surface-container text-on-surface rounded-full flex items-center justify-center transition-colors cursor-pointer"
                 onClick={() => setSelectedProject(null)}
+                aria-label="Close project details"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="absolute bottom-6 left-8">
-                <div className="flex gap-2 mb-2">
-                  {selectedProject.tags.map((tag, idx) => (
-                    <span key={idx} className="bg-primary/20 backdrop-blur-md text-primary text-[9px] font-mono px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold border border-primary/30">
+              <div className="absolute bottom-6 left-6 right-6">
+                <span className="inline-block mb-3 px-3 py-1 rounded-full bg-surface/90 text-primary text-[9px] font-mono uppercase tracking-wider font-bold border border-outline-variant">
+                  {selectedProject.category}
+                </span>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {selectedProject.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-surface/90 text-primary text-[9px] font-mono px-2.5 py-1 rounded-full uppercase tracking-wider font-bold border border-outline-variant"
+                    >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h3 className="font-headline text-2xl font-bold text-white tracking-tight">
+                <h3
+                  id="project-modal-title"
+                  className="font-headline text-xl sm:text-2xl font-bold text-on-surface tracking-tight leading-snug"
+                >
                   {selectedProject.title}
                 </h3>
               </div>
             </div>
 
-            {/* Modal Body Info */}
-            <div className="p-8 space-y-6">
+            <div className="p-6 sm:p-8 space-y-6 bg-surface">
               <div>
                 <h4 className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
-                  Overview &amp; Context
+                  Project Overview
                 </h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed">
                   {selectedProject.description}
@@ -117,33 +142,44 @@ export default function FeaturedProjects() {
               </div>
 
               <div>
-                <h4 className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider mb-2 font-bold select-none">
-                  Strategic Methodology
+                <h4 className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider mb-2 font-bold">
+                  Approach &amp; Scope
                 </h4>
-                <p className="text-on-surface text-sm leading-relaxed bg-primary/5 p-5 border border-outline-variant/40 rounded-2xl">
-                  {selectedProject.longDescription || "Utilized real-time analytical reporting logs and cluster indices to discover, segment, and targeting optimal user groups for maximum marketing conversion rates."}
+                <p className="text-on-surface text-sm leading-relaxed bg-surface-container p-5 border border-outline-variant/50 rounded-2xl">
+                  {selectedProject.longDescription}
                 </p>
               </div>
 
-              {/* Bottom Stat row */}
-              <div className="flex justify-between items-center bg-surface-variant/40 p-5 border border-outline-variant/40 rounded-2xl backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <Activity className="w-5 h-5 text-primary" />
-                  <div>
-                    <div className="text-primary font-headline text-2xl font-extrabold">
-                      {selectedProject.metricValue}
-                    </div>
-                    <div className="font-mono text-[9px] text-on-surface-variant uppercase tracking-wider font-bold">
-                      {selectedProject.metricLabel}
-                    </div>
+              <div>
+                <h4 className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider mb-3 font-bold">
+                  Key Achievements
+                </h4>
+                <ul className="space-y-3">
+                  {selectedProject.achievements.map((achievement) => (
+                    <li key={achievement} className="flex items-start gap-3 text-sm text-on-surface leading-relaxed">
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <span>{achievement}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-surface-container p-5 border border-outline-variant/50 rounded-2xl">
+                <div>
+                  <div className="text-primary font-headline text-2xl font-extrabold">
+                    {selectedProject.metricValue}
+                  </div>
+                  <div className="font-mono text-[9px] text-on-surface-variant uppercase tracking-wider font-bold mt-1">
+                    {selectedProject.metricLabel}
                   </div>
                 </div>
 
-                <button 
-                  className="bg-primary text-on-primary px-5 py-2.5 rounded-full font-mono text-[10px] uppercase font-extrabold tracking-widest hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border-none"
+                <button
+                  type="button"
+                  className="bg-primary text-on-primary px-5 py-2.5 rounded-full font-mono text-[10px] uppercase font-extrabold tracking-widest hover:brightness-110 active:scale-95 transition-all cursor-pointer border-none w-full sm:w-auto"
                   onClick={() => setSelectedProject(null)}
                 >
-                  <span>Close Overlay</span>
+                  Close
                 </button>
               </div>
             </div>

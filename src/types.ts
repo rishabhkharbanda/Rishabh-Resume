@@ -23,12 +23,15 @@ export interface ExperienceItem {
 export interface ProjectItem {
   id: string;
   title: string;
+  category: string;
   description: string;
   tags: string[];
-  imgUrl: string;
+  imgUrl?: string;
+  accentClass: string;
   metricValue: string;
   metricLabel: string;
-  longDescription?: string;
+  longDescription: string;
+  achievements: string[];
 }
 
 export interface SkillItem {

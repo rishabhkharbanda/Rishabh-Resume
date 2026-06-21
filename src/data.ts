@@ -150,26 +150,97 @@ export const portfolioExperiences: ExperienceItem[] = [
 
 export const portfolioProjects: ProjectItem[] = [
   {
+    id: 'marketing-attribution',
+    title: 'Marketing Attribution & Performance Optimization Platform',
+    category: 'Attribution & Paid Media',
+    description:
+      'End-to-end attribution platform measuring channel effectiveness across the acquisition funnel with automated CAC, CPL, ROAS, and revenue reporting.',
+    tags: ['SQL', 'Python', 'Tableau', 'AppsFlyer'],
+    accentClass: 'from-primary/90 via-secondary/80 to-tertiary/70',
+    metricValue: 'Multi-Channel',
+    metricLabel: 'Attribution Coverage',
+    longDescription:
+      'Developed an end-to-end marketing attribution and performance analytics platform to measure channel effectiveness across the customer acquisition funnel. Integrated campaign data from multiple paid media sources and built automated dashboards tracking CAC, CPL, ROAS, conversion rates, and revenue contribution by channel. Performed audience, creative, and campaign-level analysis to identify optimization opportunities and improve budget allocation decisions. Implemented attribution models to evaluate customer touchpoints and support data-driven marketing strategies.',
+    achievements: [
+      'Built automated dashboards for campaign performance monitoring.',
+      'Developed channel-level attribution and ROI measurement frameworks.',
+      'Identified acquisition optimization opportunities through audience segmentation.',
+      'Delivered actionable insights for budget allocation and marketing efficiency improvements.',
+    ],
+  },
+  {
+    id: 'lifecycle-retention',
+    title: 'Customer Lifecycle & Retention Analytics Framework',
+    category: 'Lifecycle & Retention',
+    description:
+      'Lifecycle analytics framework tracking acquisition through re-engagement with D0–D90 cohort models, segmentation, and churn analysis.',
+    tags: ['Python', 'SQL', 'Tableau', 'WebEngage'],
+    accentClass: 'from-data-growth/90 via-primary/75 to-secondary/65',
+    metricValue: 'D0–D90',
+    metricLabel: 'Cohort Retention',
+    longDescription:
+      'Designed a customer lifecycle analytics framework to track user behavior across acquisition, activation, engagement, retention, and re-engagement stages. Built cohort models covering D0, D7, D30, and D90 retention periods to analyze customer behavior and identify churn patterns. Implemented customer segmentation models based on engagement frequency, transaction behavior, and customer value. Created retention dashboards and performance reports that supported personalized lifecycle marketing campaigns and customer journey optimization initiatives.',
+    achievements: [
+      'Developed retention and churn analysis models using cohort methodologies.',
+      'Built customer segmentation frameworks for targeted marketing campaigns.',
+      'Created executive dashboards for lifecycle performance tracking.',
+      'Generated actionable insights to improve customer engagement and retention.',
+    ],
+  },
+  {
+    id: 'marketing-intelligence',
+    title: 'Marketing Intelligence & Executive Reporting Platform',
+    category: 'Executive Reporting',
+    description:
+      'Centralized marketing intelligence hub consolidating acquisition, retention, and revenue KPIs into automated executive dashboards.',
+    tags: ['Tableau', 'Power BI', 'SQL', 'Python'],
+    accentClass: 'from-tertiary/85 via-primary/70 to-secondary/60',
+    metricValue: 'Unified KPI',
+    metricLabel: 'Reporting Hub',
+    longDescription:
+      'Built a centralized marketing intelligence platform that consolidated marketing, customer, and revenue data into a unified reporting environment. Designed executive dashboards tracking acquisition performance, campaign effectiveness, customer retention, revenue growth, and key business KPIs. Automated data processing workflows and reporting pipelines to reduce manual effort and improve reporting accuracy. Delivered real-time visibility into business performance, enabling leadership teams to make faster and more informed decisions.',
+    achievements: [
+      'Automated marketing and business KPI reporting processes.',
+      'Built executive dashboards for acquisition, retention, and revenue monitoring.',
+      'Integrated multiple data sources into a centralized reporting framework.',
+      'Reduced manual reporting effort through automated data workflows and dashboard refreshes.',
+    ],
+  },
+  {
     id: 'sales-dashboard',
     title: 'Sales Performance Dashboard',
-    description: 'Retail sales dashboard with Python data pipeline and interactive Tableau visualisations.',
-    tags: ['Tableau', 'Python'],
-    imgUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAE-0EoQIvw-Clvv4exGUOlpiDWqL-eA0vl2xYKPmQKruYQ0sdXRTEG5xPbdqGor1qxI8z5EH1OXbBzaIJLKJUmQVEjt2OuLmW5i7hh8blw3ymuHzgXbAwdGN0B2ULFUm_jM8rxJnfztWoRBZp8AW-2ZtiYp3FuycE-CzqDjxdQOIkaGc3bC2hZYsvnhB6dHlI2t1Op9YI1Z9z_EtN6EnJUyQUaYUo0OaSHCoOfMDtsvgwabEi-z2iKCwSR3CQzVvI6LoDKFEjw9jjg',
+    category: 'Retail Analytics',
+    description:
+      'Retail sales analytics pipeline with Python preprocessing and interactive Tableau views for regional and product performance.',
+    tags: ['Tableau', 'Python', 'SQL'],
+    accentClass: 'from-secondary/80 via-primary/70 to-surface-container-high',
     metricValue: 'Multi-Region',
     metricLabel: 'Sales Tracking',
     longDescription:
       'Developed a sales performance dashboard for a retail company. Used Python for data cleaning and preprocessing, then built interactive Tableau visualisations covering total sales, growth trends, top-performing products, and regional breakdowns — enabling stakeholders to improve sales strategies.',
+    achievements: [
+      'Automated data cleaning and preprocessing with Python pipelines.',
+      'Built interactive Tableau views for sales trends and regional breakdowns.',
+      'Enabled faster stakeholder decisions with self-serve performance reporting.',
+    ],
   },
   {
     id: 'customer-segmentation',
     title: 'Customer Segmentation Analysis',
-    description: 'Clustering-based customer segmentation for targeted lifecycle marketing and personalised experiences.',
+    category: 'Segmentation & CRM',
+    description:
+      'Clustering-based segmentation model for e-commerce lifecycle marketing and personalised customer experiences.',
     tags: ['Python', 'Excel', 'Tableau'],
-    imgUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPX_FpLloml4t6EAfX_qFlku9p_zGzy5JPc5-Mr444LiOwbH8QG9gJVlGkTR-12kPfOOKIFmuQos4BIh1vY6TBS5RGgIE_yPfHub_V0UrtLQujGDl0Bur2BdEPbZlEsCfMG5rQKQ6yLs1j1AK21VTod95kkruV1GXdFETfC_8x98yg06cVrN_v9p6F0_9nFbvL76R9IYp4UVshrJ9PNGk-D1GJlgSdhYRxHAPlF6D59KK9GUZzVjDh8g949gUUz7p3E5B7xMY3uxaj',
-    metricValue: 'Cohort',
-    metricLabel: 'Segments Built',
+    accentClass: 'from-primary/75 via-tertiary/65 to-secondary/55',
+    metricValue: 'Behavioral',
+    metricLabel: 'Segment Models',
     longDescription:
       'Built a customer segmentation model for an e-commerce platform using Python and clustering algorithms to segment users by purchasing behaviour and demographic data. Visualised segments in Tableau, providing actionable insights for targeted lifecycle marketing and personalised customer experiences.',
+    achievements: [
+      'Segmented users by purchase behaviour and demographic attributes.',
+      'Visualised cohorts in Tableau for marketing and CRM teams.',
+      'Delivered targeting insights for lifecycle campaigns and personalisation.',
+    ],
   },
 ];
 
