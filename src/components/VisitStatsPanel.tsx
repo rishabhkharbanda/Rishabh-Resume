@@ -61,10 +61,14 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
               { label: 'Human page views', value: stats.humanPageViews, icon: UserRound },
               { label: 'ATS page views', value: stats.atsPageViews, icon: Bot },
               { label: 'Bot / crawler views', value: stats.botPageViews, icon: Cpu },
+              { label: 'Unclassified views', value: stats.unknownPageViews, icon: Eye },
               { label: 'Human uniques', value: stats.humanUniques, icon: UserRound },
               { label: 'ATS uniques', value: stats.atsUniques, icon: Bot },
-              ...(stats.unknownPageViews > 0
-                ? [{ label: 'Unclassified views', value: stats.unknownPageViews, icon: Eye }]
+              ...(stats.botUniques > 0
+                ? [{ label: 'Bot uniques', value: stats.botUniques, icon: Cpu }]
+                : []),
+              ...(stats.unknownUniques > 0
+                ? [{ label: 'Unclassified uniques', value: stats.unknownUniques, icon: Eye }]
                 : []),
             ]),
       ]
@@ -185,6 +189,12 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
                 );
               })}
             </div>
+
+            {!stats.backendNeedsUpgrade && stats.backendVersion && (
+              <p className="text-xs text-on-surface-variant font-mono text-center">
+                Backend v{stats.backendVersion}
+              </p>
+            )}
 
             {!stats.backendNeedsUpgrade && (stats.todayHumanPageViews > 0 || stats.todayAtsPageViews > 0) && (
               <p className="text-xs text-on-surface-variant font-mono text-center">

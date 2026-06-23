@@ -22,6 +22,8 @@ export interface VisitStats {
   unknownPageViews: number;
   humanUniques: number;
   atsUniques: number;
+  botUniques?: number;
+  unknownUniques?: number;
   todayHumanPageViews: number;
   todayAtsPageViews: number;
   sheetUrl?: string;
@@ -43,6 +45,8 @@ interface ApiResponse {
   unknownPageViews?: number;
   humanUniques?: number;
   atsUniques?: number;
+  botUniques?: number;
+  unknownUniques?: number;
   todayHumanPageViews?: number;
   todayAtsPageViews?: number;
   sheetUrl?: string;
@@ -82,7 +86,7 @@ export async function fetchBackendHealth(): Promise<{ backendVersion: number; ne
     const backendVersion = data.backendVersion ?? 0;
     return {
       backendVersion,
-      needsUpgrade: backendVersion < 4,
+      needsUpgrade: backendVersion < 5,
     };
   } catch {
     return { backendVersion: 0, needsUpgrade: true };
@@ -103,7 +107,7 @@ export async function trackVisit(): Promise<void> {
 
   try {
     const [classification, context, network] = await Promise.all([
-      classifyVisitorWithBehavior({ timeoutMs: 2500 }),
+      classifyVisitorWithBehavior({ timeoutMs: 4000 }),
       Promise.resolve(getVisitorContext()),
       fetchVisitorNetwork(),
     ]);
@@ -180,6 +184,8 @@ export async function fetchVisitStats(pin: string): Promise<VisitStats> {
     unknownPageViews: data.unknownPageViews ?? 0,
     humanUniques: data.humanUniques ?? 0,
     atsUniques: data.atsUniques ?? 0,
+    botUniques: data.botUniques ?? 0,
+    unknownUniques: data.unknownUniques ?? 0,
     todayHumanPageViews: data.todayHumanPageViews ?? 0,
     todayAtsPageViews: data.todayAtsPageViews ?? 0,
     sheetUrl: data.sheetUrl,

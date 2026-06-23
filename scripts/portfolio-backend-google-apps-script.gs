@@ -16,6 +16,17 @@
 
 const RECIPIENT_EMAIL = 'rishabhkharbanda08@gmail.com';
 
+/** Run from Apps Script editor to recalculate visitor types in the sheet. */
+function runRecalculateAnalytics() {
+  const ss = getSpreadsheet_();
+  const visits = ss.getSheetByName(VISITS_SHEET);
+  const uniques = ss.getSheetByName(UNIQUES_SHEET);
+  ensureSheetColumns_(visits, VISIT_HEADERS);
+  ensureSheetColumns_(uniques, UNIQUE_HEADERS);
+  const changed = recalculateAllVisitorTypes_(visits, true) + recalculateAllVisitorTypes_(uniques, false);
+  Logger.log('Recalculated visitor types. Rows updated: ' + changed);
+}
+
 /** Run once from the Apps Script editor to grant spreadsheet + email permissions. */
 function authorizeSetup() {
   const ss = getSpreadsheet_();
@@ -77,7 +88,7 @@ const UNIQUE_HEADERS = [
 ];
 
 const CONTACT_HEADERS = ['Timestamp', 'Name', 'Email', 'Subject', 'Message'];
-const BACKEND_VERSION = 4;
+const BACKEND_VERSION = 5;
 
 function doPost(e) {
   const params = getParams_(e);
@@ -247,7 +258,13 @@ function buildVisitDetails_(params, meta) {
   const referrer = String(params.referrer || 'direct').slice(0, 500);
   const page = String(params.page || '/').slice(0, 200);
   const userAgent = String(params.userAgent || '').slice(0, 300);
-  const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer, page);
+  const visitorType = normalizeVisitorType_(
+    params.visitorType,
+    userAgent,
+    referrer,
+    page,
+    String(params.classificationSignals || '')
+  );
   const deviceType = String(params.deviceType || '').slice(0, 20);
 
   return {
@@ -414,6 +431,8 @@ function getStats_(params, callback) {
         unknownPageViews: typeStats.unknownPageViews,
         humanUniques: typeStats.humanUniques,
         atsUniques: typeStats.atsUniques,
+        botUniques: typeStats.botUniques,
+        unknownUniques: typeStats.unknownUniques,
         todayHumanPageViews: typeStats.todayHumanPageViews,
         todayAtsPageViews: typeStats.todayAtsPageViews,
         backendVersion: BACKEND_VERSION,
@@ -736,28 +755,82 @@ function findVisitorTypeInRow_(row) {
   return String(match.value || '');
 }
 
-function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex) {
-  let raw = findVisitorTypeInRow_(row);
-  if (!raw && typeIndex >= 0) raw = row[typeIndex];
-  const rawText = String(raw || '').trim();
+function getRowIndices_(sheet, isVisitsSheet) {
+  return {
+    type: getSheetColumnIndex_(
+      sheet,
+      'VisitorType',
+      isVisitsSheet ? getVisitColumnIndex_('VisitorType') : UNIQUE_HEADERS.indexOf('VisitorType')
+    ),
+    ua: getSheetColumnIndex_(
+      sheet,
+      'UserAgent',
+      isVisitsSheet ? getVisitColumnIndex_('UserAgent') : UNIQUE_HEADERS.indexOf('UserAgent')
+    ),
+    ref: getSheetColumnIndex_(
+      sheet,
+      isVisitsSheet ? 'Referrer' : 'LastReferrer',
+      isVisitsSheet ? getVisitColumnIndex_('Referrer') : UNIQUE_HEADERS.indexOf('LastReferrer')
+    ),
+    page: getSheetColumnIndex_(
+      sheet,
+      isVisitsSheet ? 'Page' : 'LastPage',
+      isVisitsSheet ? getVisitColumnIndex_('Page') : UNIQUE_HEADERS.indexOf('LastPage')
+    ),
+    signals: getSheetColumnIndex_(
+      sheet,
+      'ClassificationSignals',
+      isVisitsSheet
+        ? getVisitColumnIndex_('ClassificationSignals')
+        : UNIQUE_HEADERS.indexOf('ClassificationSignals')
+    ),
+  };
+}
 
-  if (!rawText || /^(high|medium|low)$/i.test(rawText)) {
-    if (legacyTypeIndex >= 0 && legacyTypeIndex !== typeIndex) {
-      raw = row[legacyTypeIndex];
-    }
+function hasConfirmedHumanSignals_(signalsText) {
+  return /behavior:(interaction|pointer-move)/i.test(String(signalsText || ''));
+}
+
+function hasLegacyAutoHumanSignals_(signalsText) {
+  const signals = String(signalsText || '');
+  if (/behavior:/i.test(signals)) return false;
+  return /ua:browser|lang:present|pointer:present|screen:present|webdriver:false/i.test(signals);
+}
+
+function resolveStoredVisitorType_(storedType, userAgent, referrer, page, signalsText) {
+  if (matchesAtsSignals_(userAgent, referrer, page)) return 'ats';
+  if (matchesBotSignals_(userAgent)) return 'bot';
+  if (hasConfirmedHumanSignals_(signalsText)) return 'human';
+
+  const stored = String(storedType || '').toLowerCase().trim();
+  if (stored === 'ats' || stored === 'bot') return stored;
+  if (stored === 'human') {
+    if (hasLegacyAutoHumanSignals_(signalsText) || !String(signalsText || '').trim()) return 'unknown';
+    return 'human';
   }
 
+  return 'unknown';
+}
+
+function inferVisitorTypeFromRow_(row, indices) {
   let userAgent = findUserAgentInRow_(row);
-  if (!userAgent && uaIndex >= 0) userAgent = row[uaIndex];
+  if (!userAgent && indices.ua >= 0) userAgent = row[indices.ua];
 
   let referrer = findReferrerInRow_(row);
-  if ((!referrer || referrer === 'direct') && refIndex >= 0 && row[refIndex]) {
-    referrer = row[refIndex];
+  if ((!referrer || referrer === 'direct') && indices.ref >= 0 && row[indices.ref]) {
+    referrer = row[indices.ref];
   }
 
-  const page = typeof pageIndex === 'number' && pageIndex >= 0 ? String(row[pageIndex] || '') : '';
+  const page = indices.page >= 0 ? String(row[indices.page] || '') : '';
+  const signals = indices.signals >= 0 ? String(row[indices.signals] || '') : '';
 
-  return normalizeVisitorType_(raw, userAgent, referrer, page);
+  let stored = '';
+  if (indices.type >= 0) stored = String(row[indices.type] || '').toLowerCase().trim();
+  if (!stored || /^(high|medium|low)$/.test(stored)) {
+    stored = findVisitorTypeInRow_(row).toLowerCase();
+  }
+
+  return resolveStoredVisitorType_(stored, userAgent, referrer, page, signals);
 }
 
 function matchesAtsSignals_(userAgent, referrer, page) {
@@ -795,71 +868,41 @@ function matchesBotSignals_(userAgent) {
   );
 }
 
-function repairVisitorTypes_(sheet, isVisitsSheet) {
+function recalculateAllVisitorTypes_(sheet, isVisitsSheet) {
   const lastRow = sheet.getLastRow();
-  if (lastRow < 2) return;
+  if (lastRow < 2) return 0;
 
   const typeCol = getSheetColumnIndex_(sheet, 'VisitorType', isVisitsSheet ? 6 : 4) + 1;
-  if (typeCol <= 0) return;
+  if (typeCol <= 0) return 0;
 
+  const indices = getRowIndices_(sheet, isVisitsSheet);
   const colCount = Math.max(sheet.getLastColumn(), isVisitsSheet ? VISIT_HEADERS.length : UNIQUE_HEADERS.length);
   const numRows = lastRow - 1;
   const rows = sheet.getRange(2, 1, numRows, colCount).getValues();
-  const typeIndex = typeCol - 1;
-  const legacyTypeIndex = isVisitsSheet ? getLegacyVisitTypeIndex_(sheet) : typeIndex;
-  const uaIndex = getSheetColumnIndex_(sheet, 'UserAgent', isVisitsSheet ? 5 : UNIQUE_HEADERS.indexOf('UserAgent'));
-  const refIndex = getSheetColumnIndex_(sheet, isVisitsSheet ? 'Referrer' : 'LastReferrer', isVisitsSheet ? 3 : UNIQUE_HEADERS.indexOf('LastReferrer'));
-  const pageIndex = isVisitsSheet ? getSheetColumnIndex_(sheet, 'Page', getVisitColumnIndex_('Page')) : getSheetColumnIndex_(sheet, 'LastPage', UNIQUE_HEADERS.indexOf('LastPage'));
+  let changed = 0;
 
   rows.forEach(function (row, index) {
-    const current = String(row[typeIndex] || '').toLowerCase().trim();
-    const userAgent = findUserAgentInRow_(row) || (uaIndex >= 0 ? row[uaIndex] : '');
-    const referrer = findReferrerInRow_(row) || (refIndex >= 0 ? row[refIndex] : '');
-    const page = pageIndex >= 0 ? row[pageIndex] : '';
-
-    if (matchesAtsSignals_(userAgent, referrer, page)) {
-      if (current !== 'ats') sheet.getRange(index + 2, typeCol).setValue('ats');
-      return;
+    const current = indices.type >= 0 ? String(row[indices.type] || '').toLowerCase().trim() : '';
+    const inferred = inferVisitorTypeFromRow_(row, indices);
+    if (current !== inferred) {
+      sheet.getRange(index + 2, typeCol).setValue(inferred);
+      changed++;
     }
-
-    if (matchesBotSignals_(userAgent)) {
-      if (current !== 'bot') sheet.getRange(index + 2, typeCol).setValue('bot');
-      return;
-    }
-
-    const inferred = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex);
-    if (current === 'human' || current === 'ats' || current === 'bot') return;
-    if (inferred === 'unknown' || inferred === 'human') return;
-    sheet.getRange(index + 2, typeCol).setValue(inferred);
   });
+
+  return changed;
+}
+
+function repairVisitorTypes_(sheet, isVisitsSheet) {
+  return recalculateAllVisitorTypes_(sheet, isVisitsSheet);
 }
 
 function ensureVisitColumns_(visits) {
   ensureSheetColumns_(visits, VISIT_HEADERS);
 }
 
-function normalizeVisitorType_(rawType, userAgent, referrer, page) {
-  const ua = String(userAgent || '').toLowerCase();
-  const ref = String(referrer || '').toLowerCase();
-  const path = String(page || '').toLowerCase();
-
-  if (matchesAtsSignals_(userAgent, referrer, page)) {
-    return 'ats';
-  }
-
-  if (matchesBotSignals_(userAgent)) {
-    return 'bot';
-  }
-
-  let value = String(rawType || '').toLowerCase().trim();
-  if (value === 'high' || value === 'medium' || value === 'low') {
-    value = '';
-  }
-  if (value === 'human' || value === 'ats' || value === 'bot' || value === 'unknown') {
-    return value;
-  }
-
-  return 'unknown';
+function normalizeVisitorType_(rawType, userAgent, referrer, page, signalsText) {
+  return resolveStoredVisitorType_(rawType, userAgent, referrer, page, signalsText);
 }
 
 function getVisitorTypeStats_(visits, uniques) {
@@ -870,6 +913,8 @@ function getVisitorTypeStats_(visits, uniques) {
     unknownPageViews: 0,
     humanUniques: 0,
     atsUniques: 0,
+    botUniques: 0,
+    unknownUniques: 0,
     todayHumanPageViews: 0,
     todayAtsPageViews: 0,
   };
@@ -880,15 +925,11 @@ function getVisitorTypeStats_(visits, uniques) {
     const colCount = Math.max(visits.getLastColumn(), VISIT_HEADERS.length);
     const numRows = visitLastRow - 1;
     const rows = visits.getRange(2, 1, numRows, colCount).getValues();
-    const typeIndex = getSheetColumnIndex_(visits, 'VisitorType', getVisitColumnIndex_('VisitorType'));
-    const legacyTypeIndex = getLegacyVisitTypeIndex_(visits);
-    const uaIndex = getSheetColumnIndex_(visits, 'UserAgent', getVisitColumnIndex_('UserAgent'));
-    const refIndex = getSheetColumnIndex_(visits, 'Referrer', getVisitColumnIndex_('Referrer'));
-    const pageIndex = getSheetColumnIndex_(visits, 'Page', getVisitColumnIndex_('Page'));
+    const indices = getRowIndices_(visits, true);
 
     rows.forEach(function (row) {
       const timestamp = row[0];
-      const type = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex);
+      const type = inferVisitorTypeFromRow_(row, indices);
       const isToday =
         timestamp &&
         Utilities.formatDate(new Date(timestamp), Session.getScriptTimeZone(), 'yyyy-MM-dd') === today;
@@ -912,14 +953,13 @@ function getVisitorTypeStats_(visits, uniques) {
     const cols = Math.max(uniques.getLastColumn(), UNIQUE_HEADERS.length);
     const numRows = uniqueLastRow - 1;
     const rows = uniques.getRange(2, 1, numRows, cols).getValues();
-    const typeIndex = getSheetColumnIndex_(uniques, 'VisitorType', UNIQUE_HEADERS.indexOf('VisitorType'));
-    const uaIndex = getSheetColumnIndex_(uniques, 'UserAgent', UNIQUE_HEADERS.indexOf('UserAgent'));
-    const refIndex = getSheetColumnIndex_(uniques, 'LastReferrer', UNIQUE_HEADERS.indexOf('LastReferrer'));
-    const pageIndex = getSheetColumnIndex_(uniques, 'LastPage', UNIQUE_HEADERS.indexOf('LastPage'));
+    const indices = getRowIndices_(uniques, false);
     rows.forEach(function (row) {
-      const type = resolveVisitorType_(row, typeIndex, typeIndex, uaIndex, refIndex, pageIndex);
+      const type = inferVisitorTypeFromRow_(row, indices);
       if (type === 'human') stats.humanUniques++;
-      if (type === 'ats') stats.atsUniques++;
+      else if (type === 'ats') stats.atsUniques++;
+      else if (type === 'bot') stats.botUniques++;
+      else stats.unknownUniques++;
     });
   }
 
