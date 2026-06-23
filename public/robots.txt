@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rishabhkharbanda.github.io/Rishabh-Resume/sitemap.xml

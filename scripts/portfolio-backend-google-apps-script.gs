@@ -77,7 +77,7 @@ const UNIQUE_HEADERS = [
 ];
 
 const CONTACT_HEADERS = ['Timestamp', 'Name', 'Email', 'Subject', 'Message'];
-const BACKEND_VERSION = 3;
+const BACKEND_VERSION = 4;
 
 function doPost(e) {
   const params = getParams_(e);
@@ -247,7 +247,7 @@ function buildVisitDetails_(params, meta) {
   const referrer = String(params.referrer || 'direct').slice(0, 500);
   const page = String(params.page || '/').slice(0, 200);
   const userAgent = String(params.userAgent || '').slice(0, 300);
-  const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer);
+  const visitorType = normalizeVisitorType_(params.visitorType, userAgent, referrer, page);
   const deviceType = String(params.deviceType || '').slice(0, 20);
 
   return {
@@ -736,7 +736,7 @@ function findVisitorTypeInRow_(row) {
   return String(match.value || '');
 }
 
-function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex) {
+function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex) {
   let raw = findVisitorTypeInRow_(row);
   if (!raw && typeIndex >= 0) raw = row[typeIndex];
   const rawText = String(raw || '').trim();
@@ -755,7 +755,44 @@ function resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex)
     referrer = row[refIndex];
   }
 
-  return normalizeVisitorType_(raw, userAgent, referrer);
+  const page = typeof pageIndex === 'number' && pageIndex >= 0 ? String(row[pageIndex] || '') : '';
+
+  return normalizeVisitorType_(raw, userAgent, referrer, page);
+}
+
+function matchesAtsSignals_(userAgent, referrer, page) {
+  const ua = String(userAgent || '').toLowerCase();
+  const ref = String(referrer || '').toLowerCase();
+  const path = String(page || '').toLowerCase();
+
+  if (
+    /greenhouse|lever|workday|taleo|icims|smartrecruiters|ashby|bamboohr|jazzhr|jobvite|successfactors|eightfold|phenom|workable|recruitee|breezy|bullhorn|teamtailor|pinpoint|comeet|freshteam|hireez|hiretual|seekout|beamery|personio|rippling|brassring|applicant.?tracking|ats.?parser|resume.?parser|resume.?screen|hirevue/.test(
+      ua
+    )
+  ) {
+    return true;
+  }
+
+  if (
+    /greenhouse\.io|grnh\.se|boards\.greenhouse|lever\.co|jobs\.lever|myworkdayjobs\.com|workday\.com|icims\.com|smartrecruiters\.com|ashbyhq\.com|jobs\.ashbyhq|bamboohr\.com|jazzhr\.com|jazz\.co|jobvite\.com|workable\.com|apply\.workable|recruitee\.com|eightfold\.ai|phenom\.com|teamtailor\.com|pinpointhq\.com|comeet\.co|freshteam\.com|taleo\.net|oraclecloud\.com|brassring\.com|successfactors\.com|gem\.com|hireez\.com|hiretual\.com|linkedin\.com\/(jobs|talent|recruiter)|indeed\.com|glassdoor\.com|monster\.com|naukri\.com|shine\.com/.test(
+      ref
+    )
+  ) {
+    return true;
+  }
+
+  if (/utm_source=(greenhouse|lever|workday|icims|ashby|smartrecruiters)|gh_jid|gh_src|lever-|workday|icims/.test(path)) {
+    return true;
+  }
+
+  return false;
+}
+
+function matchesBotSignals_(userAgent) {
+  const ua = String(userAgent || '').toLowerCase();
+  return /googlebot|google-inspectiontool|bingbot|slurp|duckduckbot|baiduspider|yandexbot|petalbot|bytespider|facebookexternalhit|meta-externalagent|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|whatsapp|headlesschrome|headless chrome|phantomjs|puppeteer|playwright|selenium|webdriver|lighthouse|python-requests|curl\/|wget\/|scrapy|httpclient|go-http|java\/|libwww|okhttp|gptbot|chatgpt-user|claudebot|anthropic-ai|cohere-ai|perplexitybot|amazonbot|applebot|semrushbot|ahrefsbot|mj12bot|dotbot|\b(bot|crawler|spider|scraper|archiver|preview)\b/.test(
+    ua
+  );
 }
 
 function repairVisitorTypes_(sheet, isVisitsSheet) {
@@ -772,57 +809,54 @@ function repairVisitorTypes_(sheet, isVisitsSheet) {
   const legacyTypeIndex = isVisitsSheet ? getLegacyVisitTypeIndex_(sheet) : typeIndex;
   const uaIndex = getSheetColumnIndex_(sheet, 'UserAgent', isVisitsSheet ? 5 : UNIQUE_HEADERS.indexOf('UserAgent'));
   const refIndex = getSheetColumnIndex_(sheet, isVisitsSheet ? 'Referrer' : 'LastReferrer', isVisitsSheet ? 3 : UNIQUE_HEADERS.indexOf('LastReferrer'));
+  const pageIndex = isVisitsSheet ? getSheetColumnIndex_(sheet, 'Page', getVisitColumnIndex_('Page')) : getSheetColumnIndex_(sheet, 'LastPage', UNIQUE_HEADERS.indexOf('LastPage'));
 
   rows.forEach(function (row, index) {
     const current = String(row[typeIndex] || '').toLowerCase().trim();
-    if (current === 'human' || current === 'ats' || current === 'bot') return;
+    const userAgent = findUserAgentInRow_(row) || (uaIndex >= 0 ? row[uaIndex] : '');
+    const referrer = findReferrerInRow_(row) || (refIndex >= 0 ? row[refIndex] : '');
+    const page = pageIndex >= 0 ? row[pageIndex] : '';
 
-    const inferred = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex);
-    if (inferred === 'unknown') return;
+    if (matchesAtsSignals_(userAgent, referrer, page)) {
+      if (current !== 'ats') sheet.getRange(index + 2, typeCol).setValue('ats');
+      return;
+    }
+
+    if (matchesBotSignals_(userAgent)) {
+      if (current !== 'bot') sheet.getRange(index + 2, typeCol).setValue('bot');
+      return;
+    }
+
+    const inferred = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex);
+    if (current === 'human' || current === 'ats' || current === 'bot') return;
+    if (inferred === 'unknown' || inferred === 'human') return;
     sheet.getRange(index + 2, typeCol).setValue(inferred);
   });
-}
-
-function isLikelyHumanBrowser_(userAgent) {
-  const ua = String(userAgent || '');
-  if (!ua) return false;
-  if (/bot|crawler|spider|headless|python-requests|curl\/|wget\/|scrapy/i.test(ua)) return false;
-  return /mozilla|chrome|safari|firefox|edg\/|opr\/|mobile/i.test(ua);
 }
 
 function ensureVisitColumns_(visits) {
   ensureSheetColumns_(visits, VISIT_HEADERS);
 }
 
-function normalizeVisitorType_(rawType, userAgent, referrer) {
+function normalizeVisitorType_(rawType, userAgent, referrer, page) {
+  const ua = String(userAgent || '').toLowerCase();
+  const ref = String(referrer || '').toLowerCase();
+  const path = String(page || '').toLowerCase();
+
+  if (matchesAtsSignals_(userAgent, referrer, page)) {
+    return 'ats';
+  }
+
+  if (matchesBotSignals_(userAgent)) {
+    return 'bot';
+  }
+
   let value = String(rawType || '').toLowerCase().trim();
   if (value === 'high' || value === 'medium' || value === 'low') {
     value = '';
   }
   if (value === 'human' || value === 'ats' || value === 'bot' || value === 'unknown') {
     return value;
-  }
-
-  const ua = String(userAgent || '').toLowerCase();
-  const ref = String(referrer || '').toLowerCase();
-
-  if (
-    /greenhouse|lever|workday|taleo|icims|smartrecruiters|ashby|bamboohr|jazzhr|jobvite|successfactors|eightfold|phenom|workable|recruitee|breezy|bullhorn|applicant.?tracking|ats.?parser|resume.?parser/.test(
-      ua
-    ) ||
-    /greenhouse\.io|lever\.co|myworkdayjobs\.com|icims\.com|smartrecruiters\.com|ashbyhq\.com|workable\.com|eightfold\.ai|phenom\.com/.test(
-      ref
-    )
-  ) {
-    return 'ats';
-  }
-
-  if (/bot|crawler|spider|headless|puppeteer|playwright|selenium|python-requests|curl\//.test(ua)) {
-    return 'bot';
-  }
-
-  if (isLikelyHumanBrowser_(userAgent)) {
-    return 'human';
   }
 
   return 'unknown';
@@ -850,10 +884,11 @@ function getVisitorTypeStats_(visits, uniques) {
     const legacyTypeIndex = getLegacyVisitTypeIndex_(visits);
     const uaIndex = getSheetColumnIndex_(visits, 'UserAgent', getVisitColumnIndex_('UserAgent'));
     const refIndex = getSheetColumnIndex_(visits, 'Referrer', getVisitColumnIndex_('Referrer'));
+    const pageIndex = getSheetColumnIndex_(visits, 'Page', getVisitColumnIndex_('Page'));
 
     rows.forEach(function (row) {
       const timestamp = row[0];
-      const type = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex);
+      const type = resolveVisitorType_(row, typeIndex, legacyTypeIndex, uaIndex, refIndex, pageIndex);
       const isToday =
         timestamp &&
         Utilities.formatDate(new Date(timestamp), Session.getScriptTimeZone(), 'yyyy-MM-dd') === today;
@@ -879,8 +914,10 @@ function getVisitorTypeStats_(visits, uniques) {
     const rows = uniques.getRange(2, 1, numRows, cols).getValues();
     const typeIndex = getSheetColumnIndex_(uniques, 'VisitorType', UNIQUE_HEADERS.indexOf('VisitorType'));
     const uaIndex = getSheetColumnIndex_(uniques, 'UserAgent', UNIQUE_HEADERS.indexOf('UserAgent'));
+    const refIndex = getSheetColumnIndex_(uniques, 'LastReferrer', UNIQUE_HEADERS.indexOf('LastReferrer'));
+    const pageIndex = getSheetColumnIndex_(uniques, 'LastPage', UNIQUE_HEADERS.indexOf('LastPage'));
     rows.forEach(function (row) {
-      const type = resolveVisitorType_(row, typeIndex, typeIndex, uaIndex, -1);
+      const type = resolveVisitorType_(row, typeIndex, typeIndex, uaIndex, refIndex, pageIndex);
       if (type === 'human') stats.humanUniques++;
       if (type === 'ats') stats.atsUniques++;
     });

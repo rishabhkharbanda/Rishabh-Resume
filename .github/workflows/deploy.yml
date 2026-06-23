@@ -38,13 +38,16 @@ jobs:
           cp dist/favicon-32.png favicon-32.png
           cp dist/apple-touch-icon.png apple-touch-icon.png
           cp dist/favicon-512.png favicon-512.png
+          cp dist/robots.txt robots.txt
+          cp dist/sitemap.xml sitemap.xml
+          cp dist/site.webmanifest site.webmanifest
           touch .nojekyll
 
       - name: Commit and push built files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html assets/ avatar.png screen-removebg-preview.png Rishabh_Kharbanda.pdf favicon.ico favicon.svg favicon-32.png apple-touch-icon.png favicon-512.png .nojekyll
+          git add index.html assets/ avatar.png screen-removebg-preview.png Rishabh_Kharbanda.pdf favicon.ico favicon.svg favicon-32.png apple-touch-icon.png favicon-512.png robots.txt sitemap.xml site.webmanifest .nojekyll
           git diff --staged --quiet && echo "No changes to deploy" && exit 0
           git commit -m "deploy: build site for GitHub Pages [skip ci]"
           git push

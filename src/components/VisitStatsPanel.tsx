@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, BarChart3, Users, Eye, TrendingUp, ExternalLink, UserRound, Bot, AlertTriangle, Copy, Check } from 'lucide-react';
+import { X, BarChart3, Users, Eye, TrendingUp, ExternalLink, UserRound, Bot, AlertTriangle, Copy, Check, Cpu } from 'lucide-react';
 import { fetchVisitStats, VisitStats } from '../config/api';
 
 const BACKEND_SCRIPT_URL =
@@ -60,6 +60,7 @@ export default function VisitStatsPanel({ isOpen, onClose }: VisitStatsPanelProp
           : [
               { label: 'Human page views', value: stats.humanPageViews, icon: UserRound },
               { label: 'ATS page views', value: stats.atsPageViews, icon: Bot },
+              { label: 'Bot / crawler views', value: stats.botPageViews, icon: Cpu },
               { label: 'Human uniques', value: stats.humanUniques, icon: UserRound },
               { label: 'ATS uniques', value: stats.atsUniques, icon: Bot },
               ...(stats.unknownPageViews > 0

@@ -82,7 +82,7 @@ export async function fetchBackendHealth(): Promise<{ backendVersion: number; ne
     const backendVersion = data.backendVersion ?? 0;
     return {
       backendVersion,
-      needsUpgrade: backendVersion < 3,
+      needsUpgrade: backendVersion < 4,
     };
   } catch {
     return { backendVersion: 0, needsUpgrade: true };
