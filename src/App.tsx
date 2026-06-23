@@ -40,6 +40,7 @@ import ScrollToTop from './components/ScrollToTop';
 import VisitStatsPanel from './components/VisitStatsPanel';
 import ProfileAvatar from './components/ProfileAvatar';
 import VisitorGreetingHero from './components/VisitorGreetingHero';
+import SeoHead from './components/SeoHead';
 import { trackVisit } from './config/api';
 
 export default function App() {
@@ -124,7 +125,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full overflow-x-clip bg-background text-on-background selection:bg-primary selection:text-on-primary relative isolate">
-      
+      <SeoHead activeTab={activeTab} />
+
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />
       <VisitStatsPanel isOpen={statsOpen} onClose={() => setStatsOpen(false)} />
@@ -166,7 +168,7 @@ export default function App() {
           </div>
 
           {/* Desktop Nav menu Links */}
-          <nav className="hidden md:flex gap-8 items-center justify-center">
+          <nav className="hidden md:flex gap-8 items-center justify-center" aria-label="Primary navigation">
             {[
               { id: 'portfolio' as ViewTab, label: 'Portfolio' },
               { id: 'experience' as ViewTab, label: 'Experience' },
@@ -223,7 +225,10 @@ export default function App() {
         {activeTab === 'portfolio' && (
           <div>
             {/* HERO SEGMENT */}
-            <section className="relative min-h-[720px] flex flex-col justify-center px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden pb-28 sm:pb-36">
+            <section
+              aria-labelledby="hero-name"
+              className="relative min-h-[720px] flex flex-col justify-center px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden pb-28 sm:pb-36"
+            >
               <div className="absolute inset-0 grid-pattern opacity-40 -z-10" />
 
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-14 items-center w-full min-w-0 relative z-10">
@@ -238,10 +243,17 @@ export default function App() {
                     </span>
                   </div>
 
-                  <h1 className="font-headline text-[clamp(2.25rem,10vw,3.625rem)] md:text-[94px] font-extrabold tracking-tighter leading-[0.95] mb-8 select-none break-words">
+                  <h1
+                    id="hero-name"
+                    className="font-headline text-[clamp(2.25rem,10vw,3.625rem)] md:text-[94px] font-extrabold tracking-tighter leading-[0.95] mb-4 select-none break-words"
+                  >
                     Rishabh <br />
                     <span className="text-primary select-text hover:opacity-90 transition-opacity duration-400">Kharbanda</span>
                   </h1>
+
+                  <h2 className="font-headline text-xl md:text-2xl font-bold text-on-surface mb-6 tracking-tight">
+                    Senior Marketing Analyst &amp; Data Strategist
+                  </h2>
 
                   <p className="font-sans text-[17px] md:text-xl text-on-surface-variant mb-12 max-w-2xl leading-relaxed font-medium">
                     {profileSummary}
