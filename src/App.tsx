@@ -38,7 +38,6 @@ import ContactForm from './components/ContactForm';
 import SuccessScreen from './components/SuccessScreen';
 import ScrollToTop from './components/ScrollToTop';
 import VisitStatsPanel from './components/VisitStatsPanel';
-import ProfileAvatar from './components/ProfileAvatar';
 import VisitorGreetingHero from './components/VisitorGreetingHero';
 import { trackVisit } from './config/api';
 
@@ -226,8 +225,7 @@ export default function App() {
             <section className="relative min-h-[720px] flex flex-col justify-center px-4 sm:px-6 md:px-12 max-w-6xl mx-auto w-full overflow-hidden pb-28 sm:pb-36">
               <div className="absolute inset-0 grid-pattern opacity-40 -z-10" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-14 items-center w-full min-w-0 relative z-10">
-                <div className="max-w-4xl w-full min-w-0 order-2 lg:order-1">
+              <div className="max-w-4xl w-full min-w-0 relative z-10">
                   <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary mb-8 animate-fade-in liquid-glass">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -262,11 +260,6 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-
-                <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-                  <ProfileAvatar className="w-44 h-44 sm:w-52 sm:h-52 lg:w-64 lg:h-64 rounded-3xl" />
-                </div>
-              </div>
 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-50 select-none hidden md:flex">
                 <span className="font-mono text-[9px] uppercase tracking-[0.3em] font-medium scale-90 text-primary">Scroll</span>
