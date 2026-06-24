@@ -25,6 +25,28 @@ const LINE_HOLD_MS = 550;
 const LINE_GAP_MS = 320;
 const ASSIST_POPUP_AUTO_HIDE_MS = 7_000;
 const ASSIST_CLICK_COOLDOWN_MS = 18_000;
+const MOBILE_MAX_WIDTH_PX = 1023;
+
+function useIsMobile(maxWidth = MOBILE_MAX_WIDTH_PX) {
+  const query = `(max-width: ${maxWidth}px)`;
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query);
+    const onChange = () => setIsMobile(mediaQuery.matches);
+    onChange();
+    mediaQuery.addEventListener('change', onChange);
+    return () => mediaQuery.removeEventListener('change', onChange);
+  }, [query]);
+
+  return isMobile;
+}
+
+function isMobileViewport() {
+  return typeof window !== 'undefined' && window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches;
+}
 
 type SpeechDismissOptions = {
   contentComplete?: boolean;
@@ -192,8 +214,11 @@ function useSectionSpeechTrigger(
   headingId: string,
   shownRef: React.MutableRefObject<boolean>,
   onTrigger: () => void,
+  enabled = true,
 ) {
   useEffect(() => {
+    if (!enabled) return;
+
     const heading = document.getElementById(headingId);
     if (!heading) return;
 
@@ -213,7 +238,7 @@ function useSectionSpeechTrigger(
 
     observer.observe(heading);
     return () => observer.disconnect();
-  }, [headingId, onTrigger, shownRef]);
+  }, [headingId, onTrigger, shownRef, enabled]);
 }
 
 interface SpeechBubbleProps {
@@ -318,17 +343,22 @@ export default function VisitorGreetingHero({
   onNavigate,
   onScrollTo,
 }: VisitorGreetingHeroProps) {
+  const isMobile = useIsMobile();
+  const [userActivatedDialogue, setUserActivatedDialogue] = useState(false);
   const [heroPhase, setHeroPhase] = useState<HeroPhase>('enter');
-  const [heroPanelVisible, setHeroPanelVisible] = useState(true);
+  const [heroPanelVisible, setHeroPanelVisible] = useState(() => !isMobileViewport());
   const [marketerPanelVisible, setMarketerPanelVisible] = useState(false);
   const [experiencePanelVisible, setExperiencePanelVisible] = useState(false);
   const marketerShownRef = useRef(false);
   const experienceShownRef = useRef(false);
   const assistVariantRef = useRef(0);
   const assistCooldownUntilRef = useRef(0);
+  const mobileHeroIntroducedRef = useRef(false);
 
   const [assistPopupVisible, setAssistPopupVisible] = useState(false);
   const [assistPrompt, setAssistPrompt] = useState(AVATAR_ASSIST_PROMPTS[0]);
+
+  const speechEnabled = !isMobile || userActivatedDialogue;
 
   const typeOne = useTypewriter(GREETING_PART_ONE, heroPhase === 'typing-one' && heroPanelVisible);
   const typeTwo = useTypewriter(GREETING_PART_TWO, heroPhase === 'typing-two' && heroPanelVisible);
@@ -365,11 +395,11 @@ export default function VisitorGreetingHero({
     setExperiencePanelVisible(true);
   }, [dismissHeroPanel, dismissMarketerPanel]);
 
-  const showHeroBubble = heroPanelVisible && heroPhase !== 'enter';
-  const showHeroTyping = heroPanelVisible && heroPhase === 'pause';
-  const showHeroChips = heroPanelVisible && heroPhase === 'chips';
-  const showMarketerBubble = marketerPanelVisible;
-  const showExperienceBubble = experienceSpeech.showBubble;
+  const showHeroBubble = speechEnabled && heroPanelVisible && heroPhase !== 'enter';
+  const showHeroTyping = speechEnabled && heroPanelVisible && heroPhase === 'pause';
+  const showHeroChips = speechEnabled && heroPanelVisible && heroPhase === 'chips';
+  const showMarketerBubble = speechEnabled && marketerPanelVisible;
+  const showExperienceBubble = speechEnabled && experienceSpeech.showBubble;
 
   const activeSpeech: ActiveSpeech = showExperienceBubble
     ? 'experience'
@@ -404,14 +434,38 @@ export default function VisitorGreetingHero({
   }, [dismissAssistPopup, onNavigate]);
 
   const handleAvatarClick = useCallback(() => {
-    if (isContextualSpeechActive || assistPopupVisible) return;
+    if (isMobile) {
+      setUserActivatedDialogue(true);
+
+      if (!mobileHeroIntroducedRef.current) {
+        mobileHeroIntroducedRef.current = true;
+        setHeroPanelVisible(true);
+        setHeroPhase('typing-one');
+        return;
+      }
+
+      if (isContextualSpeechActive || assistPopupVisible) return;
+    } else if (isContextualSpeechActive || assistPopupVisible) {
+      return;
+    }
+
     if (Date.now() < assistCooldownUntilRef.current) return;
 
     const prompt = AVATAR_ASSIST_PROMPTS[assistVariantRef.current % AVATAR_ASSIST_PROMPTS.length];
     assistVariantRef.current += 1;
     setAssistPrompt(prompt);
     setAssistPopupVisible(true);
-  }, [isContextualSpeechActive, assistPopupVisible]);
+  }, [isMobile, isContextualSpeechActive, assistPopupVisible]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    setHeroPanelVisible(false);
+    setMarketerPanelVisible(false);
+    setExperiencePanelVisible(false);
+    setAssistPopupVisible(false);
+    setHeroPhase('enter');
+  }, [isMobile]);
 
   useEffect(() => {
     if (!assistPopupVisible) return;
@@ -444,9 +498,11 @@ export default function VisitorGreetingHero({
   });
 
   useEffect(() => {
+    if (isMobile) return;
+
     const timer = window.setTimeout(() => setHeroPhase('typing-one'), 650);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (heroPhase === 'typing-one' && typeOne.done) {
@@ -469,8 +525,8 @@ export default function VisitorGreetingHero({
     }
   }, [heroPhase, typeTwo.done]);
 
-  useSectionSpeechTrigger('home-marketer-heading', marketerShownRef, triggerMarketerSpeech);
-  useSectionSpeechTrigger('home-hire-heading', experienceShownRef, triggerExperienceSpeech);
+  useSectionSpeechTrigger('home-marketer-heading', marketerShownRef, triggerMarketerSpeech, !isMobile);
+  useSectionSpeechTrigger('home-hire-heading', experienceShownRef, triggerExperienceSpeech, !isMobile);
 
   const handleChipClick = useCallback(
     (id: GreetingAction) => {
@@ -485,28 +541,32 @@ export default function VisitorGreetingHero({
           break;
         case 'hire':
           onScrollTo('home-hire');
-          window.setTimeout(() => {
-            if (!experienceShownRef.current) {
-              experienceShownRef.current = true;
-              triggerExperienceSpeech();
-            }
-          }, 700);
+          if (!isMobile) {
+            window.setTimeout(() => {
+              if (!experienceShownRef.current) {
+                experienceShownRef.current = true;
+                triggerExperienceSpeech();
+              }
+            }, 700);
+          }
           break;
         case 'marketer':
           onScrollTo('home-marketer');
-          window.setTimeout(() => {
-            if (!marketerShownRef.current) {
-              marketerShownRef.current = true;
-              triggerMarketerSpeech();
-            }
-          }, 700);
+          if (!isMobile) {
+            window.setTimeout(() => {
+              if (!marketerShownRef.current) {
+                marketerShownRef.current = true;
+                triggerMarketerSpeech();
+              }
+            }, 700);
+          }
           break;
         case 'talk':
           onNavigate('contact');
           break;
       }
     },
-    [dismissHeroPanel, onNavigate, onScrollTo, triggerExperienceSpeech, triggerMarketerSpeech],
+    [dismissHeroPanel, isMobile, onNavigate, onScrollTo, triggerExperienceSpeech, triggerMarketerSpeech],
   );
 
   const heroBubbleBody =
@@ -552,9 +612,9 @@ export default function VisitorGreetingHero({
         <motion.button
           type="button"
           onClick={handleAvatarClick}
-          disabled={isContextualSpeechActive}
+          disabled={!isMobile && isContextualSpeechActive}
           aria-label={
-            isContextualSpeechActive
+            !isMobile && isContextualSpeechActive
               ? 'Rishabh is speaking'
               : 'Ask Rishabh for help'
           }
@@ -562,8 +622,8 @@ export default function VisitorGreetingHero({
           initial={{ y: 120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'spring', damping: 18, stiffness: 130, delay: 0.15 }}
-          whileHover={isContextualSpeechActive ? undefined : { scale: 1.04, y: -4 }}
-          whileTap={isContextualSpeechActive ? undefined : { scale: 0.98 }}
+          whileHover={!isMobile && isContextualSpeechActive ? undefined : { scale: 1.04, y: -4 }}
+          whileTap={!isMobile && isContextualSpeechActive ? undefined : { scale: 0.98 }}
         >
           <motion.img
             src={mascotAvatarUrl}
@@ -577,7 +637,7 @@ export default function VisitorGreetingHero({
         </motion.button>
 
         <AnimatePresence mode="wait">
-          {assistPopupVisible && !isContextualSpeechActive && (
+          {speechEnabled && assistPopupVisible && !isContextualSpeechActive && (
             <AssistPopup
               headline={assistPrompt.headline}
               subline={assistPrompt.subline}
@@ -586,7 +646,7 @@ export default function VisitorGreetingHero({
             />
           )}
 
-          {!assistPopupVisible && activeSpeech === 'experience' && (
+          {speechEnabled && !assistPopupVisible && activeSpeech === 'experience' && (
             <motion.div
               key={`experience-line-${experienceSpeech.lineIndex}`}
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -602,7 +662,7 @@ export default function VisitorGreetingHero({
             </motion.div>
           )}
 
-          {!assistPopupVisible && activeSpeech === 'marketer' && (
+          {speechEnabled && !assistPopupVisible && activeSpeech === 'marketer' && (
             <motion.div
               key="marketer-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -618,7 +678,7 @@ export default function VisitorGreetingHero({
             </motion.div>
           )}
 
-          {!assistPopupVisible && activeSpeech === 'hero' && (
+          {speechEnabled && !assistPopupVisible && activeSpeech === 'hero' && (
             <motion.div
               key="hero-panel"
               initial={{ opacity: 0, y: 20, scale: 0.96 }}
@@ -639,7 +699,7 @@ export default function VisitorGreetingHero({
       </div>
 
       <AnimatePresence>
-        {showHeroChips && activeSpeech !== 'marketer' && activeSpeech !== 'experience' && (
+        {speechEnabled && showHeroChips && activeSpeech !== 'marketer' && activeSpeech !== 'experience' && (
           <motion.div
             key="mobile-chips"
             initial={{ opacity: 0, y: 10 }}
