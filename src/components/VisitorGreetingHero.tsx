@@ -25,6 +25,24 @@ const LINE_HOLD_MS = 550;
 const LINE_GAP_MS = 320;
 const ASSIST_POPUP_AUTO_HIDE_MS = 7_000;
 const ASSIST_CLICK_COOLDOWN_MS = 18_000;
+const MOBILE_MAX_WIDTH_PX = 1023;
+
+function useIsMobile(maxWidth = MOBILE_MAX_WIDTH_PX) {
+  const query = `(max-width: ${maxWidth}px)`;
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query);
+    const onChange = () => setIsMobile(mediaQuery.matches);
+    onChange();
+    mediaQuery.addEventListener('change', onChange);
+    return () => mediaQuery.removeEventListener('change', onChange);
+  }, [query]);
+
+  return isMobile;
+}
 
 type SpeechDismissOptions = {
   contentComplete?: boolean;
@@ -192,8 +210,11 @@ function useSectionSpeechTrigger(
   headingId: string,
   shownRef: React.MutableRefObject<boolean>,
   onTrigger: () => void,
+  enabled = true,
 ) {
   useEffect(() => {
+    if (!enabled) return;
+
     const heading = document.getElementById(headingId);
     if (!heading) return;
 
@@ -213,7 +234,7 @@ function useSectionSpeechTrigger(
 
     observer.observe(heading);
     return () => observer.disconnect();
-  }, [headingId, onTrigger, shownRef]);
+  }, [headingId, onTrigger, shownRef, enabled]);
 }
 
 interface SpeechBubbleProps {
@@ -318,14 +339,20 @@ export default function VisitorGreetingHero({
   onNavigate,
   onScrollTo,
 }: VisitorGreetingHeroProps) {
+  const isMobile = useIsMobile();
   const [heroPhase, setHeroPhase] = useState<HeroPhase>('enter');
-  const [heroPanelVisible, setHeroPanelVisible] = useState(true);
+  const [heroPanelVisible, setHeroPanelVisible] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      !window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches,
+  );
   const [marketerPanelVisible, setMarketerPanelVisible] = useState(false);
   const [experiencePanelVisible, setExperiencePanelVisible] = useState(false);
   const marketerShownRef = useRef(false);
   const experienceShownRef = useRef(false);
   const assistVariantRef = useRef(0);
   const assistCooldownUntilRef = useRef(0);
+  const mobileHeroIntroducedRef = useRef(false);
 
   const [assistPopupVisible, setAssistPopupVisible] = useState(false);
   const [assistPrompt, setAssistPrompt] = useState(AVATAR_ASSIST_PROMPTS[0]);
@@ -404,6 +431,15 @@ export default function VisitorGreetingHero({
   }, [dismissAssistPopup, onNavigate]);
 
   const handleAvatarClick = useCallback(() => {
+    if (isMobile) {
+      if (!mobileHeroIntroducedRef.current) {
+        mobileHeroIntroducedRef.current = true;
+        setHeroPanelVisible(true);
+        setHeroPhase('typing-one');
+        return;
+      }
+    }
+
     if (isContextualSpeechActive || assistPopupVisible) return;
     if (Date.now() < assistCooldownUntilRef.current) return;
 
@@ -411,7 +447,7 @@ export default function VisitorGreetingHero({
     assistVariantRef.current += 1;
     setAssistPrompt(prompt);
     setAssistPopupVisible(true);
-  }, [isContextualSpeechActive, assistPopupVisible]);
+  }, [isMobile, isContextualSpeechActive, assistPopupVisible]);
 
   useEffect(() => {
     if (!assistPopupVisible) return;
@@ -444,9 +480,11 @@ export default function VisitorGreetingHero({
   });
 
   useEffect(() => {
+    if (isMobile) return;
+
     const timer = window.setTimeout(() => setHeroPhase('typing-one'), 650);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (heroPhase === 'typing-one' && typeOne.done) {
@@ -469,8 +507,8 @@ export default function VisitorGreetingHero({
     }
   }, [heroPhase, typeTwo.done]);
 
-  useSectionSpeechTrigger('home-marketer-heading', marketerShownRef, triggerMarketerSpeech);
-  useSectionSpeechTrigger('home-hire-heading', experienceShownRef, triggerExperienceSpeech);
+  useSectionSpeechTrigger('home-marketer-heading', marketerShownRef, triggerMarketerSpeech, !isMobile);
+  useSectionSpeechTrigger('home-hire-heading', experienceShownRef, triggerExperienceSpeech, !isMobile);
 
   const handleChipClick = useCallback(
     (id: GreetingAction) => {
@@ -485,28 +523,32 @@ export default function VisitorGreetingHero({
           break;
         case 'hire':
           onScrollTo('home-hire');
-          window.setTimeout(() => {
-            if (!experienceShownRef.current) {
-              experienceShownRef.current = true;
-              triggerExperienceSpeech();
-            }
-          }, 700);
+          if (!isMobile) {
+            window.setTimeout(() => {
+              if (!experienceShownRef.current) {
+                experienceShownRef.current = true;
+                triggerExperienceSpeech();
+              }
+            }, 700);
+          }
           break;
         case 'marketer':
           onScrollTo('home-marketer');
-          window.setTimeout(() => {
-            if (!marketerShownRef.current) {
-              marketerShownRef.current = true;
-              triggerMarketerSpeech();
-            }
-          }, 700);
+          if (!isMobile) {
+            window.setTimeout(() => {
+              if (!marketerShownRef.current) {
+                marketerShownRef.current = true;
+                triggerMarketerSpeech();
+              }
+            }, 700);
+          }
           break;
         case 'talk':
           onNavigate('contact');
           break;
       }
     },
-    [dismissHeroPanel, onNavigate, onScrollTo, triggerExperienceSpeech, triggerMarketerSpeech],
+    [dismissHeroPanel, isMobile, onNavigate, onScrollTo, triggerExperienceSpeech, triggerMarketerSpeech],
   );
 
   const heroBubbleBody =
@@ -552,9 +594,9 @@ export default function VisitorGreetingHero({
         <motion.button
           type="button"
           onClick={handleAvatarClick}
-          disabled={isContextualSpeechActive}
+          disabled={isContextualSpeechActive && !isMobile}
           aria-label={
-            isContextualSpeechActive
+            isContextualSpeechActive && !isMobile
               ? 'Rishabh is speaking'
               : 'Ask Rishabh for help'
           }
@@ -562,8 +604,8 @@ export default function VisitorGreetingHero({
           initial={{ y: 120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'spring', damping: 18, stiffness: 130, delay: 0.15 }}
-          whileHover={isContextualSpeechActive ? undefined : { scale: 1.04, y: -4 }}
-          whileTap={isContextualSpeechActive ? undefined : { scale: 0.98 }}
+          whileHover={isContextualSpeechActive && !isMobile ? undefined : { scale: 1.04, y: -4 }}
+          whileTap={isContextualSpeechActive && !isMobile ? undefined : { scale: 0.98 }}
         >
           <motion.img
             src={mascotAvatarUrl}
