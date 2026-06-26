@@ -8,87 +8,84 @@ import {
 } from './types';
 
 export const profileSummary =
-  'Senior Marketing Analyst with 5+ years of experience driving growth across gaming, fantasy sports, e-commerce, and B2C markets. Specialises in performance marketing, lifecycle analytics, and paid media optimisation — with a track record of reducing CAC by 17%, cutting ad spend by 55% while sustaining results, and delivering 70% MoM e-commerce growth. Deep expertise in cohort analysis, attribution modeling, retention marketing, and user segmentation. Experienced across international markets (Malaysia, Australia, Papua New Guinea) and experienced in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage. Leverages AI tools daily for faster insight generation, campaign ideation, and data summarisation.';
+  'Senior Marketing Analyst with 5+ years of experience driving growth across gaming, fantasy sports, e-commerce, and B2C markets. Specialises in performance marketing, lifecycle analytics, and paid media optimisation — with a track record of reducing CAC by 17%, cutting ad spend by 55% while sustaining results, and delivering 70% MoM e-commerce growth. Deep expertise in cohort analysis, attribution modeling, retention marketing, and user segmentation. Experienced across international markets (Malaysia, Australia, Papua New Guinea) and proficient in Tableau, Power BI, Python, SQL, AppsFlyer, Clevertap, and WebEngage.';
 
 export const portfolioExperiences: ExperienceItem[] = [
   {
     company: 'Yong Yuan Casino',
     role: 'Senior Marketing Analyst',
     period: 'OCT 2025 - MAY 2026',
-    location: 'Malaysia, Australia & Papua New Guinea',
+    location: 'Malaysia, Australia & Papua New Guinea (Remote)',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Built 8+ Tableau dashboards tracking CAC, ROI, ROAS, and paid media KPIs across three markets (Malaysia, Australia, Papua New Guinea), reducing reporting turnaround by 40%.',
+        text: 'Built 8+ Tableau dashboards tracking player acquisition, retention, engagement, and revenue KPIs across multiple markets, reducing reporting time by 40%.',
       },
       {
-        text: 'Optimised bidding strategies, audience segmentation, and ad creatives across paid media channels, lifting conversion rates by 18% and lowering Cost per Lead (CPL) through attribution modeling.',
+        text: 'Analyzed player journeys and behavioral data to identify conversion opportunities, improving player registration and engagement rates by 18%.',
       },
       {
-        text: 'Redesigned 10+ landing pages through user journey analysis and UX improvements, cutting funnel drop-offs and increasing campaign sign-ups by 25%.',
+        text: 'Conducted funnel analysis across 10+ landing pages and onboarding flows, increasing player sign-ups by 25% through user experience improvements.',
       },
       {
-        text: 'Drove lifecycle marketing strategy using cohort analysis and user segmentation to identify retention windows and build personalised re-engagement flows.',
-      },
-      {
-        text: 'Designed wireframes and UX flows in Figma for 3+ government digital platforms, collaborating closely with developers to deliver accessible, user-centric experiences.',
+        text: 'Performed cohort analysis and player segmentation to identify churn patterns, supporting targeted retention campaigns and personalized re-engagement strategies.',
       },
     ],
     metrics: [
       { label: 'DASHBOARDS', value: '8+', trend: 'up', subLabel: 'Built' },
-      { label: 'REPORTING', value: '40%', trend: 'down', subLabel: 'Faster Turnaround' },
-      { label: 'CONVERSIONS', value: '18% ↑', trend: 'up', subLabel: 'Rate Increase' },
-      { label: 'SIGN-UPS', value: '25% ↑', trend: 'up', subLabel: 'Landing Page CRO' },
+      { label: 'REPORTING', value: '40%', trend: 'down', subLabel: 'Faster Reporting' },
+      { label: 'ENGAGEMENT', value: '18% ↑', trend: 'up', subLabel: 'Player Registration' },
+      { label: 'SIGN-UPS', value: '25% ↑', trend: 'up', subLabel: 'Onboarding CRO' },
     ],
   },
   {
-    company: 'Head Digital Works',
+    company: 'Head Digital Works (A23)',
     role: 'Senior Marketing Analyst',
     period: 'SEP 2024 - SEP 2025',
     location: 'Hyderabad, India · Gaming & Fantasy Sports',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Optimised performance marketing across channels using geo-segmentation and player value tiers (HVP, MVP), reducing CAC by 17% through strategic paid media reallocation and creative testing.',
+        text: 'Analyzed player behavior and segmented users by geography and value tiers (HVP/MVP), improving retention efficiency and reducing CAC by 17%.',
       },
       {
-        text: 'Restructured performance strategy and budget allocation, delivering stronger results on ₹1.8 Cr/month vs a prior spend of ₹4 Cr — a 55% cost reduction with no drop in outcomes.',
+        text: 'Optimized player acquisition and retention investments, reducing monthly marketing spend by 55% while maintaining player growth and engagement targets.',
       },
       {
-        text: 'Conducted D0–D30 cohort analysis to map churn patterns; deployed targeted onboarding journeys via WebEngage with AppsFlyer MMP tracking, reducing new user churn by 15%.',
+        text: 'Built D0–D30 player cohort analyses and personalized onboarding journeys using WebEngage and AppsFlyer, reducing new-player churn by 15%.',
       },
       {
-        text: 'Ran detailed competitor benchmarking and market research, identifying product feature gaps that directly informed roadmap decisions and expanded share of market (SOM).',
+        text: 'Conducted player and competitor analysis to identify engagement opportunities, contributing to product enhancements and retention-focused initiatives.',
       },
       {
-        text: 'Executed offline acquisition events (poker tournaments at IITs, IIMs, and Goa casinos), generating early-stage user loyalty and brand recognition in a competitive market.',
+        text: 'Executed poker acquisition events across IITs, IIMs, and Goa poker venues, driving player acquisition, community engagement, and brand loyalty.',
       },
     ],
     metrics: [
       { label: 'CAC REDUCTION', value: '17%', trend: 'down', subLabel: 'CAC Reduced' },
       { label: 'AD SPEND CUT', value: '55%', trend: 'down', subLabel: 'Cost Reduction' },
-      { label: 'CHURN', value: '15% ↓', trend: 'down', subLabel: 'Churn Reduced' },
-      { label: 'OPTIMIZED BUDGET', value: '₹1.8Cr', trend: 'down', subLabel: 'Monthly Budget' },
+      { label: 'CHURN', value: '15% ↓', trend: 'down', subLabel: 'New-Player Churn' },
+      { label: 'COHORTS', value: 'D0–D30', trend: 'up', subLabel: 'Lifecycle Analysis' },
     ],
   },
   {
     company: 'KSKT Agromart',
-    role: 'Data Analyst',
+    role: 'Marketing Analyst',
     period: 'DEC 2023 - AUG 2024',
     location: 'Gurugram, India',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Led e-commerce growth strategy, scaling online sales by 70% MoM through data-driven campaign optimisation, paid media targeting, and retention marketing initiatives.',
+        text: 'Scaled online sales by 70% MoM through data-driven campaign optimization and retention marketing.',
       },
       {
-        text: 'Designed and deployed 3 KPI dashboards covering sales, marketing, and operations, enabling faster, evidence-based decision-making.',
+        text: 'Built KPI dashboards for sales, marketing, and operations reporting.',
       },
       {
-        text: 'Grew customer retention by 80% via deep user segmentation, personalised lifecycle campaigns, and post-purchase re-engagement flows.',
+        text: 'Increased customer retention by 80% through audience segmentation and lifecycle campaigns.',
       },
       {
-        text: 'Raised Average Order Value (AOV) by 60% and improved ROAS by 20% through optimised marketing programs; used Python for data cleaning, cohort analysis, and LTV modelling.',
+        text: 'Improved AOV by 60% and ROAS by 20% through targeted marketing initiatives.',
       },
     ],
     metrics: [
@@ -100,50 +97,86 @@ export const portfolioExperiences: ExperienceItem[] = [
   },
   {
     company: 'DaddyTech',
-    role: 'Data Analyst',
-    period: 'SEP 2022 - NOV 2023',
-    location: 'Gurugram, India',
+    role: 'Marketing Analyst',
+    period: 'FEB 2023 - NOV 2023',
+    location: 'Gurugram, India · Poker Platform',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Used Tableau and Power BI to surface actionable trends from large datasets, contributing to a 22% increase in customer retention and 30% quarterly revenue growth.',
+        text: 'Used Tableau and Power BI to identify actionable insights, contributing to a 22% increase in customer retention.',
       },
       {
-        text: 'Developed and deployed predictive statistical models that drove an average of 100 net-new customers per day.',
+        text: 'Developed predictive models that acquired an average of 100 new customers daily.',
       },
       {
-        text: 'Maintained 100% data integrity across pipelines; led cross-functional product launch coordination resulting in 20% sales uplift and 15% faster project delivery.',
+        text: 'Maintained data accuracy across reporting pipelines and dashboards.',
+      },
+      {
+        text: 'Collaborated with cross-functional teams to support product launches, driving a 20% increase in sales.',
       },
     ],
     metrics: [
-      { label: 'REVENUE GROWTH', value: '30%', trend: 'up', subLabel: 'Quarterly Revenue' },
-      { label: 'DAILY VOLUME', value: '100+', trend: 'up', subLabel: 'Net-New Customers' },
       { label: 'RETENTION', value: '22% ↑', trend: 'up', subLabel: 'Customer Retention' },
-      { label: 'DATA INTEGRITY', value: '100%', trend: 'neutral', subLabel: 'Pipeline Accuracy' },
+      { label: 'DAILY VOLUME', value: '100+', trend: 'up', subLabel: 'New Customers' },
+      { label: 'SALES', value: '20% ↑', trend: 'up', subLabel: 'Product Launches' },
+      { label: 'DATA QUALITY', value: '100%', trend: 'neutral', subLabel: 'Pipeline Accuracy' },
     ],
   },
   {
     company: 'FabHotels',
     role: 'Key Account Manager',
-    period: 'APR 2021 - AUG 2022',
+    period: 'APR 2022 - JAN 2023',
     location: 'Gurugram, India',
     descriptionTitle: 'Role Highlights',
     points: [
       {
-        text: 'Proactively resolved client issues, reducing escalations by 75% and complaints by 80% as single point of contact.',
+        text: 'Resolved client issues, reducing escalations by 75% and complaints by 80%.',
       },
       {
-        text: 'Generated MIS reports to support efficient tracking, improving decision-making processes by 25%.',
+        text: 'Generated MIS reports to support business tracking and decision-making.',
       },
       {
-        text: 'Handled GST management, payments, and UTR generation; reported 200% financial growth in managed accounts.',
+        text: 'Managed GST processing, payments, and UTR generation.',
+      },
+      {
+        text: 'Maintained strong client relationships and ensured smooth account operations.',
       },
     ],
     metrics: [
       { label: 'ESCALATIONS', value: '75% ↓', trend: 'down', subLabel: 'Client Escalations' },
       { label: 'COMPLAINTS', value: '80% ↓', trend: 'down', subLabel: 'Complaint Reduction' },
-      { label: 'DECISION SPEED', value: '25% ↑', trend: 'up', subLabel: 'MIS Reporting' },
-      { label: 'FINANCIAL GROWTH', value: '200%', trend: 'up', subLabel: 'Managed Accounts' },
+      { label: 'MIS REPORTING', value: 'Active', trend: 'up', subLabel: 'Business Tracking' },
+      { label: 'ACCOUNTS', value: 'Managed', trend: 'neutral', subLabel: 'Client Operations' },
+    ],
+  },
+  {
+    company: 'Junglee Games',
+    role: 'Customer Service Executive',
+    period: 'SEP 2021 - APR 2022',
+    location: 'Gurugram, India',
+    descriptionTitle: 'Role Highlights',
+    points: [
+      {
+        text: 'Resolved customer queries and issues through email and live chat support.',
+      },
+      {
+        text: 'Handled customer escalations and ensured timely issue resolution.',
+      },
+      {
+        text: 'Verified KYC documents and supported user onboarding processes.',
+      },
+      {
+        text: 'Maintained high customer satisfaction by providing prompt and professional assistance.',
+      },
+      {
+        text: 'Worked closely with internal teams to improve the overall player experience.',
+      },
+    ],
+    metrics: [
+      { label: 'SUPPORT', value: 'Email', trend: 'neutral', subLabel: 'Live Chat' },
+      { label: 'KYC', value: 'Verified', trend: 'up', subLabel: 'User Onboarding' },
+      { label: 'ESCALATIONS', value: 'Resolved', trend: 'down', subLabel: 'Issue Resolution' },
+      { label: 'CSAT', value: 'High', trend: 'up', subLabel: 'Customer Satisfaction' },
     ],
   },
 ];
@@ -160,11 +193,11 @@ export const portfolioProjects: ProjectItem[] = [
     metricValue: 'Multi-Channel',
     metricLabel: 'Attribution Coverage',
     longDescription:
-      'Developed an end-to-end marketing attribution and performance analytics platform to measure channel effectiveness across the customer acquisition funnel. Integrated campaign data from multiple paid media sources and built automated dashboards tracking CAC, CPL, ROAS, conversion rates, and revenue contribution by channel. Performed audience, creative, and campaign-level analysis to identify optimization opportunities and improve budget allocation decisions. Implemented attribution models to evaluate customer touchpoints and support data-driven marketing strategies.',
+      'Developed an end-to-end marketing attribution and performance analytics platform to measure channel effectiveness across the customer acquisition funnel. Integrated campaign data from multiple paid media sources and built automated dashboards tracking CAC, CPL, ROAS, conversion rates, and revenue contribution by channel. Performed audience, creative, and campaign-level analysis to identify optimisation opportunities and improve budget allocation decisions, implementing attribution models to evaluate customer touchpoints and support data-driven marketing strategies.',
     achievements: [
       'Built automated dashboards for campaign performance monitoring.',
       'Developed channel-level attribution and ROI measurement frameworks.',
-      'Identified acquisition optimization opportunities through audience segmentation.',
+      'Identified acquisition optimisation opportunities through audience segmentation.',
       'Delivered actionable insights for budget allocation and marketing efficiency improvements.',
     ],
   },
@@ -179,7 +212,7 @@ export const portfolioProjects: ProjectItem[] = [
     metricValue: 'D0–D90',
     metricLabel: 'Cohort Retention',
     longDescription:
-      'Designed a customer lifecycle analytics framework to track user behavior across acquisition, activation, engagement, retention, and re-engagement stages. Built cohort models covering D0, D7, D30, and D90 retention periods to analyze customer behavior and identify churn patterns. Implemented customer segmentation models based on engagement frequency, transaction behavior, and customer value. Created retention dashboards and performance reports that supported personalized lifecycle marketing campaigns and customer journey optimization initiatives.',
+      'Designed a customer lifecycle analytics framework to track user behaviour across acquisition, activation, engagement, retention, and re-engagement stages. Built cohort models covering D0, D7, D30, and D90 retention periods to analyse customer behaviour and identify churn patterns. Implemented customer segmentation models based on engagement frequency, transaction behaviour, and customer value, creating retention dashboards and performance reports that supported personalised lifecycle marketing campaigns and customer journey optimisation initiatives.',
     achievements: [
       'Developed retention and churn analysis models using cohort methodologies.',
       'Built customer segmentation frameworks for targeted marketing campaigns.',
@@ -198,7 +231,7 @@ export const portfolioProjects: ProjectItem[] = [
     metricValue: 'Unified KPI',
     metricLabel: 'Reporting Hub',
     longDescription:
-      'Built a centralized marketing intelligence platform that consolidated marketing, customer, and revenue data into a unified reporting environment. Designed executive dashboards tracking acquisition performance, campaign effectiveness, customer retention, revenue growth, and key business KPIs. Automated data processing workflows and reporting pipelines to reduce manual effort and improve reporting accuracy. Delivered real-time visibility into business performance, enabling leadership teams to make faster and more informed decisions.',
+      'Built a centralized marketing intelligence platform that consolidated marketing, customer, and revenue data into a unified reporting environment. Designed executive dashboards tracking acquisition performance, campaign effectiveness, customer retention, revenue growth, and key business KPIs. Automated data processing workflows and reporting pipelines to reduce manual effort and improve reporting accuracy, delivering real-time visibility into business performance for faster leadership decision-making.',
     achievements: [
       'Automated marketing and business KPI reporting processes.',
       'Built executive dashboards for acquisition, retention, and revenue monitoring.',
@@ -212,12 +245,12 @@ export const portfolioProjects: ProjectItem[] = [
     category: 'Retail Analytics',
     description:
       'Retail sales analytics pipeline with Python preprocessing and interactive Tableau views for regional and product performance.',
-    tags: ['Tableau', 'Python', 'SQL'],
+    tags: ['Tableau', 'Python'],
     accentClass: 'from-secondary/80 via-primary/70 to-surface-container-high',
     metricValue: 'Multi-Region',
     metricLabel: 'Sales Tracking',
     longDescription:
-      'Developed a sales performance dashboard for a retail company. Used Python for data cleaning and preprocessing, then built interactive Tableau visualisations covering total sales, growth trends, top-performing products, and regional breakdowns — enabling stakeholders to improve sales strategies.',
+      'Developed a sales performance dashboard for a retail company. Used Python for data cleaning and preprocessing, then built interactive Tableau visualisations covering total sales, growth trends, top-performing products, and regional breakdowns.',
     achievements: [
       'Automated data cleaning and preprocessing with Python pipelines.',
       'Built interactive Tableau views for sales trends and regional breakdowns.',
@@ -235,7 +268,7 @@ export const portfolioProjects: ProjectItem[] = [
     metricValue: 'Behavioral',
     metricLabel: 'Segment Models',
     longDescription:
-      'Built a customer segmentation model for an e-commerce platform using Python and clustering algorithms to segment users by purchasing behaviour and demographic data. Visualised segments in Tableau, providing actionable insights for targeted lifecycle marketing and personalised customer experiences.',
+      'Built a customer segmentation model for an e-commerce platform using Python and clustering algorithms to segment users by purchasing behaviour and demographic data. Visualised segments in Tableau for targeted lifecycle marketing.',
     achievements: [
       'Segmented users by purchase behaviour and demographic attributes.',
       'Visualised cohorts in Tableau for marketing and CRM teams.',
@@ -268,13 +301,19 @@ export const portfolioEducation: EducationItem[] = [
   {
     degree: 'Bachelor of Computer Applications (BCA)',
     institution: 'North East Frontier Technical University (NEFTU)',
-    period: '2019 - 2023',
+    period: 'Passed: 2023',
     detail: 'Concentrated on business analytics and data-driven decision-making.',
   },
   {
-    degree: 'Higher Secondary Certificate (Science)',
+    degree: 'Intermediate / Class XII (NIOS)',
     institution: 'M.G. Convent School, Lucknow',
-    period: '2017 - 2019',
+    period: 'Passed: 2019',
+    detail: 'Science stream foundation.',
+  },
+  {
+    degree: 'High School / Class X (CBSE)',
+    institution: 'Rasphil Academy, Lucknow',
+    period: 'Passed: 2015',
     detail: 'Strong foundation in mathematics and science.',
   },
 ];
@@ -285,4 +324,4 @@ export const portfolioLanguages: LanguageItem[] = [
 ];
 
 export const resumePdfFilename = 'Rishabh_Kharbanda.pdf';
-export const resumePdfUrl = `${import.meta.env.BASE_URL}${resumePdfFilename}?v=3`;
+export const resumePdfUrl = `${import.meta.env.BASE_URL}${resumePdfFilename}?v=4`;
