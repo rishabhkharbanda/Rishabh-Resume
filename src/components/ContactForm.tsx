@@ -120,7 +120,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
               </div>
               <div>
                 <p className="font-mono text-[9px] text-on-surface-variant mb-0.5 tracking-wider font-extrabold uppercase select-none">LOCATION</p>
-                <p className="font-sans text-sm text-on-surface font-medium">Delhi NCR, India</p>
+                <p className="font-sans text-sm text-on-surface font-medium">Faridabad, India</p>
               </div>
             </div>
           </div>
@@ -146,11 +146,11 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
           </div>
         </div>
 
-        {/* Google Maps — Delhi NCR */}
+        {/* Google Maps — Faridabad */}
         <div className="relative aspect-video bg-primary-container/30 overflow-hidden border border-outline-variant/40 rounded-3xl group/map cursor-pointer">
           <iframe
-            title="Delhi NCR location map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d650036.2288289947!2d76.89530232574351!3d28.286602538950536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cdcf849b3d949%3A0xf33d37d3c02dbe49!2sBPTP%20Park%2081!5e0!3m2!1sen!2sin!4v1780902660611!5m2!1sen!2sin"
+            title="Faridabad location map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14035.5!2d77.3178!3d28.4089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cdd5c5c5c5c5d%3A0x0!2sFaridabad%2C%20Haryana!5e0!3m2!1sen!2sin!4v1780902660611!5m2!1sen!2sin"
             className="absolute inset-0 w-full h-full border-0 grayscale brightness-75 contrast-90 opacity-80 group-hover/map:grayscale-0 group-hover/map:brightness-100 group-hover/map:opacity-100 transition-all duration-700 ease-out"
             allowFullScreen
             loading="lazy"
@@ -160,7 +160,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
           <div className="absolute inset-0 bg-primary-container/40 pointer-events-none group-hover/map:opacity-0 transition-opacity duration-700 ease-out" />
           <div className="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md p-3.5 border border-outline-variant/40 rounded-xl pointer-events-none group-hover/map:bg-surface/90 transition-colors duration-500">
             <p className="font-mono text-[10px] text-primary uppercase tracking-widest font-extrabold">
-              DELHI NCR
+              FARIDABAD
             </p>
           </div>
         </div>
